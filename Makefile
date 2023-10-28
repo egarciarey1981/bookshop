@@ -24,5 +24,5 @@ composer-install: composer.json ## Instala dependencias de composer
 composer-update: ## Actualiza dependencias de composer
 	$(EXEC_IN_CONTAINER_PHP) "cd //code && composer update"
 
-cliente: ## Ejecuta el cliente
+web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client
