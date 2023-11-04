@@ -60,7 +60,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         $stmt->execute();
 
         if (!$stmt->rowCount()) {
-            throw new BookDoesNotExistException($bookId);
+            throw new BookDoesNotExistException($book->id());
         }
     }
 

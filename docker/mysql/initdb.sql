@@ -2,28 +2,49 @@ CREATE DATABASE IF NOT EXISTS `bookshop`;
 
 USE `bookshop`;
 
+CREATE TABLE IF NOT EXISTS `genres` (
+  `id`   varchar(255) NOT NULL PRIMARY KEY,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `books` (
-  `id`     varchar(255) NOT NULL PRIMARY KEY,
+  `id`    varchar(255) NOT NULL PRIMARY KEY,
   `title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `books_genres` (
+  `book_id`  varchar(255) NOT NULL,
+  `genre_id` varchar(255) NOT NULL,
+  PRIMARY KEY (`book_id`, `genre_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `genres` (`id`, `name`) VALUES
+('453509857ae45', 'Tragedy'),
+('453509857ae46', 'Horror'),
+('453509857ae49', 'Mystery'),
+('453509857ae4a', 'Romance'),
+('453509857ae4b', 'Western'),
+('453509857ae4c', 'Drama'),
+('453509857ae4d', 'Action'),
+('453509857ae4e', 'Adventure');
+
 INSERT INTO `books` (`id`, `title`) VALUES
-('653509857ae45', 'Romeo y Julieta'),
-('6535098a0c2d5', 'El Quijote'),
-('6535098a0c2d6', 'La Celestina'),
-('6535098a0c2d7', 'El Hobbit'),
-('6535098a0c2d8', 'El señor de los anillos'),
-('6535098a0c2d9', 'El código Da Vinci'),
-('6535098a0c2da', 'El alquimista'),
-('6535098a0c2db', 'La historia interminable'),
-('6535098a0c2dc', 'El perfume'),
-('6535098a0c2dd', 'El nombre de la rosa'),
-('6535098a0c2de', 'El retrato de Dorian Gray'),
-('6535098a0c2df', 'El médico'),
-('6535098a0c2e0', 'El último mohicano'),
-('6535098a0c2e1', 'El conde de Montecristo'),
-('6535098a0c2e2', 'El guardián entre el centeno'),
-('6535098a0c2e3', 'El gran Gatsby'),
-('6535098a0c2e4', 'El principito'),
-('6535098a0c2e5', 'El hombre invisible'),
-('6535098a0c2e6', 'El retrato de Dorian Gray');
+('553509857ae60', 'Romeo and Juliet'),
+('553509857ae61', 'Frankestein'),
+('553509857ae62', 'The Hound of the Baskervilles'),
+('553509857ae63', 'Twenty Thousand Leagues Under the Seas'),
+('553509857ae64', 'Five Weeks in a Balloon');
+
+INSERT INTO `books_genres` (`book_id`, `genre_id`) VALUES
+('553509857ae60', '453509857ae45'),
+('553509857ae60', '453509857ae4c'),
+('553509857ae61', '453509857ae46'),
+('553509857ae61', '453509857ae4c'),
+('553509857ae62', '453509857ae46'),
+('553509857ae62', '453509857ae4c'),
+('553509857ae63', '453509857ae4d'),
+('553509857ae63', '453509857ae4e'),
+('553509857ae64', '453509857ae4d'),
+('553509857ae64', '453509857ae4e'),
+('553509857ae65', '453509857ae4d'),
+('553509857ae65', '453509857ae4e');

@@ -8,6 +8,11 @@ use App\Actions\Book\ListBooksAction;
 use App\Actions\Book\CreateBookAction;
 use App\Actions\Book\RemoveBookAction;
 use App\Actions\Book\UpdateBookAction;
+use App\Actions\Genre\CreateGenreAction;
+use App\Actions\Genre\ListGenresAction;
+use App\Actions\Genre\RemoveGenreAction;
+use App\Actions\Genre\UpdateGenreAction;
+use App\Actions\Genre\ViewGenreAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
@@ -23,5 +28,12 @@ return function (App $app) {
         $group->post('', CreateBookAction::class);
         $group->put('/{id}', UpdateBookAction::class);
         $group->delete('/{id}', RemoveBookAction::class);
+    });
+    $app->group('/genre', function (Group $group) {
+        $group->get('/{id}', ViewGenreAction::class);
+        $group->get('', ListGenresAction::class);
+        $group->post('', CreateGenreAction::class);
+        $group->put('/{id}', UpdateGenreAction::class);
+        $group->delete('/{id}', RemoveGenreAction::class);
     });   
 };

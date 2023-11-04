@@ -33,7 +33,11 @@ abstract class Action
         try {
             return $this->action();
         } catch (DomainRecordNotFoundException $e) {
+            $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respond(404);
+        } catch (\Exception $e) {
+            $this->logger->error(static::class . ': ' . $e->getMessage());
+            return $this->respond(500);
         }
     }
 

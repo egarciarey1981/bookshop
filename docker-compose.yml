@@ -7,8 +7,6 @@ volumes:
 services:
   php:
     build: ./docker/php
-    expose:
-      - 9003
     volumes:
       - .:/var/www/html
       - ./logs/app.log:/tmp/app.log
