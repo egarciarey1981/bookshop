@@ -1,23 +1,30 @@
-version: '3'
+version: '3.7'
+
+volumes:
+  mysql-data:
+    driver: local
 
 services:
   php:
     build: ./docker/php
+    expose:
+      - 9003
     volumes:
-      - .:/code
+      - .:/var/www/html
+      - ./logs/app.log:/tmp/app.log
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
   nginx:
     build: ./docker/nginx
     ports:
-      - "8080:80"
+      - 8080:80
     volumes:
-      - .:/code
+      - .:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
   mysql:
     build: ./docker/mysql
     restart: always
     ports:
-      - '3306:3306'
+      - 3306:3306
     environment:
       LANG: C.UTF-8
       MYSQL_ROOT_PASSWORD: root
@@ -25,6 +32,3 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/mysql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
-
-volumes:
-  mysql-data:

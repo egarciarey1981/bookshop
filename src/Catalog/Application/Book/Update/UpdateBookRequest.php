@@ -2,27 +2,30 @@
 
 namespace Bookshop\Catalog\Application\Book\Update;
 
-use Bookshop\Catalog\Domain\Book\Book;
 use Bookshop\Catalog\Domain\Book\BookId;
 use Bookshop\Catalog\Domain\Book\BookTitle;
 
 class UpdateBookRequest
 {
-    private Book $book;
+    private BookId $bookId;
+    private BookTitle $bookTitle;
 
     public function __construct(
         string $id,
         string $title,
     )
     {
-        $this->book = new Book(
-            new BookId($id),
-            new BookTitle($title),
-        );
+        $this->bookId = new BookId($id);
+        $this->bookTitle = new BookTitle($title);
     }
 
-    public function book(): Book
+    public function bookId(): BookId
     {
-        return $this->book;
+        return $this->bookId;
+    }
+
+    public function bookTitle(): BookTitle
+    {
+        return $this->bookTitle;
     }
 }

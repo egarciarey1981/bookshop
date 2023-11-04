@@ -19,10 +19,10 @@ down: ## Detiene y elimina los contenedores
 	docker-compose down
 
 composer-install: composer.json ## Instala dependencias de composer
-	$(EXEC_IN_CONTAINER_PHP) "cd //code && composer install"
+	$(EXEC_IN_CONTAINER_PHP) "cd /var/www/html && composer install"
 
 composer-update: ## Actualiza dependencias de composer
-	$(EXEC_IN_CONTAINER_PHP) "cd //code && composer update"
+	$(EXEC_IN_CONTAINER_PHP) "cd /var/www/html && composer update"
 
 web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client

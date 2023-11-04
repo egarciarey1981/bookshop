@@ -1,10 +1,10 @@
 <?php
 
-namespace Bookshop\Catalog\Application\Book\Delete;
+namespace Bookshop\Catalog\Application\Book\Remove;
 
 use Bookshop\Catalog\Domain\Book\BookId;
 
-class DeleteBookRequest
+class RemoveBookRequest
 {
     private BookId $bookId;
 

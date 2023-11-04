@@ -27,7 +27,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         }, $books);
     }
 
-    public function ofId(BookId $id): Book
+    public function bookOfId(BookId $id): Book
     {
         $sql = "SELECT * FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -43,33 +43,20 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         );
     }
 
-    public function insert(Book $book): void
+    public function save(Book $book): void
     {
-        $sql = "INSERT INTO books (id, title) VALUES (:id, :title)";
+        $sql = "INSERT INTO books (id, title) VALUES (:id, :title) ON DUPLICATE KEY UPDATE title = :title";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->title()->value(), PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt->execute();        
     }
 
-    public function update(Book $book): void
-    {
-        $sql = "UPDATE books SET title = :title WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
-        $stmt->bindValue('title', $book->title()->value(), PDO::PARAM_STR);
-        $stmt->execute();
-
-        if (!$stmt->rowCount()) {
-            throw new BookDoesNotExistException($book->id());
-        }
-    }
-
-    public function delete(BookId $bookId): void
+    public function remove(Book $book): void
     {
         $sql = "DELETE FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
         $stmt->execute();
 
         if (!$stmt->rowCount()) {

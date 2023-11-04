@@ -22,10 +22,10 @@ class ViewBookAction extends BookAction
             new ViewBookRequest($id)
         );
 
-        $data['book'] = $listBookResponse->book();
-
         $this->logger->info("Book of id `$id` was viewed.");
 
-        return $this->respondWithData($data);
+        return $this->respondWithData([
+            'book' => $listBookResponse->book()
+        ]);
     }
 }

@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Book\Delete\DeleteBookRequest;
-use Bookshop\Catalog\Application\Book\Delete\DeleteBookService;
+use Bookshop\Catalog\Application\Book\Remove\RemoveBookRequest;
+use Bookshop\Catalog\Application\Book\Remove\RemoveBookService;
 
-class DeleteBookAction extends BookAction
+class RemoveBookAction extends BookAction
 {
     public function action(): Response
     {
-        $updateBooksService = new DeleteBookService(
+        $updateBooksService = new RemoveBookService(
             $this->bookRepository
         );
 
         $id = $this->resolveArg('id');
 
         $updateBooksService(
-            new DeleteBookRequest($id)
+            new RemoveBookRequest($id)
         );
 
-        $this->logger->info("Book of id `$id` was updated.");
+        $this->logger->info("Book of id `$id` was removed.");
 
         return $this->respond();
     }

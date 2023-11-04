@@ -6,7 +6,6 @@ use Bookshop\Catalog\Domain\Book\Book;
 use Bookshop\Catalog\Domain\Book\BookId;
 use Bookshop\Catalog\Domain\Book\BookTitle;
 use Bookshop\Catalog\Domain\Book\BookRepository;
-use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
 
 class InMemoryBookRepository implements BookRepository
 {
@@ -56,7 +55,7 @@ class InMemoryBookRepository implements BookRepository
         return $result;
     }
 
-    public function ofId(BookId $bookId): Book
+    public function bookOfId(BookId $bookId): ?Book
     {
         foreach ($this->books as $book) {
             if ($book['id'] === $bookId->value()) {
@@ -67,18 +66,10 @@ class InMemoryBookRepository implements BookRepository
             }
         }
 
-        throw new BookDoesNotExistException($bookId);
+        return null;
     }
 
-    public function insert(Book $book): void
-    {
-        $this->books[] = [
-            'id' => $book->id()->value(),
-            'name' => $book->title()->value(),
-        ];
-    }
-
-    public function update(Book $book): void
+    public function save(Book $book): void
     {
         foreach ($this->books as &$bookInMemory) {
             if ($bookInMemory['id'] === $book->id()->value()) {
@@ -87,19 +78,20 @@ class InMemoryBookRepository implements BookRepository
             }
         }
 
-        throw new BookDoesNotExistException($book->id());
+        $this->books[] = [
+            'id' => $book->id()->value(),
+            'name' => $book->title()->value()
+        ];
     }
 
-    public function delete(BookId $bookId): void
+    public function remove(Book $book): void
     {
-        foreach ($this->books as $key => $book) {
-            if ($book['id'] === $bookId->value()) {
+        foreach ($this->books as $key => $bookInMemory) {
+            if ($bookInMemory['id'] === $book->id()->value()) {
                 unset($this->books[$key]);
                 return;
             }
         }
-
-        throw new BookDoesNotExistException($bookId);
     }
 
     public function nextIdentity(): BookId

@@ -21,7 +21,7 @@ class CreateBookService
             $request->bookTitle(),
         );
 
-        $this->bookRepository->insert($book);
+        $this->bookRepository->save($book);
 
         return new CreateBookResponse($book);
     }

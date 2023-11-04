@@ -18,12 +18,12 @@ return function (ContainerBuilder $containerBuilder) {
                 'logErrorDetails'     => false,
                 'logger' => [
                     'name' => 'slim-app',
-                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
+                    'path' => __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
                 'db' => [
                     'driver' => 'mysql', // qué base de datos
-                    'host' => 'mysql', //nombre del contenedor con la base de datos
+                    'host' => 'mysql', // contenedor con la base de datos
                     'database' => 'bookshop',
                     'username' => 'root',
                     'password' => 'root',

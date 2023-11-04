@@ -1,12 +1,11 @@
 <?php
 
-namespace Bookshop\Catalog\Application\Book\Update;
+namespace Bookshop\Catalog\Application\Book\Remove;
 
-use Bookshop\Catalog\Domain\Book\Book;
 use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Book\BookRepository;
 
-class UpdateBookService
+class RemoveBookService
 {
     private BookRepository $bookRepository;
 
@@ -15,7 +14,7 @@ class UpdateBookService
         $this->bookRepository = $bookRepository;
     }
     
-    public function __invoke(UpdateBookRequest $request)
+    public function __invoke(RemoveBookRequest $request)
     {
         $book = $this->bookRepository->bookOfId(
             $request->bookId()
@@ -25,11 +24,6 @@ class UpdateBookService
             throw new BookDoesNotExistException($request->bookId());
         }
 
-        $book = new Book(
-            $request->bookId(),
-            $request->bookTitle(),
-        );
-
-        $this->bookRepository->save($book);
+        $this->bookRepository->remove($book);
     }
 }

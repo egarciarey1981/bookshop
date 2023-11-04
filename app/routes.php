@@ -6,7 +6,7 @@ use Slim\App;
 use App\Actions\Book\ViewBookAction;
 use App\Actions\Book\ListBooksAction;
 use App\Actions\Book\CreateBookAction;
-use App\Actions\Book\DeleteBookAction;
+use App\Actions\Book\RemoveBookAction;
 use App\Actions\Book\UpdateBookAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -22,6 +22,6 @@ return function (App $app) {
         $group->get('', ListBooksAction::class);
         $group->post('', CreateBookAction::class);
         $group->put('/{id}', UpdateBookAction::class);
-        $group->delete('/{id}', DeleteBookAction::class);
+        $group->delete('/{id}', RemoveBookAction::class);
     });   
 };

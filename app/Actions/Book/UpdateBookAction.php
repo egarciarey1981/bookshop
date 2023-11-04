@@ -23,7 +23,7 @@ class UpdateBookAction extends BookAction
             )
         );
 
-        $id = $this->queryString('id');
+        $id = $this->resolveArg('id');
         $this->logger->info("Book of id `$id` was updated.");
 
         return $this->respond();
