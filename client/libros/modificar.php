@@ -32,10 +32,16 @@
                 dataType: "json",
                 statusCode: {
                     500: function() {
+                        if (response.responseJSON.error) {
+                            console.log(response.responseJSON.error);
+                        }
                         alert('Error en el servidor');
                         window.location.href = 'http://localhost:8081/generos/listar.php';
                     },
                     404: function() {
+                        if (response.responseJSON.error) {
+                            console.log(response.responseJSON.error);
+                        }
                         alert('Género no encontrado');
                         window.location.href = 'http://localhost:8081/generos/listar.php';
                     },
@@ -50,17 +56,32 @@
             $('#formulario_editar_libro').submit(function(event) {
                 event.preventDefault();
                 $.ajax({
-                        url: "http://localhost:8080/book/<?= $_GET['id'] ?>",
-                        type: "PUT",
-                        dataType: "json",
-                        data: {
-                            title: $('#titulo').val()
+                    url: "http://localhost:8080/book/<?= $_GET['id'] ?>",
+                    type: "PUT",
+                    dataType: "json",
+                    data: {
+                        title: $('#titulo').val()
+                    },
+                    statusCode: {
+                        500: function() {
+                            if (response.responseJSON.error) {
+                                console.log(response.responseJSON.error);
+                            }
+                            alert('Error en el servidor');
+                            window.location.href = 'http://localhost:8081/libros/listar.php';
+                        },
+                        400: function() {
+                            if (response.responseJSON.error) {
+                                console.log(response.responseJSON.error);
+                            }
+                            alert('Datos incorrectos');
+                        },
+                        200: function(response) {
+                            alert('Libro actualizado');
+                            window.location.href = 'http://localhost:8081/libros/listar.php';
                         }
-                    })
-                    .done(function(data, textStatus, jqXHR) {
-                        alert('Libro actualizado');
-                        window.location.href = 'http://localhost:8081/libros/listar.php';
-                    })
+                    }
+                })
             });
         });
     </script>

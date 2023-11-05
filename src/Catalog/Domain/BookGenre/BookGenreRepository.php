@@ -7,4 +7,5 @@ use Bookshop\Catalog\Domain\Book\BookId;
 interface BookGenreRepository
 {
     public function ofBookId(BookId $id): array;
+    public function ofBookIds(array $ids): array;
 }

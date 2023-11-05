@@ -23,6 +23,7 @@
         <thead>
             <tr>
                 <th>Título</th>
+                <th>Géneros</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -64,6 +65,12 @@
             $.each(libros, function(key, value) {
                 var fila = "<tr>";
                 fila += "<td>" + value.title + "</td>";
+                fila += "<td>";
+                genresName = jQuery.map(value.genres, function(value, key) {
+                    return '<a href="http://localhost:8081/generos/ver.php?id=' + value.id +  '">' + value.name + '</a>';
+                });
+                fila += genresName.join(', ');
+                fila += "</td>";
                 fila += "<td>";
                 fila += "<a href='http://localhost:8081/libros/modificar.php?id=" + value.id + "'>Modificar</a> ";
                 fila += "<a href='http://localhost:8081/libros/eliminar.php?id=" + value.id + "'>Eliminar</a>";

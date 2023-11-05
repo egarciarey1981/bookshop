@@ -62,16 +62,16 @@ SQL;
 
     public function ofGenreIds(array $genreIds): array
     {
-        $sql = "SELECT * FROM genres WHERE id IN (:genre_ids)";
-        
+        $arrayIds = array_map(
+            fn ($genreId) => $genreId->value(),
+            $genreIds,
+        );
+        $listIds = implode(',', array_fill(0, count($arrayIds), '?'));
+        $sql = "SELECT * FROM genres WHERE id IN ($listIds)";
         $stmt = $this->connection->prepare($sql);
-        $foo = implode("','", array_map(
-            function ($genreId) {
-                return $genreId->value();
-            },
-            $genreIds
-        ));
-        $stmt->bindValue('genre_ids', $foo, PDO::PARAM_STR_CHAR);
+        foreach ($arrayIds as $k => $id) {
+            $stmt->bindValue($k + 1, $id, PDO::PARAM_STR);
+        }
         $stmt->execute();
         $genres = $stmt->fetchAll();
         return array_map(function ($genre) {

@@ -82,8 +82,13 @@ abstract class Action
         $data = [
             'status' => $statusCode,
             'data' => $data,
-            'error' => null,
         ];
+
+        if (isset($data['data']['error'])) {
+            $data['error'] = $data['data']['error'];
+            unset($data['data']['error']);
+        }
+
         $json = json_encode($data, JSON_PRETTY_PRINT);
         $this->response->getBody()->write($json);
 

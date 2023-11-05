@@ -24,7 +24,10 @@ class ListGenresAction extends GenreAction
             )
         );
 
-        $data = $listGenreResponse->genres();
+        $data = [
+            'total' => $listGenreResponse->total(),
+            'genres' => $listGenreResponse->genres(),
+        ];
 
         $this->logger->info("Genres list was viewed.");
 

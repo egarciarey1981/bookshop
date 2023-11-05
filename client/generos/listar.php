@@ -46,6 +46,9 @@
                 dataType: "json",
                 statusCode: {
                     500: function() {
+                        if (response.responseJSON.error) {
+                            console.log(response.responseJSON.error);
+                        }
                         alert('Error en el servidor');
                     },
                     200: function(response) {

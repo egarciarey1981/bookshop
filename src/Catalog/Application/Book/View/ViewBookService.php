@@ -36,17 +36,33 @@ class ViewBookService
             );
         }
 
-        $booksGenres = $this->bookGenreRepository->ofBookId(
-            $request->bookId(),
+        $data['book'] = [
+            'id' => $book->id()->value(),
+            'title' => $book->title()->value(),
+            'genres' => [],
+        ];
+
+        $this->addGenres($book, $data);
+
+        return new ViewBookResponse($data);
+    }
+
+    private function addGenres($book, &$data)
+    {
+        $booksGenres = $this->bookGenreRepository->ofBookId($book->id());
+
+        $genresIds = array_map(
+            fn ($bookGenre) => $bookGenre->genreId(),
+            $booksGenres,
         );
 
-        $genres = $this->genreRepository->ofGenreIds(
-            array_map(
-                fn ($bookGenre) => $bookGenre->genreId(),
-                $booksGenres,
-            ),
-        );
+        $genres = $this->genreRepository->ofGenreIds($genresIds);
 
-        return new ViewBookResponse($book, ...$genres);
+        foreach ($genres as $genre) {
+            $data['book']['genres'][] = [
+                'id' => $genre->id()->value(),
+                'name' => $genre->name()->value(),
+            ];
+        }
     }
 }

@@ -27,4 +27,30 @@ class PdoBookGenreRepository extends PdoRepository implements BookGenreRepositor
             $booksGenres,
         );
     }
+
+    public function ofBookIds(array $bookIds): array
+    {
+        $arrayIds = array_map(
+            fn ($bookId) => $bookId->value(),
+            $bookIds,
+        );
+        $listIds = implode(',', array_fill(0, count($arrayIds), '?'));
+
+        $sql = "SELECT * FROM books_genres WHERE book_id IN ($listIds)";
+        $stmt = $this->connection->prepare($sql);
+        foreach ($arrayIds as $k => $id) {
+            $stmt->bindValue($k + 1, $id, PDO::PARAM_STR);
+        }
+        $stmt->execute();
+
+        $booksGenres = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn ($bookGenre) => new BookGenre(
+                new BookId($bookGenre['book_id']),
+                new GenreId($bookGenre['genre_id']),
+            ),
+            $booksGenres,
+        );
+    }
 }

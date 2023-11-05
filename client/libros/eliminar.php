@@ -30,10 +30,16 @@
                 dataType: "json",
                 statusCode: {
                     500: function() {
+                        if (response.responseJSON.error) {
+                            console.log(response.responseJSON.error);
+                        }
                         alert('Error en el servidor');
                         window.location.href = 'http://localhost:8081/libros/listar.php';
                     },
                     404: function() {
+                        if (response.responseJSON.error) {
+                            console.log(response.responseJSON.error);
+                        }
                         alert('Libro no encontrado');
                         window.location.href = 'http://localhost:8081/libros/listar.php';
                     },
@@ -51,10 +57,16 @@
                     dataType: "json",
                     statusCode: {
                         500: function() {
+                            if (response.responseJSON.error) {
+                                console.log(response.responseJSON.error);
+                            }
                             alert('Error en el servidor');
                             window.location.href = 'http://localhost:8081/libros/listar.php';
                         },
                         404: function() {
+                            if (response.responseJSON.error) {
+                                console.log(response.responseJSON.error);
+                            }
                             alert('Libro no encontrado');
                             window.location.href = 'http://localhost:8081/libros/listar.php';
                         },
