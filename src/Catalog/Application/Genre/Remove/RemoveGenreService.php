@@ -16,7 +16,7 @@ class RemoveGenreService
     
     public function __invoke(RemoveGenreRequest $request)
     {
-        $genre = $this->genreRepository->genreOfId(
+        $genre = $this->genreRepository->ofGenreId(
             $request->genreId()
         );
 

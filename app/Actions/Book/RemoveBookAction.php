@@ -24,6 +24,6 @@ class RemoveBookAction extends BookAction
 
         $this->logger->info("Book of id `$id` was removed.");
 
-        return $this->respond();
+        return $this->respond(204);
     }
 }

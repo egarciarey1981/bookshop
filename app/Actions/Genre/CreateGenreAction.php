@@ -18,7 +18,7 @@ class CreateGenreAction extends GenreAction
 
         $createGenreResponse = $createGenresService(
             new CreateGenreRequest(
-                $this->postParam('name'),
+                $this->formParam('name', ''),
             )
         );
 

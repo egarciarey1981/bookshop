@@ -19,7 +19,7 @@ class UpdateGenreAction extends GenreAction
         $updateGenresService(
             new UpdateGenreRequest(
                 $this->resolveArg('id'),
-                $this->putParam('name'),
+                $this->formParam('name'),
             )
         );
 

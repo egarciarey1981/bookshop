@@ -19,7 +19,7 @@ class UpdateBookAction extends BookAction
         $updateBooksService(
             new UpdateBookRequest(
                 $this->resolveArg('id'),
-                $this->putParam('title'),
+                $this->formParam('title'),
             )
         );
 

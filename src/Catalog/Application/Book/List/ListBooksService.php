@@ -12,14 +12,24 @@ class ListBooksService
     {
         $this->bookRepository = $bookRepository;
     }
-    
+
     public function __invoke(ListBooksRequest $request): ListBooksResponse
     {
-        $books = $this->bookRepository->all(
-            $request->offset(),
-            $request->limit(),
-        );
+        $limit = $request->limit();
+        $offset = $request->offset();
+        $filter = $request->filter();
 
-        return new ListBooksResponse(...$books);
+        $books = $this->bookRepository->all($offset, $limit, $filter);
+
+        $data['total'] = $this->bookRepository->count($filter);
+
+        foreach ($books as $genre) {
+            $data['books'][] = [
+                'id' => $genre->id()->value(),
+                'title' => $genre->title()->value(),
+            ];
+        }
+
+        return new ListBooksResponse($data);
     }
 }

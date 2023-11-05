@@ -20,10 +20,11 @@ class ListGenresAction extends GenreAction
             new ListGenresRequest(
                 (int) $this->queryString('offset', 0),
                 (int) $this->queryString('limit', 10),
+                $this->queryString('filter', ''),
             )
         );
 
-        $data['genres'] = $listGenreResponse->genres();
+        $data = $listGenreResponse->genres();
 
         $this->logger->info("Genres list was viewed.");
 

@@ -11,12 +11,17 @@ use Bookshop\Catalog\Domain\Genre\GenreDoesNotExistException;
 
 class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
-    public function all(int $offset, int $limit): array
+    public function all(int $offset, int $limit, string $filter): array
     {
-        $sql = 'SELECT * FROM genres LIMIT :limit OFFSET :offset';
+        $sql = <<<SQL
+SELECT id, name
+FROM genres
+WHERE name LIKE "%$filter%"
+ORDER BY name
+LIMIT $limit OFFSET $offset;
+SQL;
+
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
-        $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
         $genres = $stmt->fetchAll();
         return array_map(function ($genre) {
@@ -27,7 +32,19 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         }, $genres);
     }
 
-    public function genreOfId(GenreId $id): Genre
+    public function count(string $filter): int
+    {
+        $sql = <<<SQL
+SELECT COUNT(*)
+FROM genres
+WHERE name LIKE "%$filter%"
+SQL;
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    public function ofGenreId(GenreId $id): Genre
     {
         $sql = "SELECT * FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -41,6 +58,28 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
             new GenreId($genre['id']),
             new GenreName($genre['name'])
         );
+    }
+
+    public function ofGenreIds(array $genreIds): array
+    {
+        $sql = "SELECT * FROM genres WHERE id IN (:genre_ids)";
+        
+        $stmt = $this->connection->prepare($sql);
+        $foo = implode("','", array_map(
+            function ($genreId) {
+                return $genreId->value();
+            },
+            $genreIds
+        ));
+        $stmt->bindValue('genre_ids', $foo, PDO::PARAM_STR_CHAR);
+        $stmt->execute();
+        $genres = $stmt->fetchAll();
+        return array_map(function ($genre) {
+            return new Genre(
+                new GenreId($genre['id']),
+                new GenreName($genre['name'])
+            );
+        }, $genres);
     }
 
     public function save(Genre $genre): void

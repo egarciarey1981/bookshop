@@ -34,24 +34,11 @@ abstract class Action
             return $this->action();
         } catch (DomainRecordNotFoundException $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
-            return $this->respond(404);
+            return $this->respondWithData(['error' => $e->getMessage()], 404);
         } catch (\Exception $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respond(500);
         }
-    }
-
-    protected function where(): void
-    {
-        var_dump($this->args);
-        var_dump($this->request->getQueryParams());
-        var_dump($this->request->getParsedBody());
-        var_dump($this->request->getUploadedFiles());
-        var_dump($this->request->getCookieParams());
-        var_dump($this->request->getAttributes());
-        var_dump($this->request->getServerParams());
-        var_dump($this->request->getHeaders());
-        var_dump($this->request->getUri());
     }
 
     protected function queryString(string $key, mixed $default = null): mixed
@@ -65,7 +52,7 @@ abstract class Action
         return $queryParams[$key];
     }
 
-    protected function postParam(string $key, mixed $default = null): mixed
+    protected function formParam(string $key, mixed $default = null): mixed
     {
         $parsedBody = (array)$this->request->getParsedBody();
 
@@ -74,17 +61,6 @@ abstract class Action
         }
 
         return $parsedBody[$key];
-    }
-
-    protected function putParam(string $key, mixed $default = null): mixed
-    {
-        $parsedBody = json_decode(file_get_contents('php://input'), true);
-
-        if (!isset($parsedBody[$key])) {
-            return $default;
-        }
-
-        return $parsedBody[$key];        
     }
 
     protected function resolveArg(string $name)
@@ -98,11 +74,16 @@ abstract class Action
 
     protected function respond(int $statusCode = 200): Response
     {
-        return $this->response->withStatus($statusCode);
+        return $this->respondWithData([], $statusCode);
     }
 
     protected function respondWithData(array $data = [], int $statusCode = 200, array $headers = []): Response
     {
+        $data = [
+            'status' => $statusCode,
+            'data' => $data,
+            'error' => null,
+        ];
         $json = json_encode($data, JSON_PRETTY_PRINT);
         $this->response->getBody()->write($json);
 

@@ -18,7 +18,7 @@ class CreateBookAction extends BookAction
 
         $createBookResponse = $createBooksService(
             new CreateBookRequest(
-                $this->postParam('title'),
+                $this->formParam('title', ''),
             )
         );
 

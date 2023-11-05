@@ -16,7 +16,7 @@ class RemoveBookService
     
     public function __invoke(RemoveBookRequest $request)
     {
-        $book = $this->bookRepository->bookOfId(
+        $book = $this->bookRepository->ofBookId(
             $request->bookId()
         );
 

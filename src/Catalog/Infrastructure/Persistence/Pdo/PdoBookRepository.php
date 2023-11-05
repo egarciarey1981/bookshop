@@ -11,12 +11,17 @@ use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
 
 class PdoBookRepository extends PdoRepository implements BookRepository
 {
-    public function all(int $offset, int $limit): array
+    public function all(int $offset, int $limit, string $filter): array
     {
-        $sql = 'SELECT * FROM books LIMIT :limit OFFSET :offset';
+        $sql = <<<SQL
+SELECT id, title
+FROM books
+WHERE title LIKE "%$filter%"
+ORDER BY title
+LIMIT $limit OFFSET $offset;
+SQL;
+
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
-        $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
         $books = $stmt->fetchAll();
         return array_map(function ($book) {
@@ -27,7 +32,19 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         }, $books);
     }
 
-    public function bookOfId(BookId $id): Book
+    public function count(string $filter): int
+    {
+        $sql = <<<SQL
+SELECT COUNT(*)
+FROM books
+WHERE title LIKE "%$filter%"
+SQL;
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    public function ofBookId(BookId $id): Book
     {
         $sql = "SELECT * FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -49,7 +66,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->title()->value(), PDO::PARAM_STR);
-        $stmt->execute();        
+        $stmt->execute();
     }
 
     public function remove(Book $book): void

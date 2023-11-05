@@ -20,10 +20,11 @@ class ListBooksAction extends BookAction
             new ListBooksRequest(
                 (int) $this->queryString('offset', 0),
                 (int) $this->queryString('limit', 10),
+                $this->queryString('filter', ''),
             )
         );
 
-        $data['books'] = $listBookResponse->books();
+        $data = $listBookResponse->books();
 
         $this->logger->info("Books list was viewed.");
 

@@ -15,11 +15,21 @@ class ListGenresService
     
     public function __invoke(ListGenresRequest $request): ListGenresResponse
     {
-        $genres = $this->genreRepository->all(
-            $request->offset(),
-            $request->limit(),
-        );
+        $offset = $request->offset();
+        $limit = $request->limit();
+        $filter = $request->filter();
 
-        return new ListGenresResponse(...$genres);
+        $genres = $this->genreRepository->all($offset, $limit, $filter);
+
+        $data['total'] = $this->genreRepository->count($filter);
+
+        foreach ($genres as $genre) {
+            $data['genres'][] = [
+                'id' => $genre->id()->value(),
+                'name' => $genre->name()->value(),
+            ];
+        }
+
+        return new ListGenresResponse($data);
     }
 }

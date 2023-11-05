@@ -24,6 +24,6 @@ class RemoveGenreAction extends GenreAction
 
         $this->logger->info("Genre of id `$id` was removed.");
 
-        return $this->respond();
+        return $this->respond(204);
     }
 }

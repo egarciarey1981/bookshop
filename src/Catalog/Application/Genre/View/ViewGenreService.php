@@ -16,7 +16,7 @@ class ViewGenreService
     
     public function __invoke(ViewGenreRequest $request): ViewGenreResponse
     {
-        $genre = $this->genreRepository->genreOfId(
+        $genre = $this->genreRepository->ofGenreId(
             $request->genreId(),
         );
 

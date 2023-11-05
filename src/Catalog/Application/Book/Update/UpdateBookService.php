@@ -17,7 +17,7 @@ class UpdateBookService
     
     public function __invoke(UpdateBookRequest $request)
     {
-        $book = $this->bookRepository->bookOfId(
+        $book = $this->bookRepository->ofBookId(
             $request->bookId()
         );
 
