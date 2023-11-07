@@ -2,15 +2,15 @@
 
 namespace Bookshop\Catalog\Domain\Book;
 
-use Bookshop\Catalog\Domain\Genre\CollectionGenres;
+use Bookshop\Catalog\Domain\Genre\GenresCollection;
 
 class Book
 {
     private BookId $id;
     private BookTitle $title;
-    private CollectionGenres $genres;
+    private GenresCollection $genres;
 
-    public function __construct(BookId $id, BookTitle $title, CollectionGenres $genres)
+    public function __construct(BookId $id, BookTitle $title, GenresCollection $genres)
     {
         $this->id = $id;
         $this->title = $title;
@@ -27,7 +27,7 @@ class Book
         return $this->title;
     }
 
-    public function genres(): CollectionGenres
+    public function genres(): GenresCollection
     {
         return $this->genres;
     }

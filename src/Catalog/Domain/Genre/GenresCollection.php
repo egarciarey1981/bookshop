@@ -2,9 +2,9 @@
 
 namespace Bookshop\Catalog\Domain\Genre;
 
-class CollectionGenres
+class GenresCollection
 {
-    private array $genres;
+    private array $genres = [];
 
     public function contains(Genre $genre): bool
     {

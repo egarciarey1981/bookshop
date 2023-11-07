@@ -8,6 +8,10 @@ use Bookshop\Catalog\Domain\Book\BookId;
 use Bookshop\Catalog\Domain\Book\BookTitle;
 use Bookshop\Catalog\Domain\Book\BookRepository;
 use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
+use Bookshop\Catalog\Domain\Genre\Genre;
+use Bookshop\Catalog\Domain\Genre\GenreId;
+use Bookshop\Catalog\Domain\Genre\GenreName;
+use Bookshop\Catalog\Domain\Genre\GenresCollection;
 
 class PdoBookRepository extends PdoRepository implements BookRepository
 {
@@ -27,7 +31,8 @@ SQL;
         return array_map(function ($book) {
             return new Book(
                 new BookId($book['id']),
-                new BookTitle($book['title'])
+                new BookTitle($book['title']),
+                new GenresCollection()
             );
         }, $books);
     }
@@ -54,9 +59,31 @@ SQL;
         if (!$book) {
             throw new BookDoesNotExistException($id);
         }
+
+        $sql = <<<SQL
+SELECT id, name
+FROM books_genres
+JOIN genres ON books_genres.genre_id = genres.id
+WHERE book_id = :book_id
+SQL;
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('book_id', $id->value(), PDO::PARAM_STR);
+        $stmt->execute();
+        $genres = $stmt->fetchAll();
+
+        $genresCollection = new GenresCollection();
+
+        foreach ($genres as $genre) {
+            $genresCollection->add(new Genre(
+                new GenreId($genre['id']),
+                new GenreName($genre['name'])
+            ));
+        }
+
         return new Book(
             new BookId($book['id']),
-            new BookTitle($book['title'])
+            new BookTitle($book['title']),
+            $genresCollection,
         );
     }
 
