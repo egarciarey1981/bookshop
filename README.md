@@ -1,4 +1,4 @@
-Este proyecto con Slim Framework y configuración para usar XDebug con Visual Studio Code.
+Proyecto con Slim Framework 4 y configuración para usar XDebug con Visual Studio Code.
 
 Para levantar el poryecto usar <code>make up</code>.
 
