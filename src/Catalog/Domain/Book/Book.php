@@ -31,4 +31,13 @@ class Book
     {
         return $this->genres;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->value(),
+            'title' => $this->title->value(),
+            'genres' => $this->genres->toArray(),
+        ];
+    }
 }

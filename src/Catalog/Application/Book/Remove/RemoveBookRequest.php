@@ -2,18 +2,16 @@
 
 namespace Bookshop\Catalog\Application\Book\Remove;
 
-use Bookshop\Catalog\Domain\Book\BookId;
-
 class RemoveBookRequest
 {
-    private BookId $bookId;
+    private string $bookId;
 
-    public function __construct(string $id)
+    public function __construct(string $bookId)
     {
-        $this->bookId = new BookId($id);
+        $this->bookId = $bookId;
     }
 
-    public function bookId(): BookId
+    public function bookId(): string
     {
         return $this->bookId;
     }

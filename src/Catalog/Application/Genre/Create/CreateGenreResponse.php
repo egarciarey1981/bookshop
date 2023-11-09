@@ -2,18 +2,13 @@
 
 namespace Bookshop\Catalog\Application\Genre\Create;
 
-use Bookshop\Catalog\Domain\Genre\Genre;
-
 class CreateGenreResponse
 {
-    private array $genre = [];
+    private array $genre;
 
-    public function __construct(Genre $genre)
+    public function __construct(array $genre)
     {
-        $this->genre = [
-            'id' => $genre->id()->value(),
-            'name' => $genre->name()->value(),
-        ];
+        $this->genre = $genre;
     }
 
     public function genre(): array

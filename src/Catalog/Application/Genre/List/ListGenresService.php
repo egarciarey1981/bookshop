@@ -21,17 +21,12 @@ class ListGenresService
 
         $genresEntities = $this->genreRepository->all($offset, $limit, $filter);
 
-        $total = $this->genreRepository->count($filter);
+        $data['total'] = $this->genreRepository->count($filter);
 
-        $genresData = [];
-
-        foreach ($genresEntities as $genreEntity) {
-            $genresData[] = [
-                'id' => $genreEntity->id()->value(),
-                'name' => $genreEntity->name()->value(),
-            ];
+        foreach ($genresEntities as $genre) {
+            $data['genres'][] = $genre->toArray();
         }
 
-        return new ListGenresResponse($genresData, $total);
+        return new ListGenresResponse($data['genres'], $data['total']);
     }
 }

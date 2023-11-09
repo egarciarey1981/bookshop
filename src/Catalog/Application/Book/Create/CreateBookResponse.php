@@ -2,18 +2,13 @@
 
 namespace Bookshop\Catalog\Application\Book\Create;
 
-use Bookshop\Catalog\Domain\Book\Book;
-
 class CreateBookResponse
 {
-    private array $book = [];
+    private array $book;
 
-    public function __construct(Book $book)
+    public function __construct(array $book)
     {
-        $this->book = [
-            'id' => $book->id()->value(),
-            'title' => $book->title()->value(),
-        ];
+        $this->book = $book;
     }
 
     public function book(): array

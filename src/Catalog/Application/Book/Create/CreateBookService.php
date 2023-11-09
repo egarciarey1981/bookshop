@@ -4,6 +4,8 @@ namespace Bookshop\Catalog\Application\Book\Create;
 
 use Bookshop\Catalog\Domain\Book\Book;
 use Bookshop\Catalog\Domain\Book\BookRepository;
+use Bookshop\Catalog\Domain\Book\BookTitle;
+use Bookshop\Catalog\Domain\Genre\GenresCollection;
 
 class CreateBookService
 {
@@ -16,13 +18,16 @@ class CreateBookService
     
     public function __invoke(CreateBookRequest $request): CreateBookResponse
     {
-        $book = new Book(
-            $this->bookRepository->nextIdentity(),
-            $request->bookTitle(),
-        );
+        $bookId = $this->bookRepository->nextIdentity();
+        $bookName = new BookTitle($request->bookTitle());
+        $bookGenres = new GenresCollection();
+
+        $book = new Book($bookId, $bookName, $bookGenres);
 
         $this->bookRepository->save($book);
 
-        return new CreateBookResponse($book);
+        $data['book'] = $book->toArray();
+
+        return new CreateBookResponse($data['book']);
     }
 }

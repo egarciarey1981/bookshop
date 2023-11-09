@@ -64,7 +64,7 @@
         function pintarLibros(libros) {
             $.each(libros, function(key, value) {
                 var fila = "<tr>";
-                fila += "<td>" + value.title + "</td>";
+                fila += "<td><a href='http://localhost:8081/libros/ver.php?id=" + value.id + "'>" + value.title + "</a></td>";
                 fila += "<td>";
                 genresName = jQuery.map(value.genres, function(value, key) {
                     return '<a href="http://localhost:8081/generos/ver.php?id=' + value.id +  '">' + value.name + '</a>';

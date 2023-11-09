@@ -2,18 +2,16 @@
 
 namespace Bookshop\Catalog\Application\Book\Create;
 
-use Bookshop\Catalog\Domain\Book\BookTitle;
-
 class CreateBookRequest
 {
-    private BookTitle $bookTitle;
+    private string $bookTitle;
 
-    public function __construct(string $title)
+    public function __construct(string $bookTitle)
     {
-        $this->bookTitle = new BookTitle($title);
+        $this->bookTitle = $bookTitle;
     }
 
-    public function bookTitle(): BookTitle
+    public function bookTitle(): string
     {
         return $this->bookTitle;
     }

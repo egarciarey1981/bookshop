@@ -3,6 +3,7 @@
 namespace Bookshop\Catalog\Application\Book\View;
 
 use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
+use Bookshop\Catalog\Domain\Book\BookId;
 use Bookshop\Catalog\Domain\Book\BookRepository;
 
 class ViewBookService
@@ -16,28 +17,17 @@ class ViewBookService
     
     public function __invoke(ViewBookRequest $request): ViewBookResponse
     {
-        $book = $this->bookRepository->ofBookId(
-            $request->bookId(),
-        );
+        $bookId = new BookId($request->bookId());
+
+        $book = $this->bookRepository->ofBookId($bookId);
 
         if ($book === null) {
-            throw new BookDoesNotExistException(
-                $request->bookId(),
-            );
+            throw new BookDoesNotExistException($bookId);
         }
 
-        $data['book'] = [
-            'id' => $book->id()->value(),
-            'title' => $book->title()->value(),
-            'genres' => array_map(function ($genre) {
-                return [
-                    'id' => $genre->id()->value(),
-                    'name' => $genre->name()->value(),
-                ];
-            }, $book->genres()->genres()),
-        ];
+        $data['book'] = $book->toArray();
 
-        return new ViewBookResponse($data);
+        return new ViewBookResponse($data['book']);
     }
 
 }

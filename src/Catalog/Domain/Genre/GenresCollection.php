@@ -20,4 +20,12 @@ class GenresCollection
     {
         return $this->genres;
     }
+
+    public function toArray(): array
+    {
+        return array_map(
+            fn (Genre $genre) => $genre->toArray(),
+            $this->genres
+        );
+    }
 }

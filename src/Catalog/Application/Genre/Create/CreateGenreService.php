@@ -3,6 +3,7 @@
 namespace Bookshop\Catalog\Application\Genre\Create;
 
 use Bookshop\Catalog\Domain\Genre\Genre;
+use Bookshop\Catalog\Domain\Genre\GenreName;
 use Bookshop\Catalog\Domain\Genre\GenreRepository;
 
 class CreateGenreService
@@ -16,13 +17,15 @@ class CreateGenreService
     
     public function __invoke(CreateGenreRequest $request): CreateGenreResponse
     {
-        $genre = new Genre(
-            $this->genreRepository->nextIdentity(),
-            $request->genreName(),
-        );
+        $genreId = $this->genreRepository->nextIdentity();
+        $genreName = new GenreName($request->genreName());
+
+        $genre = new Genre($genreId, $genreName);
 
         $this->genreRepository->save($genre);
 
-        return new CreateGenreResponse($genre);
+        $data['genre'] = $genre->toArray();
+
+        return new CreateGenreResponse($data['genre']);
     }
 }

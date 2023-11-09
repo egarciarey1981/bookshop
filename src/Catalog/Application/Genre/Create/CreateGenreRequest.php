@@ -2,18 +2,16 @@
 
 namespace Bookshop\Catalog\Application\Genre\Create;
 
-use Bookshop\Catalog\Domain\Genre\GenreName;
-
 class CreateGenreRequest
 {
-    private GenreName $genreName;
+    private string $genreName;
 
-    public function __construct(string $name)
+    public function __construct(string $genreName)
     {
-        $this->genreName = new GenreName($name);
+        $this->genreName = $genreName;
     }
 
-    public function genreName(): GenreName
+    public function genreName(): string
     {
         return $this->genreName;
     }

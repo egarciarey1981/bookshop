@@ -2,18 +2,16 @@
 
 namespace Bookshop\Catalog\Application\Genre\View;
 
-use Bookshop\Catalog\Domain\Genre\GenreId;
-
 class ViewGenreRequest
 {
-    private GenreId $genreId;
+    private string $genreId;
 
-    public function __construct(string $id)
+    public function __construct(string $genreId)
     {
-        $this->genreId = new GenreId($id);
+        $this->genreId = $genreId;
     }
 
-    public function genreId(): GenreId
+    public function genreId(): string
     {
         return $this->genreId;
     }

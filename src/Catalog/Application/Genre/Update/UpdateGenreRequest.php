@@ -2,29 +2,23 @@
 
 namespace Bookshop\Catalog\Application\Genre\Update;
 
-use Bookshop\Catalog\Domain\Genre\GenreId;
-use Bookshop\Catalog\Domain\Genre\GenreName;
-
 class UpdateGenreRequest
 {
-    private GenreId $genreId;
-    private GenreName $genreName;
+    private string $genreId;
+    private string $genreName;
 
-    public function __construct(
-        string $id,
-        string $name,
-    )
+    public function __construct(string $genreId, string $genreName)
     {
-        $this->genreId = new GenreId($id);
-        $this->genreName = new GenreName($name);
+        $this->genreId = $genreId;
+        $this->genreName = $genreName;
     }
 
-    public function genreId(): GenreId
+    public function genreId(): string
     {
         return $this->genreId;
     }
 
-    public function genreName(): GenreName
+    public function genreName(): string
     {
         return $this->genreName;
     }

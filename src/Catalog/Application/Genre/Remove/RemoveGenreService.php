@@ -3,6 +3,7 @@
 namespace Bookshop\Catalog\Application\Genre\Remove;
 
 use Bookshop\Catalog\Domain\Genre\GenreDoesNotExistException;
+use Bookshop\Catalog\Domain\Genre\GenreId;
 use Bookshop\Catalog\Domain\Genre\GenreRepository;
 
 class RemoveGenreService
@@ -16,12 +17,12 @@ class RemoveGenreService
     
     public function __invoke(RemoveGenreRequest $request)
     {
-        $genre = $this->genreRepository->ofGenreId(
-            $request->genreId()
-        );
+        $genreId = new GenreId($request->genreId());
+
+        $genre = $this->genreRepository->ofGenreId($genreId);
 
         if ($genre === null) {
-            throw new GenreDoesNotExistException($request->genreId());
+            throw new GenreDoesNotExistException($genreId);
         }
 
         $this->genreRepository->remove($genre);
