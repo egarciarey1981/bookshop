@@ -114,6 +114,19 @@ SQL;
         $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->title()->value(), PDO::PARAM_STR);
         $stmt->execute();
+
+        $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
+        $stmt->execute();
+
+        $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
+        foreach ($book->genres() as $genre) {
+            $stmt->bindValue('genre_id', $genre->id()->value(), PDO::PARAM_STR);
+            $stmt->execute();
+        }        
     }
 
     public function remove(Book $book): void
@@ -126,6 +139,11 @@ SQL;
         if (!$stmt->rowCount()) {
             throw new BookDoesNotExistException($book->id());
         }
+
+        $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
+        $stmt->execute();        
     }
 
     public function nextIdentity(): BookId

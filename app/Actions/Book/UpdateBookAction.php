@@ -7,16 +7,34 @@ namespace App\Actions\Book;
 use Psr\Http\Message\ResponseInterface as Response;
 use Bookshop\Catalog\Application\Book\Update\UpdateBookRequest;
 use Bookshop\Catalog\Application\Book\Update\UpdateBookService;
+use Bookshop\Catalog\Domain\Book\BookRepository;
+use Bookshop\Catalog\Domain\Genre\GenreRepository;
+use Psr\Log\LoggerInterface;
 
 class UpdateBookAction extends BookAction
 {
+    private GenreRepository $genreRepository;    
+
+    public function __construct(
+        LoggerInterface $logger,
+        BookRepository $bookRepository,
+        GenreRepository $genreRepository,
+    ) {
+        parent::__construct($logger, $bookRepository);
+        $this->genreRepository = $genreRepository;
+    }
+
     public function action(): Response
     {
         $id = $this->resolveArg('id');
         $title = $this->formParam('title', '');
+        $genreIds = $this->formParam('genres', []);
 
-        $updateBookRequest = new UpdateBookRequest($id, $title);
-        $updateBookService = new UpdateBookService($this->bookRepository);
+        $updateBookRequest = new UpdateBookRequest($id, $title, $genreIds);
+        $updateBookService = new UpdateBookService(
+            $this->bookRepository,
+            $this->genreRepository,
+        );
         $updateBookService($updateBookRequest);
 
         $this->logger->info("Book of id `$id` was updated.");
