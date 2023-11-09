@@ -44,15 +44,15 @@ SQL;
         return $stmt->fetchColumn();
     }
 
-    public function ofGenreId(GenreId $id): Genre
+    public function ofGenreId(GenreId $genreId): Genre
     {
         $sql = "SELECT * FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $id->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
         $stmt->execute();
         $genre = $stmt->fetch();
         if (!$genre) {
-            throw new GenreDoesNotExistException($id);
+            throw new GenreDoesNotExistException($genreId);
         }
         return new Genre(
             new GenreId($genre['id']),
@@ -69,8 +69,8 @@ SQL;
         $listIds = implode(',', array_fill(0, count($arrayIds), '?'));
         $sql = "SELECT * FROM genres WHERE id IN ($listIds)";
         $stmt = $this->connection->prepare($sql);
-        foreach ($arrayIds as $k => $id) {
-            $stmt->bindValue($k + 1, $id, PDO::PARAM_STR);
+        foreach ($arrayIds as $k => $genreId) {
+            $stmt->bindValue($k + 1, $genreId, PDO::PARAM_STR);
         }
         $stmt->execute();
         $genres = $stmt->fetchAll();

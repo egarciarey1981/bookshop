@@ -14,18 +14,14 @@ class ViewGenreAction extends GenreAction
     {
         $id = $this->resolveArg('id');
 
-        $viewGenresService = new ViewGenreService(
-            $this->genreRepository
-        );
+        $viewGenreRequest = new ViewGenreRequest($id);
+        $viewGenreService = new ViewGenreService($this->genreRepository);
+        $viewGenreResponse = $viewGenreService($viewGenreRequest);
 
-        $listGenreResponse = $viewGenresService(
-            new ViewGenreRequest($id)
-        );
+        $response['data']['genre'] = $viewGenreResponse->genre();
 
         $this->logger->info("Genre of id `$id` was viewed.");
 
-        return $this->respondWithData([
-            'genre' => $listGenreResponse->genre()
-        ]);
+        return $this->respondWithData($response['data']);
     }
 }

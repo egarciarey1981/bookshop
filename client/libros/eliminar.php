@@ -70,7 +70,7 @@
                             alert('Libro no encontrado');
                             window.location.href = 'http://localhost:8081/libros/listar.php';
                         },
-                        204: function() {
+                        200: function() {
                             alert('Libro eliminado');
                             window.location.href = 'http://localhost:8081/libros/listar.php';
                         }

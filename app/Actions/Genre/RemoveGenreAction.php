@@ -12,18 +12,14 @@ class RemoveGenreAction extends GenreAction
 {
     public function action(): Response
     {
-        $updateGenresService = new RemoveGenreService(
-            $this->genreRepository
-        );
-
         $id = $this->resolveArg('id');
 
-        $updateGenresService(
-            new RemoveGenreRequest($id)
-        );
+        $removeGenreRequest = new RemoveGenreRequest($id);
+        $removeGenreService = new RemoveGenreService($this->genreRepository);
+        $removeGenreService($removeGenreRequest);
 
         $this->logger->info("Genre of id `$id` was removed.");
 
-        return $this->respond(204);
+        return $this->respond();
     }
 }

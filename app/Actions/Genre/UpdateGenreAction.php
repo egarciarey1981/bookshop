@@ -12,18 +12,13 @@ class UpdateGenreAction extends GenreAction
 {
     public function action(): Response
     {
-        $updateGenresService = new UpdateGenreService(
-            $this->genreRepository
-        );
-
-        $updateGenresService(
-            new UpdateGenreRequest(
-                $this->resolveArg('id'),
-                $this->formParam('name'),
-            )
-        );
-
         $id = $this->resolveArg('id');
+        $name = $this->formParam('name', '');
+
+        $updateGenreRequest = new UpdateGenreRequest($id, $name);
+        $updateGenreService = new UpdateGenreService($this->genreRepository);
+        $updateGenreService($updateGenreRequest);
+
         $this->logger->info("Genre of id `$id` was updated.");
 
         return $this->respond();

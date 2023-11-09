@@ -8,24 +8,25 @@ class ListBooksService
 {
     private BookRepository $bookRepository;
 
-    public function __construct(BookRepository $bookRepository) {
+    public function __construct(BookRepository $bookRepository)
+    {
         $this->bookRepository = $bookRepository;
     }
 
     public function __invoke(ListBooksRequest $request): ListBooksResponse
     {
-        $limit = $request->limit();
         $offset = $request->offset();
+        $limit = $request->limit();
         $filter = $request->filter();
 
-        $booksEntities = $this->bookRepository->all($offset, $limit, $filter);
+        $books = $this->bookRepository->all($offset, $limit, $filter);
 
-        $data['total'] = $this->bookRepository->count($filter);
+        array_walk($books, function (&$book) {
+            $book = $book->toArray();
+        });
 
-        foreach ($booksEntities as $book) {
-            $data['book'][] = $book->toArray();
-        }
+        $total = $this->bookRepository->count($filter);
 
-        return new ListBooksResponse($data['book'], $data['total']);
+        return new ListBooksResponse($books, $total);
     }
 }

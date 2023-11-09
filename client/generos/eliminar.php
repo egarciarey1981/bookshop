@@ -70,7 +70,7 @@
                             alert('Género no encontrado');
                             window.location.href = 'http://localhost:8081/generos/listar.php';
                         },
-                        204: function() {
+                        200: function() {
                             alert('Género eliminado');
                             window.location.href = 'http://localhost:8081/generos/listar.php';
                         }

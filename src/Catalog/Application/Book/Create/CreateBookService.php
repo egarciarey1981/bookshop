@@ -15,7 +15,7 @@ class CreateBookService
     {
         $this->bookRepository = $bookRepository;
     }
-    
+
     public function __invoke(CreateBookRequest $request): CreateBookResponse
     {
         $bookId = $this->bookRepository->nextIdentity();
@@ -26,8 +26,6 @@ class CreateBookService
 
         $this->bookRepository->save($book);
 
-        $data['book'] = $book->toArray();
-
-        return new CreateBookResponse($data['book']);
+        return new CreateBookResponse($book->toArray());
     }
 }

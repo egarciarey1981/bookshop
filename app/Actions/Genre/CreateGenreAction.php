@@ -12,23 +12,17 @@ class CreateGenreAction extends GenreAction
 {
     public function action(): Response
     {
-        $createGenresService = new CreateGenreService(
-            $this->genreRepository
-        );
+        $name = $this->formParam('name', '');
 
-        $createGenreResponse = $createGenresService(
-            new CreateGenreRequest(
-                $this->formParam('name', ''),
-            )
-        );
+        $createGenreRequest = new CreateGenreRequest($name);
+        $createGenreService = new CreateGenreService($this->genreRepository);
+        $createGenreResponse = $createGenreService($createGenreRequest);
 
-        $data['genre'] = $createGenreResponse->genre();
-        $id = $data['genre']['id'];
+        $response['data']['genre'] = $createGenreResponse->genre();
+        $response['headers']['Location'] = '/genre/' . $response['data']['genre']['id'];
 
-        $this->logger->info("Genre of id `$id` was createed.");
+        $this->logger->info('Genre of id `'. $response['data']['genre']['id'] .'` was createed.');
 
-        return $this->respondWithData($data, 201, [
-            'Location' => "/genre/$id"
-        ]);
+        return $this->respondWithData($response['data'], 201, $response['headers']);
     }
 }

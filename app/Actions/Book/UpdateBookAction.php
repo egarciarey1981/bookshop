@@ -12,18 +12,13 @@ class UpdateBookAction extends BookAction
 {
     public function action(): Response
     {
-        $updateBooksService = new UpdateBookService(
-            $this->bookRepository
-        );
-
-        $updateBooksService(
-            new UpdateBookRequest(
-                $this->resolveArg('id'),
-                $this->formParam('title'),
-            )
-        );
-
         $id = $this->resolveArg('id');
+        $title = $this->formParam('title', '');
+
+        $updateBookRequest = new UpdateBookRequest($id, $title);
+        $updateBookService = new UpdateBookService($this->bookRepository);
+        $updateBookService($updateBookRequest);
+
         $this->logger->info("Book of id `$id` was updated.");
 
         return $this->respond();

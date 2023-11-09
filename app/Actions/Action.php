@@ -79,17 +79,19 @@ abstract class Action
 
     protected function respondWithData(array $data = [], int $statusCode = 200, array $headers = []): Response
     {
-        $data = [
-            'status' => $statusCode,
-            'data' => $data,
-        ];
+        $playload['status'] = $statusCode;
+        $playload['data'] = $data;
 
-        if (isset($data['data']['error'])) {
-            $data['error'] = $data['data']['error'];
-            unset($data['data']['error']);
+        if (isset($playload['data']['error'])) {
+            $playload['error'] = $playload['data']['error'];
+            unset($playload['data']['error']);
         }
 
-        $json = json_encode($data, JSON_PRETTY_PRINT);
+        if ($playload['data'] === []) {
+            unset($playload['data']);
+        }
+
+        $json = json_encode($playload, JSON_PRETTY_PRINT);
         $this->response->getBody()->write($json);
 
         $this->response = $this->response

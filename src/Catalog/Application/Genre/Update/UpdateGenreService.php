@@ -16,7 +16,7 @@ class UpdateGenreService
     {
         $this->genreRepository = $genreRepository;
     }
-    
+
     public function __invoke(UpdateGenreRequest $request)
     {
         $genreId = new GenreId($request->genreId());

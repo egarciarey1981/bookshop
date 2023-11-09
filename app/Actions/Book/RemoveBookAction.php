@@ -12,18 +12,14 @@ class RemoveBookAction extends BookAction
 {
     public function action(): Response
     {
-        $updateBooksService = new RemoveBookService(
-            $this->bookRepository
-        );
-
         $id = $this->resolveArg('id');
 
-        $updateBooksService(
-            new RemoveBookRequest($id)
-        );
+        $removeBookRequest = new RemoveBookRequest($id);
+        $removeBookService = new RemoveBookService($this->bookRepository);
+        $removeBookService($removeBookRequest);
 
         $this->logger->info("Book of id `$id` was removed.");
 
-        return $this->respond(204);
+        return $this->respond();
     }
 }

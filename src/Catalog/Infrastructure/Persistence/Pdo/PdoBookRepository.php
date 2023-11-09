@@ -71,15 +71,15 @@ SQL;
         return $stmt->fetchColumn();
     }
 
-    public function ofBookId(BookId $id): Book
+    public function ofBookId(BookId $bookId): Book
     {
         $sql = "SELECT * FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $id->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
         $stmt->execute();
         $book = $stmt->fetch();
         if (!$book) {
-            throw new BookDoesNotExistException($id);
+            throw new BookDoesNotExistException($bookId);
         }
 
         $sql = <<<SQL
@@ -89,7 +89,7 @@ JOIN genres ON books_genres.genre_id = genres.id
 WHERE book_id = :book_id
 SQL;
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('book_id', $id->value(), PDO::PARAM_STR);
+        $stmt->bindValue('book_id', $bookId->value(), PDO::PARAM_STR);
         $stmt->execute();
         $genres = $stmt->fetchAll();
 

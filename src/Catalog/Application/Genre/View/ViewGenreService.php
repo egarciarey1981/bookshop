@@ -25,8 +25,6 @@ class ViewGenreService
             throw new GenreDoesNotExistException($genreId);
         }
 
-        $data['genre'] = $genre->toArray();
-
-        return new ViewGenreResponse($data['genre']);
+        return new ViewGenreResponse($genre->toArray());
     }
 }

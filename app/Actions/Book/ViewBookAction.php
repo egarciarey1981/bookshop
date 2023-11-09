@@ -14,16 +14,14 @@ class ViewBookAction extends BookAction
     {
         $id = $this->resolveArg('id');
 
+        $viewBookRequest = new ViewBookRequest($id);
         $viewBooksService = new ViewBookService($this->bookRepository);
+        $viewBookResponse = $viewBooksService($viewBookRequest);
 
-        $listBookResponse = $viewBooksService(
-            new ViewBookRequest($id)
-        );
+        $response['data']['book'] = $viewBookResponse->book();
 
         $this->logger->info("Book of id `$id` was viewed.");
 
-        return $this->respondWithData([
-            'book' => $listBookResponse->book()
-        ]);
+        return $this->respondWithData($response['data']);
     }
 }

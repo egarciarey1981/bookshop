@@ -15,8 +15,7 @@ abstract class GenreAction extends Action
     public function __construct(
         LoggerInterface $logger,
         GenreRepository $genreRepository,
-    )
-    {
+    ) {
         parent::__construct($logger);
         $this->genreRepository = $genreRepository;
     }

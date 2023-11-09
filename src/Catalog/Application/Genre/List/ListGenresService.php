@@ -12,21 +12,21 @@ class ListGenresService
     {
         $this->genreRepository = $genreRepository;
     }
-    
+
     public function __invoke(ListGenresRequest $request): ListGenresResponse
     {
         $offset = $request->offset();
         $limit = $request->limit();
         $filter = $request->filter();
 
-        $genresEntities = $this->genreRepository->all($offset, $limit, $filter);
+        $genres = $this->genreRepository->all($offset, $limit, $filter);
 
-        $data['total'] = $this->genreRepository->count($filter);
+        array_walk($genres, function (&$genre) {
+            $genre = $genre->toArray();
+        });
 
-        foreach ($genresEntities as $genre) {
-            $data['genres'][] = $genre->toArray();
-        }
+        $total = $this->genreRepository->count($filter);
 
-        return new ListGenresResponse($data['genres'], $data['total']);
+        return new ListGenresResponse($genres, $total);
     }
 }

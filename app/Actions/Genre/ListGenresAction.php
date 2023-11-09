@@ -4,33 +4,27 @@ declare(strict_types=1);
 
 namespace App\Actions\Genre;
 
-use Psr\Http\Message\ResponseInterface as Response;
 use Bookshop\Catalog\Application\Genre\List\ListGenresRequest;
+use Psr\Http\Message\ResponseInterface as Response;
 use Bookshop\Catalog\Application\Genre\List\ListGenresService;
 
 class ListGenresAction extends GenreAction
 {
     public function action(): Response
     {
-        $listGenresService = new ListGenresService(
-            $this->genreRepository
-        );
+        $offset = (int) $this->queryString('offset', 0);
+        $limit = (int) $this->queryString('limit', 10);
+        $filter = $this->queryString('filter', '');
 
-        $listGenreResponse = $listGenresService(
-            new ListGenresRequest(
-                (int) $this->queryString('offset', 0),
-                (int) $this->queryString('limit', 10),
-                $this->queryString('filter', ''),
-            )
-        );
+        $listGenreRequest = new ListGenresRequest($offset, $limit, $filter);
+        $listGenresService = new ListGenresService($this->genreRepository);
+        $listGenreResponse = $listGenresService($listGenreRequest);
 
-        $data = [
-            'total' => $listGenreResponse->total(),
-            'genres' => $listGenreResponse->genres(),
-        ];
+        $response['data']['total'] = $listGenreResponse->total();
+        $response['data']['genres'] = $listGenreResponse->genres();
 
         $this->logger->info("Genres list was viewed.");
 
-        return $this->respondWithData($data);
+        return $this->respondWithData($response['data']);
     }
 }

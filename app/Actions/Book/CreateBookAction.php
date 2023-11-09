@@ -12,23 +12,17 @@ class CreateBookAction extends BookAction
 {
     public function action(): Response
     {
-        $createBooksService = new CreateBookService(
-            $this->bookRepository
-        );
+        $title = $this->formParam('title', '');
 
-        $createBookResponse = $createBooksService(
-            new CreateBookRequest(
-                $this->formParam('title', ''),
-            )
-        );
+        $createBookRequest = new CreateBookRequest($title);
+        $createBookService = new CreateBookService($this->bookRepository);
+        $createBookResponse = $createBookService($createBookRequest);
 
-        $data['book'] = $createBookResponse->book();
-        $id = $data['book']['id'];
+        $response['data']['book'] = $createBookResponse->book();
+        $response['headers']['Location'] = '/book/' . $response['data']['book']['id'];
 
-        $this->logger->info("Book of id `$id` was createed.");
+        $this->logger->info('Book of id `' . $response['data']['book']['id'] . '` was created.');
 
-        return $this->respondWithData($data, 201, [
-            'Location' => "/book/$id"
-        ]);
+        return $this->respondWithData($response['data'], 201, $response['headers']);
     }
 }

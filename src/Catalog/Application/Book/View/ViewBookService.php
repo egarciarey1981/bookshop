@@ -14,7 +14,7 @@ class ViewBookService
     {
         $this->bookRepository = $bookRepository;
     }
-    
+
     public function __invoke(ViewBookRequest $request): ViewBookResponse
     {
         $bookId = new BookId($request->bookId());
@@ -25,9 +25,6 @@ class ViewBookService
             throw new BookDoesNotExistException($bookId);
         }
 
-        $data['book'] = $book->toArray();
-
-        return new ViewBookResponse($data['book']);
+        return new ViewBookResponse($book->toArray());
     }
-
 }
