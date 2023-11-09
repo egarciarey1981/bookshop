@@ -28,11 +28,33 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         $books = $stmt->fetchAll();
-        return array_map(function ($book) {
+        $bookIds = array_map(fn ($book) => $book['id'], $books);
+        $inQuery = str_repeat('?,', count($bookIds) - 1) . '?';
+
+        $sql = <<<SQL
+SELECT book_id, id, name
+FROM books_genres
+JOIN genres ON books_genres.genre_id = genres.id
+WHERE book_id IN ($inQuery)
+SQL;
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute($bookIds);
+        $genres = $stmt->fetchAll();
+
+        $genresByBookId = [];
+        foreach ($genres as $genre) {
+            $genresByBookId[$genre['book_id']][] = new Genre(
+                new GenreId($genre['id']),
+                new GenreName($genre['name'])
+            );
+        }
+
+        return array_map(function ($book) use ($genresByBookId) {
             return new Book(
                 new BookId($book['id']),
                 new BookTitle($book['title']),
-                new GenresCollection()
+                new GenresCollection(...$genresByBookId[$book['id']] ?? [])
             );
         }, $books);
     }
@@ -71,19 +93,17 @@ SQL;
         $stmt->execute();
         $genres = $stmt->fetchAll();
 
-        $genresCollection = new GenresCollection();
-
-        foreach ($genres as $genre) {
-            $genresCollection->add(new Genre(
+        array_walk($genres, function (&$genre) {
+            $genre = new Genre(
                 new GenreId($genre['id']),
                 new GenreName($genre['name'])
-            ));
-        }
+            );
+        });
 
         return new Book(
             new BookId($book['id']),
             new BookTitle($book['title']),
-            $genresCollection,
+            new GenresCollection(...$genres)
         );
     }
 

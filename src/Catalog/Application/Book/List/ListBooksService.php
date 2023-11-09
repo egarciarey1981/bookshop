@@ -34,7 +34,12 @@ class ListBooksService
             $booksData[] = [
                 'id' => $book->id()->value(),
                 'title' => $book->title()->value(),
-                'genres' => [],
+                'genres' => array_map(function ($genre) {
+                    return [
+                        'id' => $genre->id()->value(),
+                        'name' => $genre->name()->value(),
+                    ];
+                }, $book->genres()->genres()),
             ];
         }
 
