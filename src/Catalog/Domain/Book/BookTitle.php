@@ -6,7 +6,7 @@ use DomainException;
 
 class BookTitle
 {
-    private $value;
+    private string $value;
 
     public function __construct(string $value)
     {

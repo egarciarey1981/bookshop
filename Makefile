@@ -24,5 +24,8 @@ composer-install: composer.json ## Instala dependencias de composer
 composer-update: ## Actualiza dependencias de composer
 	$(EXEC_IN_CONTAINER_PHP) "cd /var/www/html && composer update"
 
+phpstan:
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse --level max src"
+
 web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client

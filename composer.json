@@ -10,5 +10,8 @@
             "App\\": "app/",
             "Bookshop\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10"
     }
 }
