@@ -23,9 +23,9 @@ class GenreId
     {
         if (empty($value)) {
             throw new DomainException('Genre id cannot be empty');
-        } else if (strlen($value) > 36) {
+        } elseif (strlen($value) > 36) {
             throw new DomainException('Genre id cannot be longer than 36 characters');
-        } else if (strlen($value) < 36) {
+        } elseif (strlen($value) < 36) {
             throw new DomainException('Genre id cannot be shorter than 36 characters');
         }
     }

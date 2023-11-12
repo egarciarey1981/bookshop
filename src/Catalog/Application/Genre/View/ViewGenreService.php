@@ -14,7 +14,7 @@ class ViewGenreService
     {
         $this->genreRepository = $genreRepository;
     }
-    
+
     public function __invoke(ViewGenreRequest $request): ViewGenreResponse
     {
         $genreId = new GenreId($request->genreId());

@@ -88,7 +88,7 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->id()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->name()->value(), PDO::PARAM_STR);
-        $stmt->execute();        
+        $stmt->execute();
     }
 
     public function remove(Genre $genre): void

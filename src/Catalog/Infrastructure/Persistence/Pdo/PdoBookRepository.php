@@ -126,7 +126,7 @@ SQL;
         foreach ($book->genres() as $genre) {
             $stmt->bindValue('genre_id', $genre->id()->value(), PDO::PARAM_STR);
             $stmt->execute();
-        }        
+        }
     }
 
     public function remove(Book $book): void
@@ -143,7 +143,7 @@ SQL;
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
-        $stmt->execute();        
+        $stmt->execute();
     }
 
     public function nextIdentity(): BookId
