@@ -9,6 +9,7 @@ use Slim\Exception\HttpBadRequestException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Bookshop\Shared\Domain\Exception\DomainRecordNotFoundException;
+use DomainException;
 
 abstract class Action
 {
@@ -35,6 +36,9 @@ abstract class Action
         } catch (DomainRecordNotFoundException $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respondWithData(['error' => $e->getMessage()], 404);
+        } catch (DomainException $e) {
+            $this->logger->error(static::class . ': ' . $e->getMessage());
+            return $this->respondWithData(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respond(500);
