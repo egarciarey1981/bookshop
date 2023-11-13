@@ -23,10 +23,10 @@ class BookId
     {
         if (empty($value)) {
             throw new DomainException('Book id cannot be empty');
-        } elseif (strlen($value) > 36) {
-            throw new DomainException('Book id cannot be longer than 36 characters');
-        } elseif (strlen($value) < 36) {
-            throw new DomainException('Book id cannot be shorter than 36 characters');
+        } elseif (strlen($value) > 255) {
+            throw new DomainException('Book id cannot be longer than 255 characters');
+        } elseif (strlen($value) < 3) {
+            throw new DomainException('Book id cannot be shorter than 3 characters');
         }
     }
 }

@@ -24,13 +24,13 @@ composer-install: composer.json ## Instala dependencias de composer
 composer-update: ## Actualiza dependencias de composer
 	$(EXEC_IN_CONTAINER_PHP) "cd /var/www/html && composer update"
 
-phpstan: up
+phpstan: up ## Ejecuta phpstan
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse --level max src"
 
-phpcs: up
+phpcs: up ## Ejecuta phpcs
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=PSR12 src"
 
-phpcbf: up
+phpcbf: up ## Ejecuta phpcbf
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=PSR12 src"
 
 web: ## Ejecuta el cliente web

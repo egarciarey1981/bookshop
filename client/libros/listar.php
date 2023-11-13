@@ -7,6 +7,13 @@
 </head>
 
 <body>
+    <nav>
+        <lu>
+            <li><a href="http://localhost:8081/libros/listar.php">Libros</a></li>
+            <li><a href="http://localhost:8081/generos/listar.php">Géneros</a></li>
+        </lu>
+    </nav>
+
     <h1>Listado de libros</h1>
 
     <form id="formulario_filtrar_libros">

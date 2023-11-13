@@ -7,6 +7,13 @@
 </head>
 
 <body>
+    <nav>
+        <lu>
+            <li><a href="http://localhost:8081/libros/listar.php">Libros</a></li>
+            <li><a href="http://localhost:8081/generos/listar.php">Géneros</a></li>
+        </lu>
+    </nav>
+
     <h1>Listado de géneros</h1>
 
     <form id="formulario_filtrar_generos">
@@ -38,7 +45,7 @@
         var filtro = '';
 
         function cargarGeneros(pagina, filtro = '') {
-            
+
             $('#generos tbody').html('');
             $.ajax({
                 url: "http://localhost:8080/genre?limit=" + elementos + "&offset=" + (pagina - 1) * elementos + "&filter=" + filtro,
