@@ -37,18 +37,11 @@
                         name: $('#nombre').val()
                     },
                     statusCode: {
-                        500: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Error en el servidor');
-                            window.location.href = 'http://localhost:8081/generos/listar.php';
+                        500: function(response) {
+                            alert(response.responseJSON.error);
                         },
-                        400: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Datos incorrectos');
+                        400: function(response) {
+                            alert(response.responseJSON.error);
                         },
                         201: function() {
                             alert('Género creado');

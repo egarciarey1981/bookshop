@@ -86,8 +86,8 @@ SQL;
     {
         $sql = "INSERT INTO genres (id, name) VALUES (:id, :name) ON DUPLICATE KEY UPDATE name = :name";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $genre->id()->value(), PDO::PARAM_STR);
-        $stmt->bindValue('name', $genre->name()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -95,11 +95,11 @@ SQL;
     {
         $sql = "DELETE FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $genre->id()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->execute();
 
         if (!$stmt->rowCount()) {
-            throw new GenreDoesNotExistException($genre->id());
+            throw new GenreDoesNotExistException($genre->genreId());
         }
     }
 

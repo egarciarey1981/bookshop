@@ -35,7 +35,7 @@
                     200: function(response) {
                         $('#titulo').val(response.data.book.title);
                         $('#generos').html(response.data.book.genres.map(genre => `<li><a href="http://localhost:8081/generos/ver.php?id=${genre.id}">${genre.name}</a></li>`).join(''));
-                        $('#formulario_editar_libro').show();
+                        $('#formulario_modificar_libro').show();
                         $('#titulo').focus().val($('#titulo').val());
                         $('h1').text(response.data.book.title);
                     }

@@ -111,20 +111,20 @@ SQL;
     {
         $sql = "INSERT INTO books (id, title) VALUES (:id, :title) ON DUPLICATE KEY UPDATE title = :title";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
-        $stmt->bindValue('title', $book->title()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
         $stmt->execute();
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->execute();
 
         $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
-        foreach ($book->genres() as $genre) {
-            $stmt->bindValue('genre_id', $genre->id()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
+        foreach ($book->bookGenres() as $genre) {
+            $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
             $stmt->execute();
         }
     }
@@ -133,16 +133,16 @@ SQL;
     {
         $sql = "DELETE FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $book->id()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->execute();
 
         if (!$stmt->rowCount()) {
-            throw new BookDoesNotExistException($book->id());
+            throw new BookDoesNotExistException($book->bookId());
         }
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('book_id', $book->id()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->execute();
     }
 

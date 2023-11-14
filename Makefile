@@ -24,14 +24,33 @@ composer-install: composer.json ## Instala dependencias de composer
 composer-update: ## Actualiza dependencias de composer
 	$(EXEC_IN_CONTAINER_PHP) "cd /var/www/html && composer update"
 
-phpstan: up ## Ejecuta phpstan
+phpstan: ## Ejecuta phpstan
+ifdef FILES
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse --level max $(FILES)"
+else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse --level max src"
+endif
 
-phpcs: up ## Ejecuta phpcs
+phpcs: ## Ejecuta phpcs
+ifdef FILES
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=PSR12 $(FILES)"
+else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=PSR12 src"
+endif
 
-phpcbf: up ## Ejecuta phpcbf
+phpcbf: ## Ejecuta phpcbf
+ifdef FILES
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=PSR12 $(FILES)"
+else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=PSR12 src"
+endif
+
+phpmd: ## Ejecuta phpmd
+ifdef FILES
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd $(FILES) text cleancode,codesize,controversial,design,naming,unusedcode"
+else
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd src text cleancode,codesize,controversial,design,naming,unusedcode"
+endif
 
 web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client

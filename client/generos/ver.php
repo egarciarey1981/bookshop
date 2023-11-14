@@ -33,14 +33,14 @@
                     },
                     200: function(response) {
                         $('#nombre').val(response.data.genre.name);
-                        $('#formulario_editar_genero').show();
+                        $('#formulario_modificar_genero').show();
                         $('#nombre').focus().val($('#nombre').val());
                         $('h1').text(response.data.genre.name);
                     }
                 },
             });
 
-            $('#formulario_editar_genero').submit(function(event) {
+            $('#formulario_modificar_genero').submit(function(event) {
                 event.preventDefault();
                 $.ajax({
                     url: "http://localhost:8080/genre/<?= $_GET['id'] ?>",

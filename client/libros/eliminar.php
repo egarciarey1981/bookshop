@@ -14,7 +14,7 @@
 <body>
     <h1>Eliminar libro</h1>
 
-    <form id="formulario_editar_libro" style="display: none;">
+    <form id="formulario_eliminar_libro" style="display: none;">
         <p>¿Está seguro que desea eliminar el libro <strong><span id="libro"></span></strong>?</p>
         <p>
             <a href="javascript:history.back()">Volver</a>
@@ -29,27 +29,23 @@
                 type: "GET",
                 dataType: "json",
                 statusCode: {
-                    500: function() {
-                        if (response.responseJSON.error) {
-                            console.log(response.responseJSON.error);
-                        }
-                        alert('Error en el servidor');
-                        window.location.href = 'http://localhost:8081/libros/listar.php';
+                    500: function(response) {
+                        alert(response.responseJSON.error);
+                    },
+                    400: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     404: function() {
-                        if (response.responseJSON.error) {
-                            console.log(response.responseJSON.error);
-                        }
                         alert('Libro no encontrado');
                         window.location.href = 'http://localhost:8081/libros/listar.php';
                     },
                     200: function(response) {
                         $('#libro').html(response.data.book.title);
-                        $('#formulario_editar_libro').show();
+                        $('#formulario_eliminar_libro').show();
                     }
                 }
             });
-            $('#formulario_editar_libro').submit(function(event) {
+            $('#formulario_eliminar_libro').submit(function(event) {
                 event.preventDefault();
                 $.ajax({
                     url: "http://localhost:8080/book/<?= $_GET['id'] ?>",

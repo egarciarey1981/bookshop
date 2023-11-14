@@ -6,38 +6,38 @@ use Bookshop\Catalog\Domain\Genre\GenresCollection;
 
 class Book
 {
-    private BookId $id;
-    private BookTitle $title;
-    private GenresCollection $genres;
+    private BookId $bookId;
+    private BookTitle $bookTitle;
+    private GenresCollection $bookGenres;
 
-    public function __construct(BookId $id, BookTitle $title, GenresCollection $genres)
+    public function __construct(BookId $bookId, BookTitle $bookTitle, GenresCollection $bookGenres)
     {
-        $this->id = $id;
-        $this->title = $title;
-        $this->genres = $genres;
+        $this->bookId = $bookId;
+        $this->bookTitle = $bookTitle;
+        $this->bookGenres = $bookGenres;
     }
 
-    public function id(): BookId
+    public function bookId(): BookId
     {
-        return $this->id;
+        return $this->bookId;
     }
 
-    public function title(): BookTitle
+    public function bookTitle(): BookTitle
     {
-        return $this->title;
+        return $this->bookTitle;
     }
 
-    public function genres(): GenresCollection
+    public function bookGenres(): GenresCollection
     {
-        return $this->genres;
+        return $this->bookGenres;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id->value(),
-            'title' => $this->title->value(),
-            'genres' => $this->genres->toArray(),
+            'id' => $this->bookId->value(),
+            'title' => $this->bookTitle->value(),
+            'genres' => $this->bookGenres->toArray(),
         ];
     }
 }

@@ -4,30 +4,30 @@ namespace Bookshop\Catalog\Domain\Genre;
 
 class Genre
 {
-    private GenreId $id;
-    private GenreName $name;
+    private GenreId $genreId;
+    private GenreName $genreName;
 
-    public function __construct(GenreId $id, GenreName $name)
+    public function __construct(GenreId $genreId, GenreName $genreName)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->genreId = $genreId;
+        $this->genreName = $genreName;
     }
 
-    public function id(): GenreId
+    public function genreId(): GenreId
     {
-        return $this->id;
+        return $this->genreId;
     }
 
-    public function name(): GenreName
+    public function genreName(): GenreName
     {
-        return $this->name;
+        return $this->genreName;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id->value(),
-            'name' => $this->name->value(),
+            'id' => $this->genreId->value(),
+            'name' => $this->genreName->value(),
         ];
     }
 }

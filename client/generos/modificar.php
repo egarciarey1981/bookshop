@@ -9,7 +9,7 @@
 <body>
     <h1>Editar género</h1>
 
-    <form id="formulario_editar_genero" style="display: none;">
+    <form id="formulario_modificar_genero" style="display: none;">
         <table>
             <tbody>
                 <tr>
@@ -32,28 +32,24 @@
                 dataType: "json",
                 statusCode: {
                     500: function(response) {
-                        if (response.responseJSON.error) {
-                            console.log(response.responseJSON.error);
-                        }
-                        alert('Error en el servidor');
-                        window.location.href = 'http://localhost:8081/generos/listar.php';
+                        alert(response.responseJSON.error);
+                    },
+                    400: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     404: function(response) {
-                        if (response.responseJSON.error) {
-                            console.log(response.responseJSON.error);
-                        }
                         alert('Género no encontrado');
                         window.location.href = 'http://localhost:8081/generos/listar.php';
                     },
                     200: function(response) {
                         $('#nombre').val(response.data.genre.name);
-                        $('#formulario_editar_genero').show();
+                        $('#formulario_modificar_genero').show();
                         $('#nombre').focus().val($('#nombre').val());
                     }
                 },
             });
 
-            $('#formulario_editar_genero').submit(function(event) {
+            $('#formulario_modificar_genero').submit(function(event) {
                 event.preventDefault();
                 $.ajax({
                     url: "http://localhost:8080/genre/<?= $_GET['id'] ?>",
