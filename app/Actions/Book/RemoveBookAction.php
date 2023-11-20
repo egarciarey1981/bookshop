@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Book\Remove\RemoveBookRequest;
-use Bookshop\Catalog\Application\Book\Remove\RemoveBookService;
+use Bookshop\Catalog\Application\Service\Book\Remove\RemoveBookRequest;
+use Bookshop\Catalog\Application\Service\Book\Remove\RemoveBookService;
 
 class RemoveBookAction extends BookAction
 {

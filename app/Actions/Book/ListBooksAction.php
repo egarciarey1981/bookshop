@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Book\List\ListBooksRequest;
-use Bookshop\Catalog\Application\Book\List\ListBooksService;
+use Bookshop\Catalog\Application\Service\Book\List\ListBooksRequest;
+use Bookshop\Catalog\Application\Service\Book\List\ListBooksService;
 
 class ListBooksAction extends BookAction
 {

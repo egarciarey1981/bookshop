@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Book\View\ViewBookRequest;
-use Bookshop\Catalog\Application\Book\View\ViewBookService;
+use Bookshop\Catalog\Application\Service\Book\View\ViewBookRequest;
+use Bookshop\Catalog\Application\Service\Book\View\ViewBookService;
 
 class ViewBookAction extends BookAction
 {

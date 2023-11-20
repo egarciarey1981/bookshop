@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Genre;
 
-use Bookshop\Catalog\Application\Genre\List\ListGenresRequest;
+use Bookshop\Catalog\Application\Service\Genre\List\ListGenresRequest;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Genre\List\ListGenresService;
+use Bookshop\Catalog\Application\Service\Genre\List\ListGenresService;
 
 class ListGenresAction extends GenreAction
 {

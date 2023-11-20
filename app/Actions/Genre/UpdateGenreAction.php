@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Genre;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Genre\Update\UpdateGenreRequest;
-use Bookshop\Catalog\Application\Genre\Update\UpdateGenreService;
+use Bookshop\Catalog\Application\Service\Genre\Update\UpdateGenreRequest;
+use Bookshop\Catalog\Application\Service\Genre\Update\UpdateGenreService;
 
 class UpdateGenreAction extends GenreAction
 {

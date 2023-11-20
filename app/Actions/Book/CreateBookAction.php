@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Book\Create\CreateBookRequest;
-use Bookshop\Catalog\Application\Book\Create\CreateBookService;
+use Bookshop\Catalog\Application\Service\Book\Create\CreateBookRequest;
+use Bookshop\Catalog\Application\Service\Book\Create\CreateBookService;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Psr\Log\LoggerInterface;

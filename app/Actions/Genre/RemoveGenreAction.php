@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Genre;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Genre\Remove\RemoveGenreRequest;
-use Bookshop\Catalog\Application\Genre\Remove\RemoveGenreService;
+use Bookshop\Catalog\Application\Service\Genre\Remove\RemoveGenreRequest;
+use Bookshop\Catalog\Application\Service\Genre\Remove\RemoveGenreService;
 
 class RemoveGenreAction extends GenreAction
 {

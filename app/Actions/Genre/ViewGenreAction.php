@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Genre;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Genre\View\ViewGenreRequest;
-use Bookshop\Catalog\Application\Genre\View\ViewGenreService;
+use Bookshop\Catalog\Application\Service\Genre\View\ViewGenreRequest;
+use Bookshop\Catalog\Application\Service\Genre\View\ViewGenreService;
 
 class ViewGenreAction extends GenreAction
 {
