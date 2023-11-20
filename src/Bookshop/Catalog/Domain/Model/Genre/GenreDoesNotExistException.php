@@ -2,13 +2,8 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use Bookshop\Catalog\Domain\Model\Genre\GenreId;
-use Bookshop\Shared\Domain\Exception\DomainRecordNotFoundException;
+use Bookshop\Catalog\Domain\Exception\DomainDoesNotExistException;
 
-class GenreDoesNotExistException extends DomainRecordNotFoundException
+class GenreDoesNotExistException extends DomainDoesNotExistException
 {
-    public function __construct(GenreId $genreId)
-    {
-        parent::__construct(sprintf('The genre `%s` does not exist', $genreId->value()));
-    }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use Bookshop\Catalog\Domain\Exception\DomainDoesNotExistException;
+use Bookshop\Catalog\Domain\Exception\DomainException;
 use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Bookshop\Shared\Domain\Exception\DomainRecordNotFoundException;
-use DomainException;
 
 abstract class Action
 {
@@ -33,7 +33,7 @@ abstract class Action
 
         try {
             return $this->action();
-        } catch (DomainRecordNotFoundException $e) {
+        } catch (DomainDoesNotExistException $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respondWithData(['error' => $e->getMessage()], 404);
         } catch (DomainException $e) {

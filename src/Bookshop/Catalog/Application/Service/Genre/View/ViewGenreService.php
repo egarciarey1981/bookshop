@@ -22,7 +22,9 @@ class ViewGenreService
         $genre = $this->genreRepository->ofGenreId($genreId);
 
         if ($genre === null) {
-            throw new GenreDoesNotExistException($genreId);
+            throw new GenreDoesNotExistException(
+                sprintf('Genre with id `%s` does not exist', $genreId->value())
+            );
         }
 
         return new ViewGenreResponse($genre->toArray());
