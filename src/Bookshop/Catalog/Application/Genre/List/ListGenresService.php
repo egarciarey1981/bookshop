@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Genre\List;
 
-use Bookshop\Catalog\Domain\Genre\GenreRepository;
+use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 
 class ListGenresService
 {

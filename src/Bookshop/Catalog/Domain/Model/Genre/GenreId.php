@@ -1,10 +1,10 @@
 <?php
 
-namespace Bookshop\Catalog\Domain\Book;
+namespace Bookshop\Catalog\Domain\Model\Genre;
 
 use DomainException;
 
-class BookId
+class GenreId
 {
     private string $value;
 
@@ -22,11 +22,11 @@ class BookId
     private function assertIsValidId(string $value): void
     {
         if (empty($value)) {
-            throw new DomainException('Book id cannot be empty');
+            throw new DomainException('Genre id cannot be empty');
         } elseif (strlen($value) > 255) {
-            throw new DomainException('Book id cannot be longer than 255 characters');
+            throw new DomainException('Genre id cannot be longer than 255 characters');
         } elseif (strlen($value) < 3) {
-            throw new DomainException('Book id cannot be shorter than 3 characters');
+            throw new DomainException('Genre id cannot be shorter than 3 characters');
         }
     }
 }

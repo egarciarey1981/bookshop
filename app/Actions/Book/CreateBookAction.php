@@ -7,8 +7,8 @@ namespace App\Actions\Book;
 use Psr\Http\Message\ResponseInterface as Response;
 use Bookshop\Catalog\Application\Book\Create\CreateBookRequest;
 use Bookshop\Catalog\Application\Book\Create\CreateBookService;
-use Bookshop\Catalog\Domain\Book\BookRepository;
-use Bookshop\Catalog\Domain\Genre\GenreRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Psr\Log\LoggerInterface;
 
 class CreateBookAction extends BookAction

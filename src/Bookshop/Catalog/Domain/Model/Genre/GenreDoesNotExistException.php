@@ -1,8 +1,8 @@
 <?php
 
-namespace Bookshop\Catalog\Domain\Genre;
+namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use Bookshop\Catalog\Domain\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Shared\Domain\Exception\DomainRecordNotFoundException;
 
 class GenreDoesNotExistException extends DomainRecordNotFoundException

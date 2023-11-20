@@ -2,9 +2,9 @@
 
 namespace Bookshop\Catalog\Application\Book\View;
 
-use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
-use Bookshop\Catalog\Domain\Book\BookId;
-use Bookshop\Catalog\Domain\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
+use Bookshop\Catalog\Domain\Model\Book\BookId;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 
 class ViewBookService
 {

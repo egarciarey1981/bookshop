@@ -1,8 +1,8 @@
 <?php
 
-namespace Bookshop\Catalog\Domain\Book;
+namespace Bookshop\Catalog\Domain\Model\Book;
 
-use Bookshop\Catalog\Domain\Genre\GenresCollection;
+use Bookshop\Catalog\Domain\Model\Genre\GenresCollection;
 
 class Book
 {

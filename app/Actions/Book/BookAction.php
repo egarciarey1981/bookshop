@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use App\Actions\Action;
-use Bookshop\Catalog\Domain\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Psr\Log\LoggerInterface;
 
 abstract class BookAction extends Action

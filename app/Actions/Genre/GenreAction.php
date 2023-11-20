@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Genre;
 
 use App\Actions\Action;
-use Bookshop\Catalog\Domain\Genre\GenreRepository;
+use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Psr\Log\LoggerInterface;
 
 abstract class GenreAction extends Action

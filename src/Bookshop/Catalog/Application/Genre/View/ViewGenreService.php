@@ -2,9 +2,9 @@
 
 namespace Bookshop\Catalog\Application\Genre\View;
 
-use Bookshop\Catalog\Domain\Genre\GenreDoesNotExistException;
-use Bookshop\Catalog\Domain\Genre\GenreId;
-use Bookshop\Catalog\Domain\Genre\GenreRepository;
+use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 
 class ViewGenreService
 {

@@ -2,10 +2,10 @@
 
 namespace Bookshop\Catalog\Application\Genre\Create;
 
-use Bookshop\Catalog\Domain\Genre\Genre;
-use Bookshop\Catalog\Domain\Genre\GenreId;
-use Bookshop\Catalog\Domain\Genre\GenreName;
-use Bookshop\Catalog\Domain\Genre\GenreRepository;
+use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 
 class CreateGenreService
 {

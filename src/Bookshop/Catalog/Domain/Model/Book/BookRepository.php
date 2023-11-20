@@ -1,6 +1,6 @@
 <?php
 
-namespace Bookshop\Catalog\Domain\Book;
+namespace Bookshop\Catalog\Domain\Model\Book;
 
 interface BookRepository
 {

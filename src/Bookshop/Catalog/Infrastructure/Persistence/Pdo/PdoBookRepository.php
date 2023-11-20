@@ -3,15 +3,15 @@
 namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 
 use PDO;
-use Bookshop\Catalog\Domain\Book\Book;
-use Bookshop\Catalog\Domain\Book\BookId;
-use Bookshop\Catalog\Domain\Book\BookTitle;
-use Bookshop\Catalog\Domain\Book\BookRepository;
-use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
-use Bookshop\Catalog\Domain\Genre\Genre;
-use Bookshop\Catalog\Domain\Genre\GenreId;
-use Bookshop\Catalog\Domain\Genre\GenreName;
-use Bookshop\Catalog\Domain\Genre\GenresCollection;
+use Bookshop\Catalog\Domain\Model\Book\Book;
+use Bookshop\Catalog\Domain\Model\Book\BookId;
+use Bookshop\Catalog\Domain\Model\Book\BookTitle;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
+use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Bookshop\Catalog\Domain\Model\Genre\GenresCollection;
 
 class PdoBookRepository extends PdoRepository implements BookRepository
 {

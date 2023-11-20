@@ -1,6 +1,6 @@
 <?php
 
-namespace Bookshop\Catalog\Domain\Genre;
+namespace Bookshop\Catalog\Domain\Model\Genre;
 
 interface GenreRepository
 {

@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Book\List;
 
-use Bookshop\Catalog\Domain\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 
 class ListBooksService
 {

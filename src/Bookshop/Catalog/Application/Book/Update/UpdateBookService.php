@@ -2,14 +2,14 @@
 
 namespace Bookshop\Catalog\Application\Book\Update;
 
-use Bookshop\Catalog\Domain\Book\Book;
-use Bookshop\Catalog\Domain\Book\BookDoesNotExistException;
-use Bookshop\Catalog\Domain\Book\BookId;
-use Bookshop\Catalog\Domain\Book\BookRepository;
-use Bookshop\Catalog\Domain\Book\BookTitle;
-use Bookshop\Catalog\Domain\Genre\GenreId;
-use Bookshop\Catalog\Domain\Genre\GenreRepository;
-use Bookshop\Catalog\Domain\Genre\GenresCollection;
+use Bookshop\Catalog\Domain\Model\Book\Book;
+use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
+use Bookshop\Catalog\Domain\Model\Book\BookId;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookTitle;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
+use Bookshop\Catalog\Domain\Model\Genre\GenresCollection;
 
 class UpdateBookService
 {
