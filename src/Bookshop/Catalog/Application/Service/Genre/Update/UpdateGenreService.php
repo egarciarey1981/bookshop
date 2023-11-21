@@ -25,11 +25,15 @@ class UpdateGenreService
         $genre = $this->genreRepository->ofGenreId($genreId);
 
         if ($genre === null) {
-            throw new GenreDoesNotExistException($genreId);
+            throw new GenreDoesNotExistException(
+                sprintf('Genre with id `%s` does not exist', $genreId->value())
+            );
         }
 
         $genre = new Genre($genreId, $genreName);
 
-        $this->genreRepository->save($genre);
+        if ($this->genreRepository->save($genre) === false) {
+            throw new \Exception('Genre could not be updated');
+        }
     }
 }

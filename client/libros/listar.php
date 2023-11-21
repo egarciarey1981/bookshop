@@ -53,8 +53,8 @@
                 type: "GET",
                 dataType: "json",
                 statusCode: {
-                    500: function() {
-                        alert('Error en el servidor');
+                    500: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     200: function(response) {
                         if (response.data.total == 0) {
@@ -70,13 +70,17 @@
 
         function pintarLibros(libros) {
             $.each(libros, function(key, value) {
+                listGenres = 'Sin géneros';
+                if (0 < value.genres.length) {
+                    genresName = jQuery.map(value.genres, function(value, key) {
+                        return '<a href="http://localhost:8081/generos/ver.php?id=' + value.id +  '">' + value.name + '</a>';
+                    });
+                    listGenres = genresName.join(', ');
+                }                 
                 var fila = "<tr>";
                 fila += "<td><a href='http://localhost:8081/libros/ver.php?id=" + value.id + "'>" + value.title + "</a></td>";
                 fila += "<td>";
-                genresName = jQuery.map(value.genres, function(value, key) {
-                    return '<a href="http://localhost:8081/generos/ver.php?id=' + value.id +  '">' + value.name + '</a>';
-                });
-                fila += genresName.join(', ');
+                fila += listGenres;
                 fila += "</td>";
                 fila += "<td>";
                 fila += "<a href='http://localhost:8081/libros/modificar.php?id=" + value.id + "'>Modificar</a> ";

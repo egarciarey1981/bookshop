@@ -30,6 +30,7 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Libros</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -52,11 +53,8 @@
                 type: "GET",
                 dataType: "json",
                 statusCode: {
-                    500: function() {
-                        if (response.responseJSON.error) {
-                            console.log(response.responseJSON.error);
-                        }
-                        alert('Error en el servidor');
+                    500: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     200: function(response) {
                         if (response.data.total == 0) {
@@ -74,6 +72,7 @@
             $.each(generos, function(key, value) {
                 var fila = "<tr>";
                 fila += "<td><a href='http://localhost:8081/generos/ver.php?id=" + value.id + "'>" + value.name + "</a></td>";
+                fila += "<td>?</td>";                
                 fila += "<td>";
                 fila += "<a href='http://localhost:8081/generos/modificar.php?id=" + value.id + "'>Modificar</a> ";
                 fila += "<a href='http://localhost:8081/generos/eliminar.php?id=" + value.id + "'>Eliminar</a>";

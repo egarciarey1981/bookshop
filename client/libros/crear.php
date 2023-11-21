@@ -40,6 +40,9 @@
                         500: function(response) {
                             alert(response.responseJSON.error);
                         },
+                        404: function(response) {
+                            alert(response.responseJSON.error);
+                        },
                         400: function(response) {
                             alert(response.responseJSON.error);
                         },

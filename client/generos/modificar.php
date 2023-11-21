@@ -34,12 +34,11 @@
                     500: function(response) {
                         alert(response.responseJSON.error);
                     },
-                    400: function(response) {
+                    404: function(response) {
                         alert(response.responseJSON.error);
                     },
-                    404: function(response) {
-                        alert('Género no encontrado');
-                        window.location.href = 'http://localhost:8081/generos/listar.php';
+                    400: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     200: function(response) {
                         $('#nombre').val(response.data.genre.name);
@@ -60,17 +59,13 @@
                     },
                     statusCode: {
                         500: function(response) {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Error en el servidor');
-                            window.location.href = 'http://localhost:8081/generos/listar.php';
+                            alert(response.responseJSON.error);
                         },
-                        400: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Datos incorrectos');
+                        404: function(response) {
+                            alert(response.responseJSON.error);
+                        },
+                        400: function(response) {
+                            alert(response.responseJSON.error);
                         },
                         200: function(response) {
                             alert('Género modificado correctamente');

@@ -22,9 +22,13 @@ class RemoveGenreService
         $genre = $this->genreRepository->ofGenreId($genreId);
 
         if ($genre === null) {
-            throw new GenreDoesNotExistException($genreId);
+            throw new GenreDoesNotExistException(
+                sprintf('Genre with id `%s` does not exist', $genreId->value())
+            );
         }
 
-        $this->genreRepository->remove($genre);
+        if ($this->genreRepository->remove($genre) === false) {
+            throw new \Exception('Genre could not be removed');
+        }
     }
 }

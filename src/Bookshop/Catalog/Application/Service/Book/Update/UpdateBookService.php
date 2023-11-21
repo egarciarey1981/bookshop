@@ -38,11 +38,15 @@ class UpdateBookService
         $book = $this->bookRepository->ofBookId($bookId);
 
         if ($book === null) {
-            throw new BookDoesNotExistException($bookId);
+            throw new BookDoesNotExistException(
+                sprintf('Book with id `%s` does not exist', $bookId->value())
+            );
         }
 
         $book = new Book($bookId, $bookTitle, $bookGenres);
 
-        $this->bookRepository->save($book);
+        if ($this->bookRepository->update($book) === false) {
+            throw new \Exception('Book could not be updated');
+        }
     }
 }

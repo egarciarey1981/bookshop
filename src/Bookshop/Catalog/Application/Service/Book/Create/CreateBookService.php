@@ -35,8 +35,11 @@ class CreateBookService
 
         $book = new Book($bookId, $bookName, $bookGenres);
 
-        $this->bookRepository->save($book);
+        if ($this->bookRepository->insert($book) === false) {
+            throw new \Exception('Book could not be created');
+        } else {
+            return new CreateBookResponse($book->toArray());
+        }
 
-        return new CreateBookResponse($book->toArray());
     }
 }

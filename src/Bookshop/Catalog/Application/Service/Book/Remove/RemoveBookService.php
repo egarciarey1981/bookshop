@@ -22,9 +22,13 @@ class RemoveBookService
         $book = $this->bookRepository->ofBookId($bookId);
 
         if ($book === null) {
-            throw new BookDoesNotExistException($bookId);
+            throw new BookDoesNotExistException(
+                sprintf('Book with id `%s` does not exist', $bookId->value())
+            );
         }
 
-        $this->bookRepository->remove($book);
+        if ($this->bookRepository->remove($book) === false) {
+            throw new \Exception('Book could not be removed');
+        }
     }
 }

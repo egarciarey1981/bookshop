@@ -35,9 +35,8 @@
                     400: function(response) {
                         alert(response.responseJSON.error);
                     },
-                    404: function() {
-                        alert('Libro no encontrado');
-                        window.location.href = 'http://localhost:8081/libros/listar.php';
+                    404: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     200: function(response) {
                         $('#libro').html(response.data.book.title);
@@ -52,19 +51,14 @@
                     type: "DELETE",
                     dataType: "json",
                     statusCode: {
-                        500: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Error en el servidor');
-                            window.location.href = 'http://localhost:8081/libros/listar.php';
+                        500: function(response) {
+                            alert(response.responseJSON.error);
                         },
-                        404: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Libro no encontrado');
-                            window.location.href = 'http://localhost:8081/libros/listar.php';
+                        404: function(response) {
+                            alert(response.responseJSON.error);
+                        },
+                        400: function(response) {
+                            alert(response.responseJSON.error);
                         },
                         200: function() {
                             alert('Libro eliminado');

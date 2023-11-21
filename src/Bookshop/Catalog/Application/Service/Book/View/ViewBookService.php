@@ -22,7 +22,9 @@ class ViewBookService
         $book = $this->bookRepository->ofBookId($bookId);
 
         if ($book === null) {
-            throw new BookDoesNotExistException($bookId);
+            throw new BookDoesNotExistException(
+                sprintf('Book with id `%s` does not exist', $bookId->value())
+            );
         }
 
         return new ViewBookResponse($book->toArray());

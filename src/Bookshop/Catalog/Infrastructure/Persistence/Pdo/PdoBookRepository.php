@@ -71,7 +71,7 @@ SQL;
         return $stmt->fetchColumn();
     }
 
-    public function ofBookId(BookId $bookId): Book
+    public function ofBookId(BookId $bookId): ?Book
     {
         $sql = "SELECT * FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -79,7 +79,7 @@ SQL;
         $stmt->execute();
         $book = $stmt->fetch();
         if (!$book) {
-            throw new BookDoesNotExistException($bookId);
+            return null;
         }
 
         $sql = <<<SQL
@@ -107,29 +107,81 @@ SQL;
         );
     }
 
-    public function save(Book $book): void
+    public function insert(Book $book): bool
     {
-        $sql = "INSERT INTO books (id, title) VALUES (:id, :title) ON DUPLICATE KEY UPDATE title = :title";
+        $this->connection->beginTransaction();
+
+        $sql = "INSERT INTO books (id, title) VALUES (:id, :title)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
-        $stmt->execute();
+        
+        if (!$stmt->execute()) {
+            $this->connection->rollBack();
+            return false;
+        }
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
-        $stmt->execute();
+        
+        if (!$stmt->execute()) {
+            $this->connection->rollBack();
+            return false;
+        }
 
         $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
         foreach ($book->bookGenres() as $genre) {
             $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
-            $stmt->execute();
+            if (!$stmt->execute()) {
+                $this->connection->rollBack();
+                return false;
+            }
         }
+
+        return $this->connection->commit();
     }
 
-    public function remove(Book $book): void
+    public function update(Book $book): bool
+    {
+        $this->connection->beginTransaction();
+
+        $sql = "UPDATE books SET title = :title WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
+        
+        if (!$stmt->execute()) {
+            $this->connection->rollBack();
+            return false;
+        }
+
+        $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
+        
+        if (!$stmt->execute()) {
+            $this->connection->rollBack();
+            return false;
+        }
+
+        $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
+        foreach ($book->bookGenres() as $genre) {
+            $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $this->connection->rollBack();
+                return false;
+            }
+        }
+
+        return $this->connection->commit();
+    }
+
+    public function remove(Book $book): bool
     {
         $sql = "DELETE FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -143,7 +195,7 @@ SQL;
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     public function nextIdentity(): BookId

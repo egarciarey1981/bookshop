@@ -32,12 +32,11 @@
                     500: function(response) {
                         alert(response.responseJSON.error);
                     },
-                    400: function(response) {
-                        alert(response.responseJSON.error);
-                    },
                     404: function(response) {
                         alert('Género no encontrado');
-                        window.location.href = 'http://localhost:8081/generos/listar.php';
+                    },
+                    400: function(response) {
+                        alert(response.responseJSON.error);
                     },
                     200: function(response) {
                         $('#genero').html(response.data.genre.name);
@@ -52,19 +51,14 @@
                     type: "DELETE",
                     dataType: "json",
                     statusCode: {
-                        500: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
-                            alert('Error en el servidor');
-                            window.location.href = 'http://localhost:8081/generos/listar.php';
+                        500: function(response) {
+                            alert(response.responseJSON.error);
                         },
-                        404: function() {
-                            if (response.responseJSON.error) {
-                                console.log(response.responseJSON.error);
-                            }
+                        404: function(response) {
                             alert('Género no encontrado');
-                            window.location.href = 'http://localhost:8081/generos/listar.php';
+                        },
+                        400: function(response) {
+                            alert(response.responseJSON.error);
                         },
                         200: function() {
                             alert('Género eliminado');

@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Domain\Model\Book;
 
-use DomainException;
+use Bookshop\Catalog\Domain\Exception\DomainException;
 
 class BookTitle
 {

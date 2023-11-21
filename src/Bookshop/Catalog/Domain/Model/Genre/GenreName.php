@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use DomainException;
+use Bookshop\Catalog\Domain\Exception\DomainException;
 
 class GenreName
 {
