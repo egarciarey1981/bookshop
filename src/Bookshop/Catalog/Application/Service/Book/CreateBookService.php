@@ -33,8 +33,8 @@ class CreateBookService extends BookService
 
         if ($this->bookRepository->insert($book) === false) {
             throw new \Exception('Book could not be created');
-        } 
-        
+        }
+
         return $book->toArray();
     }
 }

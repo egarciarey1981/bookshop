@@ -10,14 +10,14 @@ class CreateGenreService extends GenreService
     public function execute(string $genreName): array
     {
         $genre = new Genre(
-            $this->genreRepository->nextIdentity(), 
-            new GenreName($genreName),
+            $this->genreRepository->nextIdentity(),
+            new GenreName($genreName)
         );
 
-        if ($this->genreRepository->save($genre) === false) {
+        if ($this->genreRepository->insert($genre) === false) {
             throw new  \Exception('Genre could not be created');
         }
-        
+
         return $genre->toArray();
     }
 }

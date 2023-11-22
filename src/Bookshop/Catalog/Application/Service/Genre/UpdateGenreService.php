@@ -26,7 +26,7 @@ class UpdateGenreService extends GenreService
             new GenreName($genreName)
         );
 
-        if ($this->genreRepository->save($genre) === false) {
+        if ($this->genreRepository->update($genre) === false) {
             throw new \Exception('Genre could not be updated');
         }
     }

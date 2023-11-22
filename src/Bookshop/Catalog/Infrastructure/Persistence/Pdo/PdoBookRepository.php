@@ -113,7 +113,7 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
-        
+
         if (!$stmt->execute()) {
             $this->connection->rollBack();
             return false;
@@ -122,7 +122,7 @@ SQL;
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
-        
+
         if (!$stmt->execute()) {
             $this->connection->rollBack();
             return false;
@@ -150,7 +150,7 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
-        
+
         if (!$stmt->execute()) {
             $this->connection->rollBack();
             return false;
@@ -159,7 +159,7 @@ SQL;
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
-        
+
         if (!$stmt->execute()) {
             $this->connection->rollBack();
             return false;
