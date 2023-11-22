@@ -97,8 +97,9 @@
         }
 
         function limpiarFormulario() {
-            $('#nombre').val('');
+            $('#nombre').val('');            
             $('#enlace_limpiar_formulario').hide();
+            pagina = 1;
             cargarGeneros(pagina);
         }
 
@@ -112,6 +113,7 @@
             event.preventDefault();
             filtro = $('#nombre').val();
             $('#enlace_limpiar_formulario').show();
+            pagina = 1;
             cargarGeneros(pagina, filtro);
         });
 
