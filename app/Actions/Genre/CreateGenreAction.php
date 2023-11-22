@@ -4,25 +4,33 @@ declare(strict_types=1);
 
 namespace App\Actions\Genre;
 
+use App\Actions\Action;
+use Bookshop\Catalog\Application\Service\Genre\CreateGenreService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Service\Genre\Create\CreateGenreRequest;
-use Bookshop\Catalog\Application\Service\Genre\Create\CreateGenreService;
+use Psr\Log\LoggerInterface;
 
-class CreateGenreAction extends GenreAction
+class CreateGenreAction extends Action
 {
+    public function __construct(
+        protected LoggerInterface $logger,
+        private readonly CreateGenreService $createGenreService,
+    ) {
+    }
+
     public function action(): Response
     {
-        $name = $this->formParam('name', '');
+        $genre = $this->createGenreService->execute(
+            $this->formParam('name', ''),
+        );
 
-        $createGenreRequest = new CreateGenreRequest($name);
-        $createGenreService = new CreateGenreService($this->genreRepository);
-        $createGenreResponse = $createGenreService($createGenreRequest);
+        $this->logger->info(
+            sprintf("Genre of id `%s` was created.", $genre['id'])
+        );
 
-        $response['data']['genre'] = $createGenreResponse->genre();
-        $response['headers']['Location'] = '/genre/' . $response['data']['genre']['id'];
-
-        $this->logger->info('Genre of id `'. $response['data']['genre']['id'] .'` was createed.');
-
-        return $this->respondWithData($response['data'], 201, $response['headers']);
+        return $this->respondWithData(
+            ['genre' => $genre],
+            201,
+            ['headers' => '/genre/' . $genre['id'] ],
+        );
     }
 }

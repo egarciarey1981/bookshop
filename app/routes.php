@@ -9,7 +9,7 @@ use App\Actions\Book\CreateBookAction;
 use App\Actions\Book\RemoveBookAction;
 use App\Actions\Book\UpdateBookAction;
 use App\Actions\Genre\CreateGenreAction;
-use App\Actions\Genre\ListGenresAction;
+use App\Actions\Genre\ListGenreAction;
 use App\Actions\Genre\RemoveGenreAction;
 use App\Actions\Genre\UpdateGenreAction;
 use App\Actions\Genre\ViewGenreAction;
@@ -31,7 +31,7 @@ return function (App $app) {
     });
     $app->group('/genre', function (Group $group) {
         $group->get('/{id}', ViewGenreAction::class);
-        $group->get('', ListGenresAction::class);
+        $group->get('', ListGenreAction::class);
         $group->post('', CreateGenreAction::class);
         $group->put('/{id}', UpdateGenreAction::class);
         $group->delete('/{id}', RemoveGenreAction::class);

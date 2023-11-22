@@ -4,21 +4,28 @@ declare(strict_types=1);
 
 namespace App\Actions\Genre;
 
+use App\Actions\Action;
+use Bookshop\Catalog\Application\Service\Genre\RemoveGenreService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Service\Genre\Remove\RemoveGenreRequest;
-use Bookshop\Catalog\Application\Service\Genre\Remove\RemoveGenreService;
+use Psr\Log\LoggerInterface;
 
-class RemoveGenreAction extends GenreAction
+class RemoveGenreAction extends Action
 {
+    public function __construct(
+        protected LoggerInterface $logger,
+        private readonly RemoveGenreService $removeGenreService,
+    ) {
+    }
+
     public function action(): Response
     {
-        $id = $this->resolveArg('id');
+        $this->removeGenreService->execute(
+            $genreId = $this->resolveArg('id'),
+        );
 
-        $removeGenreRequest = new RemoveGenreRequest($id);
-        $removeGenreService = new RemoveGenreService($this->genreRepository);
-        $removeGenreService($removeGenreRequest);
-
-        $this->logger->info("Genre of id `$id` was removed.");
+        $this->logger->info(
+            sprintf("Genre of id `%s` was removed.", $genreId)
+        );
 
         return $this->respond();
     }

@@ -4,24 +4,31 @@ declare(strict_types=1);
 
 namespace App\Actions\Genre;
 
+use App\Actions\Action;
+use Bookshop\Catalog\Application\Service\Genre\ViewGenreService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Service\Genre\View\ViewGenreRequest;
-use Bookshop\Catalog\Application\Service\Genre\View\ViewGenreService;
+use Psr\Log\LoggerInterface;
 
-class ViewGenreAction extends GenreAction
+class ViewGenreAction extends Action
 {
+    public function __construct(
+        protected LoggerInterface $logger,
+        private readonly ViewGenreService $viewGenresService,
+    ) {
+    }
+
     public function action(): Response
     {
-        $id = $this->resolveArg('id');
+        $genre = $this->viewGenresService->execute(
+            $genreId = $this->resolveArg('id')
+        );
 
-        $viewGenreRequest = new ViewGenreRequest($id);
-        $viewGenreService = new ViewGenreService($this->genreRepository);
-        $viewGenreResponse = $viewGenreService($viewGenreRequest);
+        $this->logger->info(
+            sprintf("Genre of id `%s` was viewed.", $genreId)
+        );
 
-        $response['data']['genre'] = $viewGenreResponse->genre();
-
-        $this->logger->info("Genre of id `$id` was viewed.");
-
-        return $this->respondWithData($response['data']);
+        return $this->respondWithData([
+            'genre' => $genre,
+        ]);
     }
 }

@@ -18,11 +18,6 @@ abstract class Action
     protected array $args;
     protected LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     abstract protected function action(): Response;
 
     public function __invoke(Request $request, Response $response, array $args): Response
