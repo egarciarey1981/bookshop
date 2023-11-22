@@ -12,7 +12,7 @@ class UpdateGenreService extends GenreService
     public function execute(string $genreId, string $genreName)
     {
         $genre = $this->genreRepository->ofGenreId(
-            new GenreId($genreId),
+            new GenreId($genreId)
         );
 
         if ($genre === null) {

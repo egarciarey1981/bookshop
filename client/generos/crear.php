@@ -7,6 +7,8 @@
 </head>
 
 <body>
+    <?php include __DIR__ . '/../includes/nav.html' ?>
+
     <h1>Crear género</h1>
 
     <form id="formulario_crear_genero">

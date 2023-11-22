@@ -4,43 +4,34 @@ declare(strict_types=1);
 
 namespace App\Actions\Book;
 
+use App\Actions\Action;
+use Bookshop\Catalog\Application\Service\Book\CreateBookService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Service\Book\Create\CreateBookRequest;
-use Bookshop\Catalog\Application\Service\Book\Create\CreateBookService;
-use Bookshop\Catalog\Domain\Model\Book\BookRepository;
-use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Psr\Log\LoggerInterface;
 
-class CreateBookAction extends BookAction
+class CreateBookAction extends Action
 {
-    private GenreRepository $genreRepository;
-
     public function __construct(
-        LoggerInterface $logger,
-        BookRepository $bookRepository,
-        GenreRepository $genreRepository,
+        protected LoggerInterface $logger,
+        private readonly CreateBookService $createBookService,
     ) {
-        parent::__construct($logger, $bookRepository);
-        $this->genreRepository = $genreRepository;
     }
 
     public function action(): Response
     {
-        $title = $this->formParam('title', '');
-        $genreIds = $this->formParam('genres', []);
-
-        $createBookRequest = new CreateBookRequest($title, $genreIds);
-        $createBookService = new CreateBookService(
-            $this->bookRepository,
-            $this->genreRepository,
+        $book = $this->createBookService->execute(
+            $this->formParam('title', ''),
+            $this->formParam('genres', [])
         );
-        $createBookResponse = $createBookService($createBookRequest);
 
-        $response['data']['book'] = $createBookResponse->book();
-        $response['headers']['Location'] = '/book/' . $response['data']['book']['id'];
+        $this->logger->info(
+            sprintf("Book of id `%s` was created.", $book['id'])
+        );
 
-        $this->logger->info('Book of id `' . $response['data']['book']['id'] . '` was created.');
-
-        return $this->respondWithData($response['data'], 201, $response['headers']);
+        return $this->respondWithData(
+            ['genre' => $book],
+            201,
+            ['headers' => '/genre/' . $book['id']]
+        );
     }
 }

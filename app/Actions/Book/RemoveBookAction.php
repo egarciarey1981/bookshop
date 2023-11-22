@@ -4,21 +4,28 @@ declare(strict_types=1);
 
 namespace App\Actions\Book;
 
+use App\Actions\Action;
+use Bookshop\Catalog\Application\Service\Book\RemoveBookService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Service\Book\Remove\RemoveBookRequest;
-use Bookshop\Catalog\Application\Service\Book\Remove\RemoveBookService;
+use Psr\Log\LoggerInterface;
 
-class RemoveBookAction extends BookAction
+class RemoveBookAction extends Action
 {
+    public function __construct(
+        protected LoggerInterface $logger,
+        private readonly RemoveBookService $removeBookService,
+    ) {
+    }
+
     public function action(): Response
     {
-        $id = $this->resolveArg('id');
+        $this->removeBookService->execute(
+            $bookId = $this->resolveArg('id')
+        );
 
-        $removeBookRequest = new RemoveBookRequest($id);
-        $removeBookService = new RemoveBookService($this->bookRepository);
-        $removeBookService($removeBookRequest);
-
-        $this->logger->info("Book of id `$id` was removed.");
+        $this->logger->info(
+            sprintf("Book of id `%s` was removed.", $bookId)
+        );
 
         return $this->respond();
     }

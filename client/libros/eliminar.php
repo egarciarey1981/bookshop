@@ -12,6 +12,8 @@
 </head>
 
 <body>
+    <?php include __DIR__ . '/../includes/nav.html' ?>
+
     <h1>Eliminar libro</h1>
 
     <form id="formulario_eliminar_libro" style="display: none;">

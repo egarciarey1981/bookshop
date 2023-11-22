@@ -4,27 +4,29 @@ declare(strict_types=1);
 
 namespace App\Actions\Book;
 
+use App\Actions\Action;
+use Bookshop\Catalog\Application\Service\Book\ListBookService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Bookshop\Catalog\Application\Service\Book\List\ListBooksRequest;
-use Bookshop\Catalog\Application\Service\Book\List\ListBooksService;
+use Psr\Log\LoggerInterface;
 
-class ListBooksAction extends BookAction
+class ListBooksAction extends Action
 {
+    public function __construct(
+        protected LoggerInterface $logger,
+        private readonly ListBookService $listBookService,
+    ) {
+    }
+
     public function action(): Response
     {
-        $offset = (int) $this->queryString('offset', 0);
-        $limit = (int) $this->queryString('limit', 10);
-        $filter = $this->queryString('filter', '');
-
-        $listBookResquest = new ListBooksRequest($offset, $limit, $filter);
-        $listBooksService = new ListBooksService($this->bookRepository);
-        $listBookResponse = $listBooksService($listBookResquest);
-
-        $response['data']['total'] = $listBookResponse->total();
-        $response['data']['books'] = $listBookResponse->books();
+        $response = $this->listBookService->execute(
+            (int) $this->queryString('offset', 0),
+            (int) $this->queryString('limit', 10),
+            $this->queryString('filter', '')
+        );
 
         $this->logger->info("Books list was viewed.");
 
-        return $this->respondWithData($response['data']);
+        return $this->respondWithData($response);
     }
 }

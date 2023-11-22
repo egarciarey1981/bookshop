@@ -7,11 +7,9 @@ use Bookshop\Catalog\Domain\Model\Book\Book;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
-use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
-use Bookshop\Catalog\Domain\Model\Genre\GenresCollection;
 
 class PdoBookRepository extends PdoRepository implements BookRepository
 {
@@ -54,7 +52,7 @@ SQL;
             return new Book(
                 new BookId($book['id']),
                 new BookTitle($book['title']),
-                new GenresCollection(...$genresByBookId[$book['id']] ?? [])
+                $genresByBookId[$book['id']] ?? []
             );
         }, $books);
     }
@@ -103,7 +101,7 @@ SQL;
         return new Book(
             new BookId($book['id']),
             new BookTitle($book['title']),
-            new GenresCollection(...$genres)
+            $genres
         );
     }
 
@@ -187,10 +185,6 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->execute();
-
-        if (!$stmt->rowCount()) {
-            throw new BookDoesNotExistException($book->bookId());
-        }
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
         $stmt = $this->connection->prepare($sql);

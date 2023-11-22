@@ -7,6 +7,8 @@
 </head>
 
 <body>
+    <?php include __DIR__ . '/../includes/nav.html' ?>
+
     <h1>Editar género</h1>
 
     <form id="formulario_modificar_genero" style="display: none;">

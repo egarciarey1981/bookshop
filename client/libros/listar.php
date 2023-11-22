@@ -7,12 +7,7 @@
 </head>
 
 <body>
-    <nav>
-        <lu>
-            <li><a href="http://localhost:8081/libros/listar.php">Libros</a></li>
-            <li><a href="http://localhost:8081/generos/listar.php">Géneros</a></li>
-        </lu>
-    </nav>
+    <?php include __DIR__ . '/../includes/nav.html' ?>
 
     <h1>Listado de libros</h1>
 

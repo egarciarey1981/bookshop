@@ -7,7 +7,9 @@
 </head>
 
 <body>
+    <?php include __DIR__ . '/../includes/nav.html' ?>
     <h1></h1>
+    <ul id="generos"></ul>
 
     <script>
         $(document).ready(function() {
@@ -24,6 +26,12 @@
                     },
                     200: function(response) {
                         $('h1').text(response.data.book.title);
+                        response.data.book.genres.forEach(function(genero) {
+                            var fila = '<li>';
+                            fila += '<a href="http://localhost:8081/generos/ver.php?id=' + genero.id + '">' + genero.name + '</a>';
+                            fila += '</li>';
+                            $('#generos').append(fila);
+                        });
                     }
                 },
             });

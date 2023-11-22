@@ -7,7 +7,6 @@ use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
-use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 
 class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
@@ -60,25 +59,54 @@ SQL;
         );
     }
 
-    public function save(Genre $genre): void
+    public function ofGenreIds(array $genreIds): array
     {
-        $sql = "INSERT INTO genres (id, name) VALUES (:id, :name) ON DUPLICATE KEY UPDATE name = :name";
+        if (count($genreIds) === 0) {
+            return [];
+        }
+
+        $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
+        $sql = "SELECT * FROM genres WHERE id IN ($inQuery)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(
+            array_map(
+                fn ($genreId) => $genreId->value(),
+                $genreIds
+            )
+        );
+        $genres = $stmt->fetchAll();
+        return array_map(function ($genre) {
+            return new Genre(
+                new GenreId($genre['id']),
+                new GenreName($genre['name'])
+            );
+        }, $genres);
+    }
+
+    public function insert(Genre $genre): bool
+    {
+        $sql = "INSERT INTO genres (id, name) VALUES (:id, :name)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
-    public function remove(Genre $genre): void
+    public function update(Genre $genre): bool
+    {
+        $sql = "UPDATE genres SET name = :name WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function remove(Genre $genre): bool
     {
         $sql = "DELETE FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
-        $stmt->execute();
-
-        if (!$stmt->rowCount()) {
-            throw new GenreDoesNotExistException($genre->genreId());
-        }
+        return $stmt->execute();
     }
 
     public function nextIdentity(): GenreId
