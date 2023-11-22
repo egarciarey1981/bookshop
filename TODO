@@ -1,0 +1,4 @@
+usar Book:Create (saber que realmente se ha creado, no recuperado de bd)
+no usar request y response (simplicidad)
+_invoke -> execute
+action -> no pasar repo, directamente service
