@@ -4,6 +4,7 @@ namespace Bookshop\Catalog\Application\Service\Genre;
 
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Exception;
 
 class CreateGenreService extends GenreService
 {
@@ -15,7 +16,7 @@ class CreateGenreService extends GenreService
         );
 
         if ($this->genreRepository->insert($genre) === false) {
-            throw new  \Exception('Genre could not be created');
+            throw new  Exception('Genre could not be created');
         }
 
         return $genre->toArray();

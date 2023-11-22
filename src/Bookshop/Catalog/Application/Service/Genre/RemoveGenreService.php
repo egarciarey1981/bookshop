@@ -5,6 +5,7 @@ namespace Bookshop\Catalog\Application\Service\Genre;
 use Bookshop\Catalog\Application\Service\Genre\GenreService;
 use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Exception;
 
 class RemoveGenreService extends GenreService
 {
@@ -21,7 +22,7 @@ class RemoveGenreService extends GenreService
         }
 
         if ($this->genreRepository->remove($genre) === false) {
-            throw new \Exception('Genre could not be removed');
+            throw new Exception('Genre could not be removed');
         }
     }
 }

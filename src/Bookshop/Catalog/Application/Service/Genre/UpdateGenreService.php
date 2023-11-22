@@ -6,6 +6,7 @@ use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Exception;
 
 class UpdateGenreService extends GenreService
 {
@@ -27,7 +28,7 @@ class UpdateGenreService extends GenreService
         );
 
         if ($this->genreRepository->update($genre) === false) {
-            throw new \Exception('Genre could not be updated');
+            throw new Exception('Genre could not be updated');
         }
     }
 }

@@ -7,6 +7,7 @@ use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Exception;
 
 class UpdateBookService extends BookService
 {
@@ -32,7 +33,7 @@ class UpdateBookService extends BookService
         );
 
         if ($this->bookRepository->update($book) === false) {
-            throw new \Exception('Book could not be updated');
+            throw new Exception('Book could not be updated');
         }
     }
 }

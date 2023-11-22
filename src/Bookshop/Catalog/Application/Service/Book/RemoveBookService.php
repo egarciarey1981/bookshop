@@ -4,6 +4,7 @@ namespace Bookshop\Catalog\Application\Service\Book;
 
 use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
+use Exception;
 
 class RemoveBookService extends BookService
 {
@@ -20,7 +21,7 @@ class RemoveBookService extends BookService
         }
 
         if ($this->bookRepository->remove($book) === false) {
-            throw new \Exception('Book could not be removed');
+            throw new Exception('Book could not be removed');
         }
     }
 }

@@ -7,6 +7,7 @@ use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
+use Exception;
 
 class CreateBookService extends BookService
 {
@@ -32,7 +33,7 @@ class CreateBookService extends BookService
         );
 
         if ($this->bookRepository->insert($book) === false) {
-            throw new \Exception('Book could not be created');
+            throw new Exception('Book could not be created');
         }
 
         return $book->toArray();
