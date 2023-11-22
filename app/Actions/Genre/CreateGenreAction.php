@@ -20,7 +20,7 @@ class CreateGenreAction extends Action
     public function action(): Response
     {
         $genre = $this->createGenreService->execute(
-            $this->formParam('name', ''),
+            $this->formParam('name', '')
         );
 
         $this->logger->info(
@@ -30,7 +30,7 @@ class CreateGenreAction extends Action
         return $this->respondWithData(
             ['genre' => $genre],
             201,
-            ['headers' => '/genre/' . $genre['id'] ],
+            ['headers' => '/genre/' . $genre['id']]
         );
     }
 }

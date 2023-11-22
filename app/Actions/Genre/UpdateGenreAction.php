@@ -21,7 +21,7 @@ class UpdateGenreAction extends Action
     {
         $this->updateGenreService->execute(
             $genreId = $this->resolveArg('id'),
-            $this->formParam('name', ''),
+            $this->formParam('name', '')
         );
 
         $this->logger->info(

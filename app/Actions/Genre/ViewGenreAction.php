@@ -27,8 +27,6 @@ class ViewGenreAction extends Action
             sprintf("Genre of id `%s` was viewed.", $genreId)
         );
 
-        return $this->respondWithData([
-            'genre' => $genre,
-        ]);
+        return $this->respondWithData(['genre' => $genre]);
     }
 }

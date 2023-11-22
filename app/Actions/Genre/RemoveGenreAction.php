@@ -20,7 +20,7 @@ class RemoveGenreAction extends Action
     public function action(): Response
     {
         $this->removeGenreService->execute(
-            $genreId = $this->resolveArg('id'),
+            $genreId = $this->resolveArg('id')
         );
 
         $this->logger->info(

@@ -22,7 +22,7 @@ class ListGenreAction extends Action
         $response = $this->listGenresService->execute(
             (int) $this->queryString('offset', 0),
             (int) $this->queryString('limit', 10),
-            $this->queryString('filter', ''),
+            $this->queryString('filter', '')
         );
 
         $this->logger->info("Genres list was viewed.");
