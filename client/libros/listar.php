@@ -108,6 +108,7 @@
         function limpiarFormulario() {
             $('#nombre').val('');
             $('#enlace_limpiar_formulario').hide();
+            pagina = 1;
             cargarLibros(pagina);
         }
 
@@ -121,6 +122,7 @@
             event.preventDefault();
             filtro = $('#nombre').val();
             $('#enlace_limpiar_formulario').show();
+            pagina = 1;
             cargarLibros(pagina, filtro);
         });
 
