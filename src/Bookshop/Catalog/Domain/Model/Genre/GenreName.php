@@ -6,12 +6,9 @@ use Bookshop\Catalog\Domain\Exception\DomainException;
 
 class GenreName
 {
-    private string $value;
-
-    public function __construct(string $value)
+    public function __construct(private string $value)
     {
         $this->assertIsValidName($value);
-        $this->value = $value;
     }
 
     public function value(): string

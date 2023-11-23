@@ -4,13 +4,10 @@ namespace Bookshop\Catalog\Domain\Model\Genre;
 
 class Genre
 {
-    private GenreId $genreId;
-    private GenreName $genreName;
-
-    public function __construct(GenreId $genreId, GenreName $genreName)
-    {
-        $this->genreId = $genreId;
-        $this->genreName = $genreName;
+    public function __construct(
+        private GenreId $genreId,
+        private GenreName $genreName,
+    ) {
     }
 
     public function genreId(): GenreId

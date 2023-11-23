@@ -6,17 +6,12 @@ use Bookshop\Catalog\Domain\Model\Genre\Genre;
 
 class Book
 {
-    private BookId $bookId;
-    private BookTitle $bookTitle;
-    /** @var array<Genre> */
-    private array $bookGenres;
-
     /** @param array<Genre> $bookGenres */
-    public function __construct(BookId $bookId, BookTitle $bookTitle, array $bookGenres)
-    {
-        $this->bookId = $bookId;
-        $this->bookTitle = $bookTitle;
-        $this->bookGenres = $bookGenres;
+    public function __construct(
+        private BookId $bookId,
+        private BookTitle $bookTitle,
+        private array $bookGenres,
+    ) {
     }
 
     public function bookId(): BookId

@@ -6,12 +6,9 @@ use DomainException;
 
 class GenreId
 {
-    private string $value;
-
-    public function __construct(string $value)
+    public function __construct(private string $value)
     {
         $this->assertIsValidId($value);
-        $this->value = $value;
     }
 
     public function value(): string
