@@ -17,6 +17,10 @@ class CreateBookService extends BookService
     ) {
     }
 
+    /**
+     * @param array<string> $bookGenreIds
+     * @return array<string,string|array<array<string,string>>>
+     * */
     public function execute(string $bookTitle, array $bookGenreIds): array
     {
         $genresBook = $this->genreRepository->ofGenreIds(

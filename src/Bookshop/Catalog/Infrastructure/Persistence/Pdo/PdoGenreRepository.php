@@ -7,6 +7,7 @@ use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
+use Exception;
 
 class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
@@ -34,13 +35,17 @@ SQL;
     public function count(string $filter): int
     {
         $sql = <<<SQL
-SELECT COUNT(*)
+SELECT COUNT(*) AS total
 FROM genres
 WHERE name LIKE "%$filter%"
 SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchColumn();
+        $result = $stmt->fetch();
+        if (is_array($result) === false) {
+            throw new Exception('Could not count genres');
+        }
+        return (int) $result['total'];
     }
 
     public function ofGenreId(GenreId $genreId): ?Genre
@@ -52,6 +57,9 @@ SQL;
         $genre = $stmt->fetch();
         if (!$genre) {
             return null;
+        }
+        if (is_array($genre) === false) {
+            throw new Exception('Could not count genres');
         }
         return new Genre(
             new GenreId($genre['id']),

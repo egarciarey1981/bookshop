@@ -7,6 +7,7 @@ use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 
 class ViewGenreService extends GenreService
 {
+    /** @return array<string,string> */
     public function execute(string $genreId): array
     {
         $genre = $this->genreRepository->ofGenreId(

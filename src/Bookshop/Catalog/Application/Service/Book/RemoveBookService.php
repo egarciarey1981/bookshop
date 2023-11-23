@@ -8,7 +8,7 @@ use Exception;
 
 class RemoveBookService extends BookService
 {
-    public function execute(string $bookId)
+    public function execute(string $bookId): void
     {
         $book = $this->bookRepository->ofBookId(
             new BookId($bookId)

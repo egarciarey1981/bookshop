@@ -8,6 +8,7 @@ use Exception;
 
 class CreateGenreService extends GenreService
 {
+    /** @return array<string,string> */
     public function execute(string $genreName): array
     {
         $genre = new Genre(

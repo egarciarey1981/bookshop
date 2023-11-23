@@ -9,7 +9,7 @@ use Exception;
 
 class RemoveGenreService extends GenreService
 {
-    public function execute(string $genreId)
+    public function execute(string $genreId): void
     {
         $genre = $this->genreRepository->ofGenreId(
             new GenreId($genreId),

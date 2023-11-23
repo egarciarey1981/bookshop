@@ -10,6 +10,7 @@ use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Exception;
 
 class PdoBookRepository extends PdoRepository implements BookRepository
 {
@@ -60,13 +61,17 @@ SQL;
     public function count(string $filter): int
     {
         $sql = <<<SQL
-SELECT COUNT(*)
+SELECT COUNT(*) AS total
 FROM books
 WHERE title LIKE "%$filter%"
 SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchColumn();
+        $result = $stmt->fetch();
+        if (is_array($result) === false) {
+            throw new Exception('Could not count books');
+        }
+        return (int) $result['total'];
     }
 
     public function ofBookId(BookId $bookId): ?Book
@@ -76,8 +81,8 @@ SQL;
         $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
         $stmt->execute();
         $book = $stmt->fetch();
-        if (!$book) {
-            return null;
+        if (is_array($book) === false) {
+            throw new Exception('Could not count books');
         }
 
         $sql = <<<SQL
@@ -88,20 +93,19 @@ WHERE book_id = :book_id
 SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $bookId->value(), PDO::PARAM_STR);
-        $stmt->execute();
-        $genres = $stmt->fetchAll();
-
-        array_walk($genres, function (&$genre) {
-            $genre = new Genre(
-                new GenreId($genre['id']),
-                new GenreName($genre['name'])
-            );
-        });
+        if ($stmt->execute() === false) {
+            throw new Exception('Could not count books');
+        }
 
         return new Book(
             new BookId($book['id']),
             new BookTitle($book['title']),
-            $genres
+            array_map(function ($genre) {
+                return new Genre(
+                    new GenreId($genre['id']),
+                    new GenreName($genre['name'])
+                );
+            }, $stmt->fetchAll())
         );
     }
 

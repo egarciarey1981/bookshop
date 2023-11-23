@@ -10,7 +10,7 @@ use Exception;
 
 class UpdateGenreService extends GenreService
 {
-    public function execute(string $genreId, string $genreName)
+    public function execute(string $genreId, string $genreName): void
     {
         $genre = $this->genreRepository->ofGenreId(
             new GenreId($genreId)

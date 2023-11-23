@@ -23,6 +23,7 @@ class Genre
         return $this->genreName;
     }
 
+    /** @return array<string,string> */
     public function toArray(): array
     {
         return [

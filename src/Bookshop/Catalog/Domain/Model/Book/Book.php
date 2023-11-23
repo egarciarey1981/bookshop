@@ -8,8 +8,10 @@ class Book
 {
     private BookId $bookId;
     private BookTitle $bookTitle;
+    /** @var array<Genre> */
     private array $bookGenres;
 
+    /** @param array<Genre> $bookGenres */
     public function __construct(BookId $bookId, BookTitle $bookTitle, array $bookGenres)
     {
         $this->bookId = $bookId;
@@ -27,11 +29,13 @@ class Book
         return $this->bookTitle;
     }
 
+    /** @return array<Genre> */
     public function bookGenres(): array
     {
         return $this->bookGenres;
     }
 
+    /** @return array<string,string|array<array<string,string>>> */
     public function toArray(): array
     {
         return [
