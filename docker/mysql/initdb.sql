@@ -4,7 +4,8 @@ USE `bookshop`;
 
 CREATE TABLE IF NOT EXISTS `genres` (
   `id`   varchar(255) NOT NULL PRIMARY KEY,
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `number_of_books` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `books` (

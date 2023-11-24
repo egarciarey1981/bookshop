@@ -7,6 +7,7 @@ class Genre
     public function __construct(
         private GenreId $genreId,
         private GenreName $genreName,
+        private int $numberOfBooks = 0,
     ) {
     }
 
@@ -20,12 +21,18 @@ class Genre
         return $this->genreName;
     }
 
+    public function numberOfBooks(): int
+    {
+        return $this->numberOfBooks;
+    }
+
     /** @return array<string,string> */
     public function toArray(): array
     {
         return [
             'id' => $this->genreId->value(),
             'name' => $this->genreName->value(),
+            'number_of_books' => (string) $this->numberOfBooks,
         ];
     }
 }

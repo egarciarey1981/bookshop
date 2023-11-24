@@ -14,7 +14,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
     public function all(int $offset, int $limit, string $filter): array
     {
         $sql = <<<SQL
-SELECT id, name
+SELECT id, name, number_of_books
 FROM genres
 WHERE name LIKE "%$filter%"
 ORDER BY name
@@ -27,7 +27,8 @@ SQL;
         return array_map(function ($genre) {
             return new Genre(
                 new GenreId($genre['id']),
-                new GenreName($genre['name'])
+                new GenreName($genre['name']),
+                $genre['number_of_books'],
             );
         }, $genres);
     }
@@ -50,7 +51,7 @@ SQL;
 
     public function ofGenreId(GenreId $genreId): ?Genre
     {
-        $sql = "SELECT * FROM genres WHERE id = :id";
+        $sql = "SELECT id, name, number_of_books FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
         $stmt->execute();
@@ -63,7 +64,8 @@ SQL;
         }
         return new Genre(
             new GenreId($genre['id']),
-            new GenreName($genre['name'])
+            new GenreName($genre['name']),
+            $genre['number_of_books'],
         );
     }
 
@@ -74,7 +76,7 @@ SQL;
         }
 
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
-        $sql = "SELECT * FROM genres WHERE id IN ($inQuery)";
+        $sql = "SELECT book_id, id, name FROM genres WHERE id IN ($inQuery)";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(
             array_map(
@@ -86,7 +88,8 @@ SQL;
         return array_map(function ($genre) {
             return new Genre(
                 new GenreId($genre['id']),
-                new GenreName($genre['name'])
+                new GenreName($genre['name']),
+                $genre['number_of_books'],
             );
         }, $genres);
     }
@@ -120,5 +123,19 @@ SQL;
     public function nextIdentity(): GenreId
     {
         return new GenreId(uniqid());
+    }
+
+    public function updateNumberOfBooksByGenre(): bool
+    {
+        $sql = <<<SQL
+UPDATE genres
+SET number_of_books = (
+    SELECT COUNT(*)
+    FROM books_genres
+    WHERE books_genres.genre_id = genres.id
+)
+SQL;
+        $stmt = $this->connection->prepare($sql);
+        return $stmt->execute();
     }
 }

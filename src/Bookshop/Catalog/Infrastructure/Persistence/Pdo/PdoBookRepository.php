@@ -31,7 +31,7 @@ SQL;
         $inQuery = str_repeat('?,', count($bookIds) - 1) . '?';
 
         $sql = <<<SQL
-SELECT book_id, id, name
+SELECT book_id, id, name, number_of_books
 FROM books_genres
 JOIN genres ON books_genres.genre_id = genres.id
 WHERE book_id IN ($inQuery)
@@ -45,7 +45,8 @@ SQL;
         foreach ($genres as $genre) {
             $genresByBookId[$genre['book_id']][] = new Genre(
                 new GenreId($genre['id']),
-                new GenreName($genre['name'])
+                new GenreName($genre['name']),
+                $genre['number_of_books'],
             );
         }
 
@@ -76,7 +77,7 @@ SQL;
 
     public function ofBookId(BookId $bookId): ?Book
     {
-        $sql = "SELECT * FROM books WHERE id = :id";
+        $sql = "SELECT book_id, id, name FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
         $stmt->execute();
@@ -86,7 +87,7 @@ SQL;
         }
 
         $sql = <<<SQL
-SELECT id, name
+SELECT id, name, number_of_books
 FROM books_genres
 JOIN genres ON books_genres.genre_id = genres.id
 WHERE book_id = :book_id
@@ -103,7 +104,8 @@ SQL;
             array_map(function ($genre) {
                 return new Genre(
                     new GenreId($genre['id']),
-                    new GenreName($genre['name'])
+                    new GenreName($genre['name']),
+                    $genre['number_of_books'],
                 );
             }, $stmt->fetchAll())
         );

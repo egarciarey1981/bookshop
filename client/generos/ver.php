@@ -10,6 +10,7 @@
     <?php include __DIR__ . '/../includes/nav.html' ?>
 
     <h1></h1>
+    <p id="number_of_books"></p>
 
     <script>
         $(document).ready(function() {
@@ -26,6 +27,7 @@
                     },
                     200: function(response) {
                         $('h1').text(response.data.genre.name);
+                        $('#number_of_books').text("Books: " + response.data.genre.number_of_books);
                     }
                 },
             });

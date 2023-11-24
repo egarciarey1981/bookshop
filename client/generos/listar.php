@@ -72,7 +72,7 @@
             $.each(generos, function(key, value) {
                 var fila = "<tr>";
                 fila += "<td><a href='http://localhost:8081/generos/ver.php?id=" + value.id + "'>" + value.name + "</a></td>";
-                fila += "<td>?</td>";                
+                fila += "<td>" + value.number_of_books + "</td>";
                 fila += "<td>";
                 fila += "<a href='http://localhost:8081/generos/modificar.php?id=" + value.id + "'>Modificar</a> ";
                 fila += "<a href='http://localhost:8081/generos/eliminar.php?id=" + value.id + "'>Eliminar</a>";
@@ -97,7 +97,7 @@
         }
 
         function limpiarFormulario() {
-            $('#nombre').val('');            
+            $('#nombre').val('');
             $('#enlace_limpiar_formulario').hide();
             pagina = 1;
             cargarGeneros(pagina);
