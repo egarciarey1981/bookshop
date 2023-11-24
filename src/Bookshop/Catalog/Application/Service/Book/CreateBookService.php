@@ -2,6 +2,8 @@
 
 namespace Bookshop\Catalog\Application\Service\Book;
 
+use Bookshop\Catalog\Domain\Event\Book\BookCreatedEvent;
+use Bookshop\Catalog\Domain\Event\DomainEventPublisher;
 use Bookshop\Catalog\Domain\Model\Book\Book;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
@@ -9,11 +11,12 @@ use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Exception;
 
-class CreateBookService extends BookService
+class CreateBookService
 {
     public function __construct(
-        protected readonly BookRepository $bookRepository,
-        protected readonly GenreRepository $genreRepository
+        private readonly DomainEventPublisher $domainEventPublisher,
+        private readonly BookRepository $bookRepository,
+        private readonly GenreRepository $genreRepository,
     ) {
     }
 
@@ -39,6 +42,10 @@ class CreateBookService extends BookService
         if ($this->bookRepository->insert($book) === false) {
             throw new Exception('Book could not be created');
         }
+
+        $this->domainEventPublisher->publish(
+            new BookCreatedEvent($book->bookId())
+        );
 
         return $book->toArray();
     }

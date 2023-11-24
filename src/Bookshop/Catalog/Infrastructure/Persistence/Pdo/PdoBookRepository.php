@@ -77,7 +77,7 @@ SQL;
 
     public function ofBookId(BookId $bookId): ?Book
     {
-        $sql = "SELECT book_id, id, name FROM books WHERE id = :id";
+        $sql = "SELECT id, title FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
         $stmt->execute();

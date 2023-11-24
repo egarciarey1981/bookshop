@@ -1,4 +1,5 @@
 <?php
+
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use App\Settings\SettingsInterface;
@@ -9,7 +10,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $containerBuilder = new ContainerBuilder();
 
 if (false) { // Should be set to true in production
-	$containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
+    $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
 }
 
 // Set up settings
@@ -23,6 +24,10 @@ $dependencies($containerBuilder);
 // Set up repositories
 $repositories = require __DIR__ . '/../app/repositories.php';
 $repositories($containerBuilder);
+
+// Set up subscribers
+$subscribers = require __DIR__ . '/../app/subscribers.php';
+$subscribers($containerBuilder);
 
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
@@ -45,9 +50,9 @@ $app->addBodyParsingMiddleware();
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
-		->withHeader('Access-Control-Allow-Origin', 'http://localhost:8081')
-		->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-		->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+        ->withHeader('Access-Control-Allow-Origin', 'http://localhost:8081')
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
 
 // Register middleware

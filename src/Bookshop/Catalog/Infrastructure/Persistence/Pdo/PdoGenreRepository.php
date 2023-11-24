@@ -76,7 +76,7 @@ SQL;
         }
 
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
-        $sql = "SELECT book_id, id, name FROM genres WHERE id IN ($inQuery)";
+        $sql = "SELECT id, name, number_of_books FROM genres WHERE id IN ($inQuery)";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(
             array_map(
@@ -125,7 +125,7 @@ SQL;
         return new GenreId(uniqid());
     }
 
-    public function updateNumberOfBooksByGenre(): bool
+    public function updateNumberOfBooksByGenreService(): bool
     {
         $sql = <<<SQL
 UPDATE genres

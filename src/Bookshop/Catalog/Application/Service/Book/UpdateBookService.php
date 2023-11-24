@@ -2,6 +2,8 @@
 
 namespace Bookshop\Catalog\Application\Service\Book;
 
+use Bookshop\Catalog\Domain\Event\Book\BookUpdatedEvent;
+use Bookshop\Catalog\Domain\Event\DomainEventPublisher;
 use Bookshop\Catalog\Domain\Model\Book\Book;
 use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
@@ -11,11 +13,12 @@ use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Exception;
 
-class UpdateBookService extends BookService
+class UpdateBookService
 {
     public function __construct(
-        protected readonly BookRepository $bookRepository,
-        protected readonly GenreRepository $genreRepository
+        private readonly DomainEventPublisher $domainEventPublisher,
+        private readonly BookRepository $bookRepository,
+        private readonly GenreRepository $genreRepository
     ) {
     }
 
@@ -49,5 +52,9 @@ class UpdateBookService extends BookService
         if ($this->bookRepository->update($book) === false) {
             throw new Exception('Book could not be updated');
         }
+
+        $this->domainEventPublisher->publish(
+            new BookUpdatedEvent($book->bookId())
+        );
     }
 }

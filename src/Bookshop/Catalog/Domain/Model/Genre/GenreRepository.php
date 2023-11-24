@@ -17,4 +17,5 @@ interface GenreRepository
     public function insert(Genre $genre): bool;
     public function update(Genre $genre): bool;
     public function remove(Genre $genre): bool;
+    public function updateNumberOfBooksByGenreService(): bool;
 }

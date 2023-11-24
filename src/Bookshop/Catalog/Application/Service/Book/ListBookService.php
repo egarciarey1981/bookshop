@@ -2,11 +2,16 @@
 
 namespace Bookshop\Catalog\Application\Service\Book;
 
-use Bookshop\Catalog\Application\Service\Book\BookService;
 use Bookshop\Catalog\Domain\Model\Book\Book;
+use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 
-class ListBookService extends BookService
+class ListBookService
 {
+    public function __construct(
+        private readonly BookRepository $bookRepository
+    ) {
+    }
+
     /** @return array<string,int|array<array<string|array<array<string,string>>>>> */
     public function execute(int $offset, int $limit, string $filter): array
     {

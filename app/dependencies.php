@@ -36,12 +36,12 @@ return function (ContainerBuilder $containerBuilder) {
             $host = $dbSettings['host'];
             $user = $dbSettings['username'];
             $pass = $dbSettings['password'];
-            
+
             $connection = new PDO("$driver:dbname=$dbname;host=$host", $user, $pass);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-      
+
             return $connection;
-          },
+        },
     ]);
 };
