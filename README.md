@@ -5,6 +5,11 @@ Proyecto con:
 * MySQL 8.2
 * XDebug 3 (configurado para Visual Studio Code)
 
+Analizadores de código:
+* PHPStan
+* PHP Code Sniffer
+* PHP Mess Detector
+
 Para levantar el proyecto usar <code>make up</code>.
 
 Para levantar el cliente web usar <code>make web</code>.
