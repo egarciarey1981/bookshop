@@ -5,6 +5,7 @@ namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Book\Book;
+use Bookshop\Catalog\Domain\Model\Book\BookCollection;
 use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
@@ -25,7 +26,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         return new BookId($bookId);
     }
 
-    public function all(int $offset, int $limit, string $filter): array
+    public function all(int $offset, int $limit, string $filter): BookCollection
     {
         $sql = <<<SQL
 SELECT id, title
@@ -61,13 +62,13 @@ SQL;
             );
         }
 
-        return array_map(function ($book) use ($genresByBookId) {
+        return new BookCollection(...array_map(function ($book) use ($genresByBookId) {
             return new Book(
                 new BookId($book['id']),
                 new BookTitle($book['title']),
                 new GenreCollection(...$genresByBookId[$book['id']] ?? [])
             );
-        }, $books);
+        }, $books));
     }
 
     public function count(string $filter): int

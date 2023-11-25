@@ -4,7 +4,6 @@ namespace Bookshop\Catalog\Application\Service\Book\List;
 
 use Bookshop\Catalog\Application\Service\Book\List\ListBookRequest;
 use Bookshop\Catalog\Application\Service\Book\List\ListBookResponse;
-use Bookshop\Catalog\Domain\Model\Book\Book;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 
 class ListBookService
@@ -19,7 +18,7 @@ class ListBookService
     public function execute(ListBookRequest $request): ListBookResponse
     {
         $total = $this->bookRepository->count($request->filter());
-        $books = $this->bookRepository->all(
+        $bookCollection = $this->bookRepository->all(
             $request->offset(),
             $request->limit(),
             $request->filter()
@@ -27,10 +26,7 @@ class ListBookService
 
         return new ListBookResponse(
             $total,
-            array_map(
-                fn (Book $book) => $book->toArray(),
-                $books
-            )
+            $bookCollection->toArray()
         );
     }
 }
