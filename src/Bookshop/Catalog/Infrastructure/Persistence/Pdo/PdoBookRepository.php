@@ -10,6 +10,7 @@ use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreCollection;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
@@ -64,7 +65,7 @@ SQL;
             return new Book(
                 new BookId($book['id']),
                 new BookTitle($book['title']),
-                $genresByBookId[$book['id']] ?? []
+                new GenreCollection(...$genresByBookId[$book['id']] ?? [])
             );
         }, $books);
     }
@@ -113,13 +114,13 @@ SQL;
         return new Book(
             new BookId($book['id']),
             new BookTitle($book['title']),
-            array_map(function ($genre) {
+            new GenreCollection(...array_map(function ($genre) {
                 return new Genre(
                     new GenreId($genre['id']),
                     new GenreName($genre['name']),
                     new GenreNumberOfBooks($genre['number_of_books']),
                 );
-            }, $stmt->fetchAll())
+            }, $stmt->fetchAll()))
         );
     }
 

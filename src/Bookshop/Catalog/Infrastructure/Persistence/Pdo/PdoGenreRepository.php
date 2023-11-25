@@ -5,6 +5,7 @@ namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreCollection;
 use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
@@ -21,7 +22,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         return new GenreId($genreId);
     }
 
-    public function all(int $offset, int $limit, string $filter): array
+    public function all(int $offset, int $limit, string $filter): GenreCollection
     {
         $sql = <<<SQL
 SELECT id, name, number_of_books
@@ -34,13 +35,16 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         $genres = $stmt->fetchAll();
-        return array_map(function ($genre) {
-            return new Genre(
-                new GenreId($genre['id']),
-                new GenreName($genre['name']),
-                new GenreNumberOfBooks($genre['number_of_books']),
-            );
-        }, $genres);
+
+        return new GenreCollection(
+            ...array_map(function ($genre) {
+                return new Genre(
+                    new GenreId($genre['id']),
+                    new GenreName($genre['name']),
+                    new GenreNumberOfBooks($genre['number_of_books']),
+                );
+            }, $genres)
+        );
     }
 
     public function count(string $filter): int
@@ -66,11 +70,13 @@ SQL;
         $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
         $stmt->execute();
         $genre = $stmt->fetch();
-        if ($genre === false || is_array($genre) === false) {
-            throw new GenreDoesNotExistException(
-                sprintf('Genre with id `%s` does not exist', $genreId->value())
-            );
+
+        if ($genre === false) {
+            throw new GenreDoesNotExistException();
+        } elseif (is_array($genre) === false) {
+            throw new Exception('Could not fetch genre');
         }
+
         return new Genre(
             new GenreId($genre['id']),
             new GenreName($genre['name']),
@@ -78,10 +84,10 @@ SQL;
         );
     }
 
-    public function ofGenreIds(array $genreIds): array
+    public function ofGenreIds(GenreId ...$genreIds): GenreCollection
     {
         if (count($genreIds) === 0) {
-            return [];
+            return new GenreCollection();
         }
 
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
@@ -94,13 +100,15 @@ SQL;
             )
         );
         $genres = $stmt->fetchAll();
-        return array_map(function ($genre) {
-            return new Genre(
-                new GenreId($genre['id']),
-                new GenreName($genre['name']),
-                new GenreNumberOfBooks($genre['number_of_books']),
-            );
-        }, $genres);
+        return new GenreCollection(
+            ...array_map(function ($genre) {
+                return new Genre(
+                    new GenreId($genre['id']),
+                    new GenreName($genre['name']),
+                    new GenreNumberOfBooks($genre['number_of_books']),
+                );
+            }, $genres)
+        );
     }
 
     public function insert(Genre $genre): void

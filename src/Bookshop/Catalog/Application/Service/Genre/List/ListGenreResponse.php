@@ -8,7 +8,7 @@ final class ListGenreResponse
     /** @var array<array<string,int|string>> */
     private array $genres;
 
-    /** @param array<array<string,int|string>> $genres */
+    /** @param array<array<string,string|int>> $genres */
     public function __construct(int $total, array $genres)
     {
         $this->total = $total;

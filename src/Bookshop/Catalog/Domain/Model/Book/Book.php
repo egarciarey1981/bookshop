@@ -2,15 +2,14 @@
 
 namespace Bookshop\Catalog\Domain\Model\Book;
 
-use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreCollection;
 
 class Book
 {
-    /** @param array<Genre> $bookGenres */
     public function __construct(
         private BookId $bookId,
         private BookTitle $bookTitle,
-        private array $bookGenres,
+        private GenreCollection $bookGenres,
     ) {
     }
 
@@ -24,8 +23,7 @@ class Book
         return $this->bookTitle;
     }
 
-    /** @return array<Genre> */
-    public function bookGenres(): array
+    public function bookGenres(): GenreCollection
     {
         return $this->bookGenres;
     }
@@ -36,10 +34,7 @@ class Book
         return [
             'id' => $this->bookId->value(),
             'title' => $this->bookTitle->value(),
-            'genres' => array_map(
-                fn (Genre $genre) => $genre->toArray(),
-                $this->bookGenres
-            ),
+            'genres' => $this->bookGenres->toArray(),
         ];
     }
 }

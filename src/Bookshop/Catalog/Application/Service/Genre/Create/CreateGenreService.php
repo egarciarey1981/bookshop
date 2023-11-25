@@ -3,7 +3,6 @@
 namespace Bookshop\Catalog\Application\Service\Genre\Create;
 
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
-use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
