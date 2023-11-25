@@ -32,22 +32,14 @@
                 url: "http://localhost:8080/genre/<?= $_GET['id'] ?>",
                 type: "GET",
                 dataType: "json",
-                statusCode: {
-                    500: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    404: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    400: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    200: function(response) {
-                        $('#nombre').val(response.data.genre.name);
-                        $('#formulario_modificar_genero').show();
-                        $('#nombre').focus().val($('#nombre').val());
-                    }
+                success: function(response) {
+                    $('#nombre').val(response.data.genre.name);
+                    $('#formulario_modificar_genero').show();
+                    $('#nombre').focus().val($('#nombre').val());
                 },
+                error: function(response) {
+                    alert(response.responseJSON.error);
+                }
             });
 
             $('#formulario_modificar_genero').submit(function(event) {
@@ -59,20 +51,12 @@
                     data: {
                         name: $('#nombre').val()
                     },
-                    statusCode: {
-                        500: function(response) {
-                            alert(response.responseJSON.error);
-                        },
-                        404: function(response) {
-                            alert(response.responseJSON.error);
-                        },
-                        400: function(response) {
-                            alert(response.responseJSON.error);
-                        },
-                        200: function(response) {
-                            alert('Género modificado correctamente');
-                            window.location.href = 'http://localhost:8081/generos/listar.php';
-                        }
+                    success: function(response) {
+                        alert('Género modificado');
+                        window.location.href = 'http://localhost:8081/generos/listar.php';
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.error);
                     }
                 })
             });

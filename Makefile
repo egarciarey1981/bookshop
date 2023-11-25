@@ -54,3 +54,8 @@ endif
 
 web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client
+
+tests: ## Ejecuta los tests
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --testdox tests"
+
+.PHONY: tests

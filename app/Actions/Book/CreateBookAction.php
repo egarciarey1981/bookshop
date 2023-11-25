@@ -5,33 +5,37 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use App\Actions\Action;
-use Bookshop\Catalog\Application\Service\Book\CreateBookService;
+use Bookshop\Catalog\Application\Service\Book\Create\CreateBookRequest;
+use Bookshop\Catalog\Application\Service\Book\Create\CreateBookService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class CreateBookAction extends Action
 {
+    private CreateBookService $service;
+
     public function __construct(
-        protected LoggerInterface $logger,
-        private readonly CreateBookService $createBookService,
+        LoggerInterface $logger,
+        CreateBookService $service,
     ) {
+        parent::__construct($logger);
+        $this->service = $service;
     }
 
     public function action(): Response
     {
-        $book = $this->createBookService->execute(
-            $this->formParam('title', ''),
-            $this->formParam('genres', [])
-        );
+        $bookTitle = $this->formParam('title', '');
+        $bookGenres = $this->formParam('genres', []);
 
-        $this->logger->info(
-            sprintf("Book of id `%s` was created.", $book['id'])
-        );
+        $request = new CreateBookRequest($bookTitle, $bookGenres);
+        $response = $this->service->execute($request);
 
-        return $this->respondWithData(
-            ['genre' => $book],
-            201,
-            ['headers' => '/genre/' . $book['id']]
-        );
+        $data['book'] = $response->book();
+        $headers['Location'] = sprintf('/book/%s', $data['book']['id']);
+
+        $message = sprintf("Book of id `%s` was created.", $data['book']['id']);
+        $this->logger->info($message);
+
+        return $this->respondWithData($data, 201, $headers);
     }
 }

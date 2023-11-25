@@ -3,7 +3,6 @@
 namespace Bookshop\Catalog\Domain\Service\Genre;
 
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
-use Exception;
 
 class UpdateNumberOfBooksByGenreService
 {
@@ -14,8 +13,6 @@ class UpdateNumberOfBooksByGenreService
 
     public function execute(): void
     {
-        if ($this->genreRepository->updateNumberOfBooksByGenreService() === false) {
-            throw new Exception('Number of books by genre could not be updated');
-        }
+        $this->genreRepository->updateNumberOfBooksByGenreService();
     }
 }

@@ -2,28 +2,22 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use Bookshop\Catalog\Domain\Exception\DomainException;
+use Bookshop\Catalog\Domain\ValueObject\StringValueObject;
 
-class GenreName
+final class GenreName extends StringValueObject
 {
-    public function __construct(private string $value)
+    private const MIN_LENGTH = 3;
+    private const MAX_LENGTH = 255;
+
+    protected function name(): string
     {
-        $this->assertIsValidName($value);
+        return 'Genre name';
     }
 
-    public function value(): string
+    protected function assertValueIsValid(string $value): void
     {
-        return $this->value;
-    }
-
-    private function assertIsValidName(string $value): void
-    {
-        if (empty($value)) {
-            throw new DomainException('Genre name cannot be empty');
-        } elseif (strlen($value) > 255) {
-            throw new DomainException('Genre name cannot be longer than 255 characters');
-        } elseif (strlen($value) < 3) {
-            throw new DomainException('Genre name cannot be shorter than 3 characters');
-        }
+        $this->assertValueIsNotEmpty($value);
+        $this->assertValueIsNotTooShort($value, self::MIN_LENGTH);
+        $this->assertValueIsNotTooLong($value, self::MAX_LENGTH);
     }
 }

@@ -5,23 +5,29 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use App\Actions\Action;
-use Bookshop\Catalog\Application\Service\Book\RemoveBookService;
+use Bookshop\Catalog\Application\Service\Book\Remove\RemoveBookRequest;
+use Bookshop\Catalog\Application\Service\Book\Remove\RemoveBookService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class RemoveBookAction extends Action
 {
+    private RemoveBookService $service;
+
     public function __construct(
-        protected LoggerInterface $logger,
-        private readonly RemoveBookService $removeBookService,
+        LoggerInterface $logger,
+        RemoveBookService $service,
     ) {
+        parent::__construct($logger);
+        $this->service = $service;
     }
 
     public function action(): Response
     {
-        $this->removeBookService->execute(
-            $bookId = $this->resolveArg('id')
-        );
+        $bookId = $this->resolveArg('id');
+
+        $request = new RemoveBookRequest($bookId);
+        $this->service->execute($request);
 
         $this->logger->info(
             sprintf("Book of id `%s` was removed.", $bookId)

@@ -38,17 +38,12 @@
                     data: {
                         name: $('#nombre').val()
                     },
-                    statusCode: {
-                        500: function(response) {
-                            alert(response.responseJSON.error);
-                        },
-                        400: function(response) {
-                            alert(response.responseJSON.error);
-                        },
-                        201: function() {
-                            alert('Género creado');
-                            window.location.href = 'http://localhost:8081/generos/listar.php';
-                        }
+                    success: function(response) {
+                        alert('Género creado');
+                        window.location.href = 'http://localhost:8081/generos/listar.php';
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.error);
                     }
                 });
             });

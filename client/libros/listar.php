@@ -47,18 +47,16 @@
                 url: "http://localhost:8080/book?limit=" + elementos + "&offset=" + (pagina - 1) * elementos + "&filter=" + filtro,
                 type: "GET",
                 dataType: "json",
-                statusCode: {
-                    500: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    200: function(response) {
-                        if (response.data.total == 0) {
-                            $('#libros tbody').append('<tr><td colspan="2">No hay libros</td></tr>');
-                        } else {
-                            pintarLibros(response.data.books);
-                            pintarPaginacion(response.data.total);
-                        }
+                success: function(response) {
+                    if (response.data.total == 0) {
+                        $('#libros tbody').append('<tr><td colspan="2">No hay libros</td></tr>');
+                    } else {
+                        pintarLibros(response.data.books);
+                        pintarPaginacion(response.data.total);
                     }
+                },
+                error: function(response) {
+                    alert(response.responseJSON.error);
                 },
             });
         }

@@ -9,7 +9,7 @@
 <body>
     <?php include __DIR__ . '/../includes/nav.html' ?>
     <h1></h1>
-    <ul id="generos"></ul>
+    <p id="generos"></p>
 
     <script>
         $(document).ready(function() {
@@ -17,22 +17,20 @@
                 url: "http://localhost:8080/book/<?= $_GET['id'] ?>",
                 type: "GET",
                 dataType: "json",
-                statusCode: {
-                    500: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    404: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    200: function(response) {
-                        $('h1').text(response.data.book.title);
+                success: function(response) {
+                    generos = 'Sin géneros'
+                    if (response.data.book.genres.length > 0) {
+                        enlaces = [];
                         response.data.book.genres.forEach(function(genero) {
-                            var fila = '<li>';
-                            fila += '<a href="http://localhost:8081/generos/ver.php?id=' + genero.id + '">' + genero.name + '</a>';
-                            fila += '</li>';
-                            $('#generos').append(fila);
+                            enlaces.push('<a href="http://localhost:8081/generos/ver.php?id=' + genero.id + '">' + genero.name + '</a>');
                         });
+                        generos = enlaces.join(', ');
                     }
+                    $('h1').text(response.data.book.title);
+                    $('#generos').html('Géneros: ' + generos);
+                },
+                error: function(response) {
+                    alert(response.responseJSON.error);
                 },
             });
         });

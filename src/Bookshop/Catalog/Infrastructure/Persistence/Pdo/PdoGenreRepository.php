@@ -2,15 +2,25 @@
 
 namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 
+use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Exception;
+use Ramsey\Uuid\Nonstandard\Uuid;
 
 class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
+    public function nextIdentity(): GenreId
+    {
+        $genreId = Uuid::uuid4()->toString();
+        return new GenreId($genreId);
+    }
+
     public function all(int $offset, int $limit, string $filter): array
     {
         $sql = <<<SQL
@@ -28,7 +38,7 @@ SQL;
             return new Genre(
                 new GenreId($genre['id']),
                 new GenreName($genre['name']),
-                $genre['number_of_books'],
+                new GenreNumberOfBooks($genre['number_of_books']),
             );
         }, $genres);
     }
@@ -49,23 +59,22 @@ SQL;
         return (int) $result['total'];
     }
 
-    public function ofGenreId(GenreId $genreId): ?Genre
+    public function ofGenreId(GenreId $genreId): Genre
     {
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
         $stmt->execute();
         $genre = $stmt->fetch();
-        if (!$genre) {
-            return null;
-        }
-        if (is_array($genre) === false) {
-            throw new Exception('Could not count genres');
+        if ($genre === false || is_array($genre) === false) {
+            throw new GenreDoesNotExistException(
+                sprintf('Genre with id `%s` does not exist', $genreId->value())
+            );
         }
         return new Genre(
             new GenreId($genre['id']),
             new GenreName($genre['name']),
-            $genre['number_of_books'],
+            new GenreNumberOfBooks($genre['number_of_books']),
         );
     }
 
@@ -89,43 +98,47 @@ SQL;
             return new Genre(
                 new GenreId($genre['id']),
                 new GenreName($genre['name']),
-                $genre['number_of_books'],
+                new GenreNumberOfBooks($genre['number_of_books']),
             );
         }, $genres);
     }
 
-    public function insert(Genre $genre): bool
+    public function insert(Genre $genre): void
     {
         $sql = "INSERT INTO genres (id, name) VALUES (:id, :name)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
-        return $stmt->execute();
+        if ($stmt->execute() === false) {
+            throw new DomainException('Could not insert genre');
+        }
     }
 
-    public function update(Genre $genre): bool
+    public function update(Genre $genre): void
     {
+        //check if genre exists
+        $this->ofGenreId($genre->genreId());
+
         $sql = "UPDATE genres SET name = :name WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
-        return $stmt->execute();
+        if ($stmt->execute() === false) {
+            throw new DomainException('Could not update genre');
+        }
     }
 
-    public function remove(Genre $genre): bool
+    public function remove(Genre $genre): void
     {
         $sql = "DELETE FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
-        return $stmt->execute();
+        if ($stmt->execute() === false) {
+            throw new DomainException('Could not remove genre');
+        }
     }
 
-    public function nextIdentity(): GenreId
-    {
-        return new GenreId(uniqid());
-    }
-
-    public function updateNumberOfBooksByGenreService(): bool
+    public function updateNumberOfBooksByGenreService(): void
     {
         $sql = <<<SQL
 UPDATE genres
@@ -136,6 +149,8 @@ SET number_of_books = (
 )
 SQL;
         $stmt = $this->connection->prepare($sql);
-        return $stmt->execute();
+        if ($stmt->execute() === false) {
+            throw new DomainException('Could not update number of books by genre');
+        }
     }
 }

@@ -2,28 +2,18 @@
 
 namespace Bookshop\Catalog\Domain\Model\Book;
 
-use DomainException;
+use Bookshop\Catalog\Domain\ValueObject\StringValueObject;
 
-class BookId
+final class BookId extends StringValueObject
 {
-    public function __construct(private string $value)
+    protected function name(): string
     {
-        $this->assertIsValidId($value);
+        return 'Book ID';
     }
 
-    public function value(): string
+    protected function assertValueIsValid(string $value): void
     {
-        return $this->value;
-    }
-
-    private function assertIsValidId(string $value): void
-    {
-        if (empty($value)) {
-            throw new DomainException('Book id cannot be empty');
-        } elseif (strlen($value) > 255) {
-            throw new DomainException('Book id cannot be longer than 255 characters');
-        } elseif (strlen($value) < 3) {
-            throw new DomainException('Book id cannot be shorter than 3 characters');
-        }
+        $this->assertValueIsNotEmpty($value);
+        $this->assertValueIsUuid($value);
     }
 }

@@ -5,28 +5,34 @@ declare(strict_types=1);
 namespace App\Actions\Book;
 
 use App\Actions\Action;
-use Bookshop\Catalog\Application\Service\Book\ViewBookService;
+use Bookshop\Catalog\Application\Service\Book\View\ViewBookRequest;
+use Bookshop\Catalog\Application\Service\Book\View\ViewBookService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class ViewBookAction extends Action
 {
+    private ViewBookService $service;
+
     public function __construct(
-        protected LoggerInterface $logger,
-        private readonly ViewBookService $viewBookService,
+        LoggerInterface $logger,
+        ViewBookService $service,
     ) {
+        parent::__construct($logger);
+        $this->service = $service;
     }
 
     public function action(): Response
     {
-        $book = $this->viewBookService->execute(
-            $bookId = $this->resolveArg('id'),
-        );
+        $bookId = $this->resolveArg('id');
 
-        $this->logger->info(
-            sprintf('Book of id `%s` was viewed.', $bookId),
-        );
+        $request = new ViewBookRequest($bookId);
+        $response = $this->service->execute($request);
 
-        return $this->respondWithData(['book' => $book]);
+        $message = sprintf("Book of id `%s` was viewed.", $bookId);
+        $this->logger->info($message);
+
+        $data['book'] = $response->book();
+        return $this->respondWithData($data);
     }
 }

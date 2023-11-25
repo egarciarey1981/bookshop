@@ -18,18 +18,13 @@
                 url: "http://localhost:8080/genre/<?= $_GET['id'] ?>",
                 type: "GET",
                 dataType: "json",
-                statusCode: {
-                    500: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    404: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    200: function(response) {
-                        $('h1').text(response.data.genre.name);
-                        $('#number_of_books').text("Books: " + response.data.genre.number_of_books);
-                    }
+                success: function(response) {
+                    $('h1').text(response.data.genre.name);
+                    $('#number_of_books').text("Books: " + response.data.genre.number_of_books);
                 },
+                error: function(response) {
+                    alert(response.responseJSON.error);
+                }
             });
         });
     </script>

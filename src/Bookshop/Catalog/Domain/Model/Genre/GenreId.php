@@ -2,28 +2,18 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use DomainException;
+use Bookshop\Catalog\Domain\ValueObject\StringValueObject;
 
-class GenreId
+final class GenreId extends StringValueObject
 {
-    public function __construct(private string $value)
+    protected function name(): string
     {
-        $this->assertIsValidId($value);
+        return 'Genre ID';
     }
 
-    public function value(): string
+    protected function assertValueIsValid(string $value): void
     {
-        return $this->value;
-    }
-
-    private function assertIsValidId(string $value): void
-    {
-        if (empty($value)) {
-            throw new DomainException('Genre id cannot be empty');
-        } elseif (strlen($value) > 255) {
-            throw new DomainException('Genre id cannot be longer than 255 characters');
-        } elseif (strlen($value) < 3) {
-            throw new DomainException('Genre id cannot be shorter than 3 characters');
-        }
+        $this->assertValueIsNotEmpty($value);
+        $this->assertValueIsUuid($value);
     }
 }

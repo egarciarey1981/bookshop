@@ -6,6 +6,7 @@ namespace App\Actions;
 
 use Bookshop\Catalog\Domain\Exception\DomainDoesNotExistException;
 use Bookshop\Catalog\Domain\Exception\DomainException;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,6 +18,11 @@ abstract class Action
     protected Response $response;
     protected array $args;
     protected LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     abstract protected function action(): Response;
 
@@ -34,7 +40,7 @@ abstract class Action
         } catch (DomainException $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respondWithData(['error' => $e->getMessage()], 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respond(500);
         }

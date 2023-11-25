@@ -30,7 +30,7 @@ class Book
         return $this->bookGenres;
     }
 
-    /** @return array<string,string|array<array<string,string>>> */
+    /** @return array<string,string|array<array<string,int|string>>> */
     public function toArray(): array
     {
         return [

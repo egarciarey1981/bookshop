@@ -30,20 +30,12 @@
                 url: "http://localhost:8080/genre/<?= $_GET['id'] ?>",
                 type: "GET",
                 dataType: "json",
-                statusCode: {
-                    500: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    404: function(response) {
-                        alert('Género no encontrado');
-                    },
-                    400: function(response) {
-                        alert(response.responseJSON.error);
-                    },
-                    200: function(response) {
-                        $('#genero').html(response.data.genre.name);
-                        $('#formulario_eliminar_genero').show();
-                    }
+                success: function(response) {
+                    $('#genero').html(response.data.genre.name);
+                    $('#formulario_eliminar_genero').show();
+                },
+                error: function(response) {
+                    alert(response.responseJSON.error);
                 }
             });
             $('#formulario_eliminar_genero').submit(function(event) {
@@ -62,7 +54,7 @@
                         400: function(response) {
                             alert(response.responseJSON.error);
                         },
-                        200: function() {
+                        204: function() {
                             alert('Género eliminado');
                             window.location.href = 'http://localhost:8081/generos/listar.php';
                         }

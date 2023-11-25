@@ -4,11 +4,18 @@ namespace Bookshop\Catalog\Domain\Model\Genre;
 
 class Genre
 {
+    private GenreId $genreId;
+    private GenreName $genreName;
+    private GenreNumberOfBooks $numberOfBooks;
+
     public function __construct(
-        private GenreId $genreId,
-        private GenreName $genreName,
-        private int $numberOfBooks = 0,
+        GenreId $genreId,
+        GenreName $genreName,
+        GenreNumberOfBooks $numberOfBooks,
     ) {
+        $this->genreId = $genreId;
+        $this->genreName = $genreName;
+        $this->numberOfBooks = $numberOfBooks;
     }
 
     public function genreId(): GenreId
@@ -21,18 +28,18 @@ class Genre
         return $this->genreName;
     }
 
-    public function numberOfBooks(): int
+    public function numberOfBooks(): GenreNumberOfBooks
     {
         return $this->numberOfBooks;
     }
 
-    /** @return array<string,string> */
+    /** @return array<string, string|int> */
     public function toArray(): array
     {
         return [
-            'id' => $this->genreId->value(),
-            'name' => $this->genreName->value(),
-            'number_of_books' => (string) $this->numberOfBooks,
+            'id' => $this->genreId()->value(),
+            'name' => $this->genreName()->value(),
+            'number_of_books' => $this->numberOfBooks()->value(),
         ];
     }
 }
