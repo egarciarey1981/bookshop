@@ -36,7 +36,7 @@ abstract class Action
             return $this->action();
         } catch (DomainDoesNotExistException $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
-            return $this->respondWithData(['error' => $e->getMessage()], 404);
+            return $this->respondWithData([], 404);
         } catch (DomainException $e) {
             $this->logger->error(static::class . ': ' . $e->getMessage());
             return $this->respondWithData(['error' => $e->getMessage()], 400);

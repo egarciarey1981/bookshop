@@ -61,7 +61,7 @@ SQL;
         return (int) $result['total'];
     }
 
-    public function ofGenreId(GenreId $genreId): Genre
+    public function ofGenreId(GenreId $genreId): ?Genre
     {
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -70,7 +70,7 @@ SQL;
         $genre = $stmt->fetch();
 
         if ($genre === false) {
-            throw new GenreDoesNotExistException();
+            return null;
         } elseif (is_array($genre) === false) {
             throw new Exception('Could not fetch genre');
         }

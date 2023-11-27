@@ -23,7 +23,12 @@
                     $('#number_of_books').text("Books: " + response.data.genre.number_of_books);
                 },
                 error: function(response) {
-                    alert(response.responseJSON.error);
+                    if (response.status == 404)
+                        alert("Género no encontrado");
+                    else if (response.status == 500)
+                        alert("Error interno del servidor");
+                    else
+                        alert("Error desconocido");
                 }
             });
         });
