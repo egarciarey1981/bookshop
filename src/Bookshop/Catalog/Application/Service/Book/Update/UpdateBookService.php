@@ -6,6 +6,7 @@ use Bookshop\Catalog\Application\Service\Book\Update\UpdateBookRequest;
 use Bookshop\Catalog\Domain\Event\Book\BookUpdatedEvent;
 use Bookshop\Catalog\Domain\Event\DomainEventPublisher;
 use Bookshop\Catalog\Domain\Model\Book\Book;
+use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
@@ -38,6 +39,12 @@ class UpdateBookService
                 $request->genreIds()
             )
         );
+
+        $book = $this->bookRepository->ofBookId($bookId);
+
+        if (null === $book) {
+            throw new BookDoesNotExistException();
+        }
 
         $book = new Book($bookId, $bookTitle, $bookGenreIds);
         $this->bookRepository->update($book);

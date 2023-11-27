@@ -33,23 +33,23 @@ endif
 
 phpcs: ## Ejecuta phpcs
 ifdef FILES
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=PSR12 $(FILES)"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=phpcs.xml $(FILES)"
 else
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=PSR12 src"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=phpcs.xml src"
 endif
 
 phpcbf: ## Ejecuta phpcbf
 ifdef FILES
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=PSR12 $(FILES)"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=phpcs.xml $(FILES)"
 else
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=PSR12 src"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=phpcs.xml src"
 endif
 
 phpmd: ## Ejecuta phpmd
 ifdef FILES
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd $(FILES) text cleancode,codesize,controversial,design,naming,unusedcode"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd $(FILES) text phpmd.xml"
 else
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd src text cleancode,codesize,controversial,design,naming,unusedcode"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd src text phpmd.xml"
 endif
 
 web: ## Ejecuta el cliente web

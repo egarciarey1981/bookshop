@@ -2,7 +2,6 @@
 
 namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 
-use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Book\Book;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
@@ -129,16 +128,7 @@ SQL;
 
         if (!$stmt->execute()) {
             $this->connection->rollBack();
-            throw new DomainException('Could not insert book');
-        }
-
-        $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
-
-        if (!$stmt->execute()) {
-            $this->connection->rollBack();
-            throw new DomainException('Could not insert book');
+            throw new Exception('Could not insert book');
         }
 
         $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
@@ -148,12 +138,12 @@ SQL;
             $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $this->connection->rollBack();
-                throw new DomainException('Could not insert book');
+                throw new Exception('Could not insert book');
             }
         }
 
         if ($this->connection->commit() === false) {
-            throw new DomainException('Could not insert book');
+            throw new Exception('Could not insert book');
         }
     }
 
@@ -168,7 +158,7 @@ SQL;
 
         if (!$stmt->execute()) {
             $this->connection->rollBack();
-            throw new DomainException('Could not update book');
+            throw new Exception('Could not update book');
         }
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
@@ -177,7 +167,7 @@ SQL;
 
         if (!$stmt->execute()) {
             $this->connection->rollBack();
-            throw new DomainException('Could not update book');
+            throw new Exception('Could not update book');
         }
 
         $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
@@ -187,12 +177,12 @@ SQL;
             $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $this->connection->rollBack();
-                throw new DomainException('Could not update book');
+                throw new Exception('Could not update book');
             }
         }
 
         if ($this->connection->commit() === false) {
-            throw new DomainException('Could not update book');
+            throw new Exception('Could not update book');
         }
     }
 
@@ -207,7 +197,7 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
-            throw new DomainException('Could not remove book');
+            throw new Exception('Could not remove book');
         }
     }
 }

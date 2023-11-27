@@ -2,7 +2,6 @@
 
 namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 
-use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
@@ -116,21 +115,18 @@ SQL;
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
-            throw new DomainException('Could not insert genre');
+            throw new Exception('Could not insert genre');
         }
     }
 
     public function update(Genre $genre): void
     {
-        //check if genre exists
-        $this->ofGenreId($genre->genreId());
-
         $sql = "UPDATE genres SET name = :name WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
-            throw new DomainException('Could not update genre');
+            throw new Exception('Could not update genre');
         }
     }
 
@@ -140,7 +136,7 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
-            throw new DomainException('Could not remove genre');
+            throw new Exception('Could not remove genre');
         }
     }
 
@@ -156,7 +152,7 @@ SET number_of_books = (
 SQL;
         $stmt = $this->connection->prepare($sql);
         if ($stmt->execute() === false) {
-            throw new DomainException('Could not update number of books by genre');
+            throw new Exception('Could not update number of books by genre');
         }
     }
 }
