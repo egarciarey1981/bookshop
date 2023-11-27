@@ -24,15 +24,19 @@ class ViewGenreAction extends Action
 
     public function action(): Response
     {
-        $genreId = (string)$this->resolveArg('id');
+        $id = (string)$this->resolveArg('id');
 
-        $request = new ViewGenreRequest($genreId);
+        $request = new ViewGenreRequest($id);
         $response = $this->service->execute($request);
 
-        $message = sprintf("Genre of id `%s` was viewed.", $genreId);
-        $this->logger->info($message);
+        $data['genre'] = [
+            'id' => $response->id(),
+            'name' => $response->name(),
+            'number_of_books' => $response->numberOfBooks(),
+        ];
 
-        $data['genre'] = $response->genre();
+        $this->logger->info("Genre of id `$id` was viewed.");
+
         return $this->respondWithData($data);
     }
 }

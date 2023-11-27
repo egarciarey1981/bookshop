@@ -19,12 +19,13 @@ class CreateGenreService
     public function execute(CreateGenreRequest $request): CreateGenreResponse
     {
         $genreId = $this->genreRepository->nextIdentity();
-        $genreName = new GenreName($request->genreName());
-        $genreNumberOfBooks = new GenreNumberOfBooks();
+        $genreName = new GenreName($request->name());
+        $genreNumberOfBooks = new GenreNumberOfBooks(0);
 
         $genre = new Genre($genreId, $genreName, $genreNumberOfBooks);
+
         $this->genreRepository->insert($genre);
 
-        return new CreateGenreResponse($genre->toArray());
+        return new CreateGenreResponse($genreId->value());
     }
 }

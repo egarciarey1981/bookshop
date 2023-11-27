@@ -4,15 +4,15 @@ namespace Bookshop\Catalog\Application\Service\Book\Remove;
 
 final class RemoveBookRequest
 {
-    private string $bookId;
+    private string $id;
 
-    public function __construct(string $bookId)
+    public function __construct(string $id)
     {
-        $this->bookId = $bookId;
+        $this->id = $id;
     }
 
-    public function bookId(): string
+    public function id(): string
     {
-        return $this->bookId;
+        return $this->id;
     }
 }

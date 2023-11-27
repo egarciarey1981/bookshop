@@ -30,19 +30,19 @@ class UpdateBookService
 
     public function execute(UpdateBookRequest $request): void
     {
-        $bookId = new BookId($request->bookId());
-        $bookTitle = new BookTitle($request->bookTitle());
+        $bookId = new BookId($request->id());
+        $bookTitle = new BookTitle($request->title());
         $bookGenreIds = $this->genreRepository->ofGenreIds(
-            ...array_map(
+            array_map(
                 fn (string $genreId) => new GenreId($genreId),
-                $request->bookGenres()
+                $request->genreIds()
             )
         );
 
         $book = new Book($bookId, $bookTitle, $bookGenreIds);
         $this->bookRepository->update($book);
 
-        $event = new BookUpdatedEvent($book->bookId());
+        $event = new BookUpdatedEvent($bookId);
         $this->domainEventPublisher->publish($event);
     }
 }

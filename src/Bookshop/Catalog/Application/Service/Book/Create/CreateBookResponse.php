@@ -4,18 +4,15 @@ namespace Bookshop\Catalog\Application\Service\Book\Create;
 
 final class CreateBookResponse
 {
-    /** @var array<string,array<array<string,int|string>>|string> */
-    private array $book;
+    private string $id;
 
-    /** @param array<string,array<array<string,int|string>>|string> $book */
-    public function __construct(array $book)
+    public function __construct(string $id)
     {
-        $this->book = $book;
+        $this->id = $id;
     }
 
-    /** @return array<string,array<array<string,int|string>>|string> */
-    public function book(): array
+    public function id(): string
     {
-        return $this->book;
+        return $this->id;
     }
 }

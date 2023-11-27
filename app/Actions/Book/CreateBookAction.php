@@ -24,18 +24,17 @@ class CreateBookAction extends Action
 
     public function action(): Response
     {
-        $bookTitle = $this->formParam('title', '');
-        $bookGenres = $this->formParam('genres', []);
+        $title = $this->formParam('title', '');
+        $genreIds = $this->formParam('genres', []);
 
-        $request = new CreateBookRequest($bookTitle, $bookGenres);
+        $request = new CreateBookRequest($title, $genreIds);
         $response = $this->service->execute($request);
 
-        $data['book'] = $response->book();
-        $headers['Location'] = sprintf('/book/%s', $data['book']['id']);
+        $id = $response->id();
+        $headers['Location'] = "/book/$id";
 
-        $message = sprintf("Book of id `%s` was created.", $data['book']['id']);
-        $this->logger->info($message);
+        $this->logger->info("Book of id `$id` was created.");
 
-        return $this->respondWithData($data, 201, $headers);
+        return $this->respondWithData([], 201, $headers);
     }
 }

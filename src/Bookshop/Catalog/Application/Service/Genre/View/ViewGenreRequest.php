@@ -4,15 +4,15 @@ namespace Bookshop\Catalog\Application\Service\Genre\View;
 
 final class ViewGenreRequest
 {
-    private string $genreId;
+    private string $id;
 
-    public function __construct(string $genreId)
+    public function __construct(string $id)
     {
-        $this->genreId = $genreId;
+        $this->id = $id;
     }
 
-    public function genreId(): string
+    public function id(): string
     {
-        return $this->genreId;
+        return $this->id;
     }
 }

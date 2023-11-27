@@ -31,12 +31,12 @@ class ListGenreAction extends Action
         $request = new ListGenreRequest($offset, $limit, $filter);
         $response = $this->service->execute($request);
 
-        $this->logger->info("Genres list was viewed.");
-
         $data = [
             'total' => $response->total(),
             'genres' => $response->genres(),
         ];
+
+        $this->logger->info("Genres list was viewed.");
 
         return $this->respondWithData($data);
     }

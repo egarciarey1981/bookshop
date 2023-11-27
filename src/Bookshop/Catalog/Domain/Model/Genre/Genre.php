@@ -32,14 +32,4 @@ class Genre
     {
         return $this->numberOfBooks;
     }
-
-    /** @return array<string, string|int> */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->genreId()->value(),
-            'name' => $this->genreName()->value(),
-            'number_of_books' => $this->numberOfBooks()->value(),
-        ];
-    }
 }

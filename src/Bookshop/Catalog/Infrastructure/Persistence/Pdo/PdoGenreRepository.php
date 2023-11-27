@@ -5,8 +5,6 @@ namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
-use Bookshop\Catalog\Domain\Model\Genre\GenreCollection;
-use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
@@ -20,12 +18,17 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         return new GenreId(uniqid());
     }
 
-    public function all(int $offset, int $limit, string $filter): GenreCollection
+    public function all(int $offset, int $limit, string $filter): array
     {
+        $where = '';
+        if ($filter !== '') {
+            $where = 'WHERE name LIKE "%' . $filter . '%"';
+        }
+
         $sql = <<<SQL
 SELECT id, name, number_of_books
 FROM genres
-WHERE name LIKE "%$filter%"
+$where
 ORDER BY name
 LIMIT $limit OFFSET $offset;
 SQL;
@@ -33,16 +36,14 @@ SQL;
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         $genres = $stmt->fetchAll();
-
-        return new GenreCollection(
-            ...array_map(function ($genre) {
-                return new Genre(
-                    new GenreId($genre['id']),
-                    new GenreName($genre['name']),
-                    new GenreNumberOfBooks($genre['number_of_books']),
-                );
-            }, $genres)
-        );
+        array_walk($genres, function (&$genre) {
+            $genre = new Genre(
+                new GenreId($genre['id']),
+                new GenreName($genre['name']),
+                new GenreNumberOfBooks($genre['number_of_books']),
+            );
+        });
+        return $genres;
     }
 
     public function count(string $filter): int
@@ -82,10 +83,10 @@ SQL;
         );
     }
 
-    public function ofGenreIds(GenreId ...$genreIds): GenreCollection
+    public function ofGenreIds(array $genreIds): array
     {
         if (count($genreIds) === 0) {
-            return new GenreCollection();
+            return [];
         }
 
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
@@ -98,15 +99,14 @@ SQL;
             )
         );
         $genres = $stmt->fetchAll();
-        return new GenreCollection(
-            ...array_map(function ($genre) {
-                return new Genre(
-                    new GenreId($genre['id']),
-                    new GenreName($genre['name']),
-                    new GenreNumberOfBooks($genre['number_of_books']),
-                );
-            }, $genres)
-        );
+        array_walk($genres, function (&$genre) {
+            $genre = new Genre(
+                new GenreId($genre['id']),
+                new GenreName($genre['name']),
+                new GenreNumberOfBooks($genre['number_of_books']),
+            );
+        });
+        return $genres;
     }
 
     public function insert(Genre $genre): void

@@ -4,25 +4,22 @@ namespace Bookshop\Catalog\Application\Service\Book\Create;
 
 final class CreateBookRequest
 {
-    private string $bookTitle;
-    /** @var array<string> */
-    private array $bookGenres;
+    private string $title;
+    private array $genreIds;
 
-    /** @param array<string> $bookGenres */
-    public function __construct(string $bookTitle, array $bookGenres)
+    public function __construct(string $title, array $genreIds)
     {
-        $this->bookTitle = $bookTitle;
-        $this->bookGenres = $bookGenres;
+        $this->title = $title;
+        $this->genreIds = $genreIds;
     }
 
-    public function bookTitle(): string
+    public function title(): string
     {
-        return $this->bookTitle;
+        return $this->title;
     }
 
-    /** @return array<string> */
-    public function bookGenres(): array
+    public function genreIds(): array
     {
-        return $this->bookGenres;
+        return $this->genreIds;
     }
 }

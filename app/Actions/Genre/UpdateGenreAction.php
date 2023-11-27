@@ -24,15 +24,13 @@ class UpdateGenreAction extends Action
 
     public function action(): Response
     {
-        $genreId = $this->resolveArg('id');
-        $genreName = $this->formParam('name', '');
+        $id = $this->resolveArg('id');
+        $name = $this->formParam('name', '');
 
-        $request = new UpdateGenreRequest($genreId, $genreName);
+        $request = new UpdateGenreRequest($id, $name);
         $this->service->execute($request);
 
-        $this->logger->info(
-            sprintf("Genre of id `%s` was updated.", $genreId),
-        );
+        $this->logger->info("Genre of id `$id` was updated.");
 
         return $this->respond();
     }

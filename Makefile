@@ -26,9 +26,9 @@ composer-update: ## Actualiza dependencias de composer
 
 phpstan: ## Ejecuta phpstan
 ifdef FILES
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse --level max $(FILES)"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse -c phpstan.neon $(FILES)"
 else
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse --level max src"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse -c phpstan.neon"
 endif
 
 phpcs: ## Ejecuta phpcs

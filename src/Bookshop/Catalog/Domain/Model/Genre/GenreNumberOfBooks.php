@@ -2,31 +2,29 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use Bookshop\Catalog\Domain\ValueObject\IntegerValueObject;
+use InvalidArgumentException;
 
-final class GenreNumberOfBooks extends IntegerValueObject
+final class GenreNumberOfBooks
 {
-    public function __construct(int $value = 0)
+    private const ERROR_MESSAGE = 'Genre number of books cannot be negative';
+
+    private int $value;
+
+    public function __construct(int $value)
     {
         $this->assertValueIsValid($value);
         $this->value = $value;
     }
 
-    protected function name(): string
+    public function value(): int
     {
-        return 'Genre Number Of Books';
-    }
-
-    public static function create(?int $value = null): self
-    {
-        if (is_null($value)) {
-            $value = 0;
-        }
-        return new static($value);
+        return $this->value;
     }
 
     protected function assertValueIsValid(int $value): void
     {
-        $this->assertValueIsPositive($value);
+        if ($value < 0) {
+            throw new InvalidArgumentException(self::ERROR_MESSAGE);
+        }
     }
 }

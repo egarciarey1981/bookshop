@@ -24,18 +24,16 @@ class CreateGenreAction extends Action
 
     public function action(): Response
     {
-        $genreName = (string)$this->formParam('name', '');
+        $name = (string)$this->formParam('name', '');
 
-        $request = new CreateGenreRequest($genreName);
+        $request = new CreateGenreRequest($name);
         $response = $this->service->execute($request);
 
-        $data['genre'] = $response->genre();
-        $headers['Location'] = sprintf('/genres/%s', $data['genre']['id']);
+        $id = $response->id();
+        $headers['Location'] = "/genres/$id";
 
-        $this->logger->info(
-            sprintf("Genre of id `%s` was created.", $data['genre']['id'])
-        );
+        $this->logger->info("Genre of id `$id` was created.");
 
-        return $this->respondWithData($data, 201, $headers);
+        return $this->respondWithData([], 201, $headers);
     }
 }

@@ -2,14 +2,12 @@
 
 namespace Bookshop\Catalog\Domain\Model\Book;
 
-use Bookshop\Catalog\Domain\Model\Genre\GenreCollection;
-
 class Book
 {
     public function __construct(
         private BookId $bookId,
         private BookTitle $bookTitle,
-        private GenreCollection $bookGenres,
+        private array $bookGenres,
     ) {
     }
 
@@ -23,18 +21,8 @@ class Book
         return $this->bookTitle;
     }
 
-    public function bookGenres(): GenreCollection
+    public function bookGenres(): array
     {
         return $this->bookGenres;
-    }
-
-    /** @return array<string,string|array<array<string,int|string>>> */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->bookId->value(),
-            'title' => $this->bookTitle->value(),
-            'genres' => $this->bookGenres->toArray(),
-        ];
     }
 }

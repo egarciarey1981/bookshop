@@ -24,15 +24,19 @@ class ViewBookAction extends Action
 
     public function action(): Response
     {
-        $bookId = $this->resolveArg('id');
+        $id = $this->resolveArg('id');
 
-        $request = new ViewBookRequest($bookId);
+        $request = new ViewBookRequest($id);
         $response = $this->service->execute($request);
 
-        $message = sprintf("Book of id `%s` was viewed.", $bookId);
-        $this->logger->info($message);
+        $this->logger->info("Book of id `$id` was viewed.");
 
-        $data['book'] = $response->book();
+        $data['book'] = [
+            'id' => $response->id(),
+            'title' => $response->title(),
+            'genres' => $response->bookGenres(),
+        ];
+
         return $this->respondWithData($data);
     }
 }

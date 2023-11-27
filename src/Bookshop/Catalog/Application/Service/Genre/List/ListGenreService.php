@@ -15,13 +15,21 @@ final class ListGenreService
 
     public function execute(ListGenreRequest $request): ListGenreResponse
     {
-        $total = $this->genreRepository->count($request->filter());
-        $genreCollection = $this->genreRepository->all(
-            $request->offset(),
-            $request->limit(),
-            $request->filter()
-        );
+        $offset = $request->offset();
+        $limit = $request->limit();
+        $filter = $request->filter();
 
-        return new ListGenreResponse($total, $genreCollection->toArray());
+        $genres = $this->genreRepository->all($offset, $limit, $filter);
+        $total = $this->genreRepository->count($filter);
+
+        array_walk($genres, function (&$genre) {
+            $genre = [
+                'id' => $genre->genreId()->value(),
+                'name' => $genre->genreName()->value(),
+                'number_of_books' => $genre->numberOfBooks()->value(),
+            ];
+        });
+
+        return new ListGenreResponse($total, $genres);
     }
 }

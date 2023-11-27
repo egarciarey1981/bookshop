@@ -7,7 +7,6 @@ use Bookshop\Catalog\Domain\Subscriber\DomainEventSubscriber;
 
 final class DomainEventPublisher
 {
-    /** @var array<DomainEventSubscriber> $subscribers */
     private array $subscribers;
     private static ?self $instance = null;
 

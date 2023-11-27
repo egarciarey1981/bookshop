@@ -5,13 +5,10 @@ namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use Bookshop\Catalog\Domain\Exception\DomainException;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Book\Book;
-use Bookshop\Catalog\Domain\Model\Book\BookCollection;
-use Bookshop\Catalog\Domain\Model\Book\BookDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
-use Bookshop\Catalog\Domain\Model\Genre\GenreCollection;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
@@ -24,7 +21,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
         return new BookId(uniqid());
     }
 
-    public function all(int $offset, int $limit, string $filter): BookCollection
+    public function all(int $offset, int $limit, string $filter): array
     {
         $sql = <<<SQL
 SELECT id, title
@@ -60,13 +57,13 @@ SQL;
             );
         }
 
-        return new BookCollection(...array_map(function ($book) use ($genresByBookId) {
+        return array_map(function ($book) use ($genresByBookId) {
             return new Book(
                 new BookId($book['id']),
                 new BookTitle($book['title']),
-                new GenreCollection(...$genresByBookId[$book['id']] ?? [])
+                $genresByBookId[$book['id']] ?? [],
             );
-        }, $books));
+        }, $books);
     }
 
     public function count(string $filter): int
@@ -85,7 +82,7 @@ SQL;
         return (int) $result['total'];
     }
 
-    public function ofBookId(BookId $bookId): Book
+    public function ofBookId(BookId $bookId): ?Book
     {
         $sql = "SELECT id, title FROM books WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
@@ -93,9 +90,7 @@ SQL;
         $stmt->execute();
         $book = $stmt->fetch();
         if (is_array($book) === false) {
-            throw new BookDoesNotExistException(
-                sprintf('Book with id `%s` does not exist', $bookId->value())
-            );
+            return null;
         }
 
         $sql = <<<SQL
@@ -113,13 +108,13 @@ SQL;
         return new Book(
             new BookId($book['id']),
             new BookTitle($book['title']),
-            new GenreCollection(...array_map(function ($genre) {
+            array_map(function ($genre) {
                 return new Genre(
                     new GenreId($genre['id']),
                     new GenreName($genre['name']),
                     new GenreNumberOfBooks($genre['number_of_books']),
                 );
-            }, $stmt->fetchAll()))
+            }, $stmt->fetchAll()),
         );
     }
 

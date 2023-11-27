@@ -4,18 +4,15 @@ namespace Bookshop\Catalog\Application\Service\Genre\Create;
 
 final class CreateGenreResponse
 {
-    /** @var array<string,string|int> */
-    private array $genre;
+    private string $id;
 
-    /** @param array<string,string|int> $genre */
-    public function __construct(array $genre)
+    public function __construct(string $id)
     {
-        $this->genre = $genre;
+        $this->id = $id;
     }
 
-    /** @return array<string,string|int> */
-    public function genre(): array
+    public function id(): string
     {
-        return $this->genre;
+        return $this->id;
     }
 }

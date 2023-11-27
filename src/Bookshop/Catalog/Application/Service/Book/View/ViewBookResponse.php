@@ -4,18 +4,32 @@ namespace Bookshop\Catalog\Application\Service\Book\View;
 
 final class ViewBookResponse
 {
-    /** @var array<string,array<array<string,int|string>>|string> */
-    private array $book;
+    private string $id;
+    private string $title;
+    private array $bookGenres;
 
-    /** @param array<string,array<array<string,int|string>>|string> $book */
-    public function __construct(array $book)
-    {
-        $this->book = $book;
+    public function __construct(
+        string $id,
+        string $title,
+        array $bookGenres,
+    ) {
+        $this->id = $id;
+        $this->title = $title;
+        $this->bookGenres = $bookGenres;
     }
 
-    /** @return array<string,array<array<string,int|string>>|string> */
-    public function book(): array
+    public function id(): string
     {
-        return $this->book;
+        return $this->id;
+    }
+
+    public function title(): string
+    {
+        return $this->title;
+    }
+
+    public function bookGenres(): array
+    {
+        return $this->bookGenres;
     }
 }

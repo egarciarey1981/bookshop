@@ -24,14 +24,12 @@ class RemoveGenreAction extends Action
 
     public function action(): Response
     {
-        $genreId = $this->resolveArg('id');
+        $id = $this->resolveArg('id');
 
-        $request = new RemoveGenreRequest($genreId);
+        $request = new RemoveGenreRequest($id);
         $this->service->execute($request);
 
-        $this->logger->info(
-            sprintf("Genre of id `%s` was removed.", $genreId)
-        );
+        $this->logger->info("Genre of id `$id` was removed.");
 
         return $this->respond(204);
     }

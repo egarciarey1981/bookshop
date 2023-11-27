@@ -4,35 +4,32 @@ namespace Bookshop\Catalog\Application\Service\Book\Update;
 
 final class UpdateBookRequest
 {
-    private string $bookId;
-    private string $bookTitle;
-    /** @var array<string> */
-    private array $bookGenres;
+    private string $id;
+    private string $title;
+    private array $genreIds;
 
-    /** @param array<string> $bookGenres */
     public function __construct(
-        string $bookId,
-        string $bookTitle,
-        array $bookGenres,
+        string $id,
+        string $title,
+        array $genreIds,
     ) {
-        $this->bookId = $bookId;
-        $this->bookTitle = $bookTitle;
-        $this->bookGenres = $bookGenres;
+        $this->id = $id;
+        $this->title = $title;
+        $this->genreIds = $genreIds;
     }
 
-    public function bookId(): string
+    public function id(): string
     {
-        return $this->bookId;
+        return $this->id;
     }
 
-    public function bookTitle(): string
+    public function title(): string
     {
-        return $this->bookTitle;
+        return $this->title;
     }
 
-    /** @return array<string> */
-    public function bookGenres(): array
+    public function genreIds(): array
     {
-        return $this->bookGenres;
+        return $this->genreIds;
     }
 }

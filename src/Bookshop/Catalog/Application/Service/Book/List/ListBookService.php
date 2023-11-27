@@ -18,15 +18,25 @@ class ListBookService
     public function execute(ListBookRequest $request): ListBookResponse
     {
         $total = $this->bookRepository->count($request->filter());
-        $bookCollection = $this->bookRepository->all(
+        $books = $this->bookRepository->all(
             $request->offset(),
             $request->limit(),
             $request->filter()
         );
 
-        return new ListBookResponse(
-            $total,
-            $bookCollection->toArray()
-        );
+        array_walk($books, function (&$book) {
+            $book = [
+                'id' => $book->bookId()->value(),
+                'title' => $book->bookTitle()->value(),
+                'genres' => array_map(function ($genre) {
+                    return [
+                        'id' => $genre->genreId()->value(),
+                        'name' => $genre->genreName()->value(),
+                    ];
+                }, $book->bookGenres()),
+            ];
+        });
+
+        return new ListBookResponse($total, $books);
     }
 }

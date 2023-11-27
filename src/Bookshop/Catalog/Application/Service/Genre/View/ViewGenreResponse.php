@@ -4,18 +4,32 @@ namespace Bookshop\Catalog\Application\Service\Genre\View;
 
 final class ViewGenreResponse
 {
-    /** @var array<string,string|int> $genre */
-    private array $genre;
+    private string $id;
+    private string $name;
+    private int $numberOfBooks;
 
-    /** @param array<string,string|int> $genre */
-    public function __construct(array $genre)
-    {
-        $this->genre = $genre;
+    public function __construct(
+        string $id,
+        string $name,
+        int $numberOfBooks,
+    ) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->numberOfBooks = $numberOfBooks;
     }
 
-    /** @return array<string,string|int> */
-    public function genre(): array
+    public function id(): string
     {
-        return $this->genre;
+        return $this->id;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function numberOfBooks(): int
+    {
+        return $this->numberOfBooks;
     }
 }

@@ -24,14 +24,14 @@ class UpdateBookAction extends Action
 
     public function action(): Response
     {
-        $bookId = $this->resolveArg('id');
-        $bookTitle = $this->formParam('title', '');
-        $bookGenres = $this->formParam('genres', []);
+        $id = $this->resolveArg('id');
+        $title = $this->formParam('title', '');
+        $genreIds = $this->formParam('genres', []);
 
-        $request = new UpdateBookRequest($bookId, $bookTitle, $bookGenres);
+        $request = new UpdateBookRequest($id, $title, $genreIds);
         $this->service->execute($request);
 
-        $message = sprintf("Book of id `%s` was updated.", $bookId);
+        $message = sprintf("Book of id `%s` was updated.", $id);
         $this->logger->info($message);
 
         return $this->respond();

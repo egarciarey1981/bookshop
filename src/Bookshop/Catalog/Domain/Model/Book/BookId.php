@@ -2,17 +2,27 @@
 
 namespace Bookshop\Catalog\Domain\Model\Book;
 
-use Bookshop\Catalog\Domain\ValueObject\StringValueObject;
+use InvalidArgumentException;
 
-final class BookId extends StringValueObject
+final class BookId
 {
-    protected function name(): string
+    private string $value;
+
+    public function __construct(string $value)
     {
-        return 'Book ID';
+        $this->assertValueIsValid($value);
+        $this->value = $value;
+    }
+
+    public function value(): string
+    {
+        return $this->value;
     }
 
     protected function assertValueIsValid(string $value): void
     {
-        $this->assertValueIsNotEmpty($value);
+        if (empty($value)) {
+            throw new InvalidArgumentException('Book id cannot be empty');
+        }
     }
 }

@@ -30,20 +30,20 @@ final class CreateBookService
     public function execute(CreateBookRequest $request): CreateBookResponse
     {
         $bookId = $this->bookRepository->nextIdentity();
-        $bookTitle = new BookTitle($request->bookTitle());
+        $bookTitle = new BookTitle($request->title());
         $bookGenres = $this->genreRepository->ofGenreIds(
-            ...array_map(
+            array_map(
                 fn (string $genreId) => new GenreId($genreId),
-                $request->bookGenres()
+                $request->genreIds()
             )
         );
 
         $book = new Book($bookId, $bookTitle, $bookGenres);
         $this->bookRepository->insert($book);
 
-        $event = new BookCreatedEvent($book->bookId());
+        $event = new BookCreatedEvent($bookId);
         $this->domainEventPublisher->publish($event);
 
-        return new CreateBookResponse($book->toArray());
+        return new CreateBookResponse($bookId->value());
     }
 }

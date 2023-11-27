@@ -17,13 +17,18 @@ class ViewGenreService
 
     public function execute(ViewGenreRequest $request): ViewGenreResponse
     {
-        $genreId = new GenreId($request->genreId());
+        $genreId = new GenreId($request->id());
+
         $genre = $this->genreRepository->ofGenreId($genreId);
+
         if ($genre === null) {
-            throw new GenreDoesNotExistException(
-                sprintf('Genre with id %s does not exist', $genreId->value())
-            );
+            throw new GenreDoesNotExistException();
         }
-        return new ViewGenreResponse($genre->toArray());
+
+        return new ViewGenreResponse(
+            $genre->genreId()->value(),
+            $genre->genreName()->value(),
+            $genre->numberOfBooks()->value(),
+        );
     }
 }
