@@ -19,8 +19,8 @@ class UpdateGenreService
 
     public function execute(UpdateGenreRequest $request): void
     {
-        $genreId = new GenreId($request->genreId());
-        $genreName = new GenreName($request->genreName());
+        $genreId = new GenreId($request->id());
+        $genreName = new GenreName($request->name());
 
         $genre = $this->genreRepository->ofGenreId($genreId);
 
@@ -28,7 +28,7 @@ class UpdateGenreService
             throw new GenreDoesNotExistException();
         }
 
-        $genre = new Genre($genreId, $genreName, $genre->numberOfBooks());
+        $genre = $genre->setName($genreName);
 
         $this->genreRepository->update($genre);
     }

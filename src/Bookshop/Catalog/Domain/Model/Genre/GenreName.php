@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use InvalidArgumentException;
+use Bookshop\Catalog\Domain\Exception\DomainException;
 
 final class GenreName
 {
@@ -29,11 +29,11 @@ final class GenreName
     protected function assertValueIsValid(string $value): void
     {
         if (empty($value)) {
-            throw new InvalidArgumentException(self::ERROR_EMPTY);
+            throw new DomainException(self::ERROR_EMPTY);
         } elseif (strlen($value) < self::MIN_LENGTH) {
-            throw new InvalidArgumentException(sprintf(self::ERROR_TOO_SHORT, self::MIN_LENGTH));
+            throw new DomainException(sprintf(self::ERROR_TOO_SHORT, self::MIN_LENGTH));
         } elseif (strlen($value) > self::MAX_LENGTH) {
-            throw new InvalidArgumentException(sprintf(self::ERROR_TOO_LONG, self::MAX_LENGTH));
+            throw new DomainException(sprintf(self::ERROR_TOO_LONG, self::MAX_LENGTH));
         }
     }
 }

@@ -3,5 +3,6 @@ parameters:
 	paths:
 		- src
 		- tests
+	treatPhpDocTypesAsCertain: false
 	ignoreErrors:
 		- '#value type specified in iterable type array#'

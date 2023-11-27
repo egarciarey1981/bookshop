@@ -5,8 +5,6 @@ namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
-use Bookshop\Catalog\Domain\Model\Genre\GenreName;
-use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Exception;
 
@@ -33,16 +31,24 @@ LIMIT $limit OFFSET $offset;
 SQL;
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-        $genres = $stmt->fetchAll();
-        array_walk($genres, function (&$genre) {
-            $genre = new Genre(
-                new GenreId($genre['id']),
-                new GenreName($genre['name']),
-                new GenreNumberOfBooks($genre['number_of_books']),
+        if ($stmt->execute() === false) {
+            throw new Exception('Could not fetch genres');
+        }
+
+        $rows = $stmt->fetchAll();
+        if ($rows === false) {
+            throw new Exception('Could not fetch genres');
+        } elseif (empty($rows)) {
+            return [];
+        }
+
+        return array_map(function ($row) {
+            return Genre::fromPrimitives(
+                $row['id'],
+                $row['name'],
+                $row['number_of_books'],
             );
-        });
-        return $genres;
+        }, $rows);
     }
 
     public function count(string $filter): int
@@ -53,12 +59,16 @@ FROM genres
 WHERE name LIKE "%$filter%"
 SQL;
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetch();
-        if (is_array($result) === false) {
+        if ($stmt->execute() === false) {
             throw new Exception('Could not count genres');
         }
-        return (int) $result['total'];
+
+        $row = $stmt->fetch();
+        if ($row === false || is_array($row) === false) {
+            throw new Exception('Could not count genres');
+        }
+
+        return (int) $row['total'];
     }
 
     public function ofGenreId(GenreId $genreId): ?Genre
@@ -66,19 +76,21 @@ SQL;
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
-        $stmt->execute();
-        $genre = $stmt->fetch();
-
-        if ($genre === false) {
-            return null;
-        } elseif (is_array($genre) === false) {
+        if ($stmt->execute() === false) {
             throw new Exception('Could not fetch genre');
         }
 
-        return new Genre(
-            new GenreId($genre['id']),
-            new GenreName($genre['name']),
-            new GenreNumberOfBooks($genre['number_of_books']),
+        $rows = $stmt->fetch();
+        if ($rows === false || is_array($rows) === false) {
+            throw new Exception('Could not fetch genre');
+        } elseif (empty($rows)) {
+            return null;
+        }
+
+        return Genre::fromPrimitives(
+            $rows['id'],
+            $rows['name'],
+            $rows['number_of_books'],
         );
     }
 
@@ -89,23 +101,25 @@ SQL;
         }
 
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
+        $ids = array_map(fn ($genreId) => $genreId->value(), $genreIds);
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id IN ($inQuery)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(
-            array_map(
-                fn ($genreId) => $genreId->value(),
-                $genreIds
-            )
-        );
-        $genres = $stmt->fetchAll();
-        array_walk($genres, function (&$genre) {
-            $genre = new Genre(
-                new GenreId($genre['id']),
-                new GenreName($genre['name']),
-                new GenreNumberOfBooks($genre['number_of_books']),
+        if ($stmt->execute($ids) === false) {
+            throw new Exception('Could not fetch genres');
+        }
+
+        $rows = $stmt->fetchAll();
+        if ($rows === false) {
+            throw new Exception('Could not fetch genres');
+        }
+
+        return array_map(function ($row) {
+            return Genre::fromPrimitives(
+                $row['id'],
+                $row['name'],
+                $row['number_of_books'],
             );
-        });
-        return $genres;
+        }, $rows);
     }
 
     public function insert(Genre $genre): void

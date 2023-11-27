@@ -4,22 +4,22 @@ namespace Bookshop\Catalog\Application\Service\Genre\Update;
 
 final class UpdateGenreRequest
 {
-    private string $genreId;
-    private string $genreName;
+    private string $id;
+    private string $name;
 
-    public function __construct(string $genreId, string $genreName)
+    public function __construct(string $id, string $name)
     {
-        $this->genreId = $genreId;
-        $this->genreName = $genreName;
+        $this->id = $id;
+        $this->name = $name;
     }
 
-    public function genreId(): string
+    public function id(): string
     {
-        return $this->genreId;
+        return $this->id;
     }
 
-    public function genreName(): string
+    public function name(): string
     {
-        return $this->genreName;
+        return $this->name;
     }
 }

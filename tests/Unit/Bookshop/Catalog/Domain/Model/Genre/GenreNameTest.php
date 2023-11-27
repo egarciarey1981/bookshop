@@ -1,9 +1,7 @@
 <?php
 
-namespace Test\Bookshop\Catalog\Domain\Model\Genre;
+namespace Test\Unit\Bookshop\Catalog\Domain\Model\Genre;
 
-use Bookshop\Catalog\Domain\Exception\DomainException;
-use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use PHPUnit\Framework\TestCase;
 
 class GenreNameTest extends TestCase
