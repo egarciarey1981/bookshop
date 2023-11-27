@@ -14,6 +14,5 @@ final class BookId extends StringValueObject
     protected function assertValueIsValid(string $value): void
     {
         $this->assertValueIsNotEmpty($value);
-        $this->assertValueIsUuid($value);
     }
 }

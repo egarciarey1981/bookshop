@@ -14,6 +14,5 @@ final class GenreId extends StringValueObject
     protected function assertValueIsValid(string $value): void
     {
         $this->assertValueIsNotEmpty($value);
-        $this->assertValueIsUuid($value);
     }
 }

@@ -12,14 +12,12 @@ use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Exception;
-use Ramsey\Uuid\Nonstandard\Uuid;
 
 class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
     public function nextIdentity(): GenreId
     {
-        $genreId = Uuid::uuid4()->toString();
-        return new GenreId($genreId);
+        return new GenreId(uniqid());
     }
 
     public function all(int $offset, int $limit, string $filter): GenreCollection
