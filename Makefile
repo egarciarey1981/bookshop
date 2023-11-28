@@ -1,6 +1,9 @@
 DOCKER_COMPOSE = docker-compose
 CONTAINER_PHP = php
-EXEC_IN_CONTAINER_PHP = $(DOCKER_COMPOSE) exec $(CONTAINER_PHP) bash -c
+EXEC_IN_CONTAINER_PHP = $(DOCKER_COMPOSE) exec -u ${USERID}:${GROUPID} $(CONTAINER_PHP) bash -c
+
+USERID=$(shell id -u)
+GROUPID=$(shell id -g)
 
 help: ## Ayuda
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -56,6 +59,9 @@ web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client
 
 test-unit: ## Ejecuta los tests
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit tests"
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests"
+
+test-coverage: ## Ejecuta los tests con cobertura
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always --coverage-html=reports/coverage tests"
 
 .PHONY: tests

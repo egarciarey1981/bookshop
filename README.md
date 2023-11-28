@@ -10,6 +10,10 @@ Analizadores de código:
 * PHP Code Sniffer
 * PHP Mess Detector
 
+Tipos de test:
+* Unitarios
+* Covertura
+
 Para levantar el proyecto usar <code>make up</code>.
 
 Para levantar el cliente web usar <code>make web</code>.
