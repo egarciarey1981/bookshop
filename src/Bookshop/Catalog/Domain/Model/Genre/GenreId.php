@@ -8,6 +8,11 @@ final class GenreId
 {
     private string $value;
 
+    public static function create(): self
+    {
+        return new self(uniqid());
+    }
+
     public function __construct(string $value)
     {
         $this->assertValueIsValid($value);

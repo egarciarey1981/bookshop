@@ -41,7 +41,7 @@
     </rule>
     <rule ref="rulesets/cleancode.xml/StaticAccess">
         <properties>
-            <property name="ignorepattern" value="/fromPrimitives/" />
+            <property name="ignorepattern" value="/(fromPrimitives|create)/" />
         </properties>
     </rule>
 </ruleset>

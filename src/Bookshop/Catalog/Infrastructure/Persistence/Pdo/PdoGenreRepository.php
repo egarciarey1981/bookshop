@@ -12,7 +12,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
     public function nextIdentity(): GenreId
     {
-        return new GenreId(uniqid());
+        return GenreId::create();
     }
 
     public function all(int $offset, int $limit, string $filter): array
@@ -146,10 +146,23 @@ SQL;
 
     public function remove(Genre $genre): void
     {
+        $this->connection->beginTransaction();
+
         $sql = "DELETE FROM genres WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
+            throw new Exception('Could not remove genre');
+        }
+
+        $sql = "DELETE FROM books_genres WHERE genre_id = :genre_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
+        if ($stmt->execute() === false) {
+            throw new Exception('Could not remove genre');
+        }
+
+        if ($this->connection->commit() === false) {
             throw new Exception('Could not remove genre');
         }
     }

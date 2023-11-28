@@ -13,7 +13,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
 {
     public function nextIdentity(): BookId
     {
-        return new BookId(uniqid());
+        return BookId::create();
     }
 
     public function all(int $offset, int $limit, string $filter): array
@@ -73,7 +73,8 @@ SQL;
         }
 
         return array_map(function ($book) use ($genresByBookId) {
-            return $book->setGenres($genresByBookId[$book->bookId()->value()]);
+            $genres = $genresByBookId[$book->bookId()->value()] ?? [];
+            return $book->setGenres($genres);
         }, $books);
     }
 
