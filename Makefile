@@ -64,4 +64,7 @@ test-unit: ## Ejecuta los tests
 test-coverage: ## Ejecuta los tests con cobertura
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always --coverage-html=reports/coverage tests"
 
+test-mutation: test-unit ## Ejecuta los tests con mutación
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/infection --only-covered"
+
 .PHONY: tests
