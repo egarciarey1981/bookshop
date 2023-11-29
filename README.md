@@ -10,9 +10,9 @@ Analizadores de código:
 * PHP Code Sniffer
 * PHP Mess Detector
 
-Tipos de test:
-* Unitarios
-* Covertura
+Tests:
+* PHPUnit
+* Infection
 
 Para levantar el proyecto usar <code>make up</code>.
 
