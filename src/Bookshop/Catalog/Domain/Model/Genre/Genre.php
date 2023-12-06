@@ -35,15 +35,6 @@ class Genre
         return $this->genreId;
     }
 
-    public function setName(GenreName $genreName): self
-    {
-        return new self(
-            $this->genreId,
-            $genreName,
-            $this->numberOfBooks,
-        );
-    }
-
     public function genreName(): GenreName
     {
         return $this->genreName;

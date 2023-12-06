@@ -28,7 +28,11 @@ class UpdateGenreService
             throw new GenreDoesNotExistException();
         }
 
-        $genre = $genre->setName($genreName);
+        $genre = new Genre(
+            $genreId,
+            $genreName,
+            $genre->numberOfBooks(),
+        );
 
         $this->genreRepository->update($genre);
     }
