@@ -5,7 +5,7 @@ namespace Bookshop\Catalog\Domain\Event;
 use BadMethodCallException;
 use Bookshop\Catalog\Domain\Subscriber\DomainEventSubscriber;
 
-final class DomainEventPublisher
+class DomainEventPublisher
 {
     private array $subscribers;
     private static ?self $instance = null;

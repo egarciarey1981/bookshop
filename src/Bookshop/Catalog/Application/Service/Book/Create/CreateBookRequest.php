@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Book\Create;
 
-final class CreateBookRequest
+class CreateBookRequest
 {
     private string $title;
     private array $genreIds;

@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Genre\Create;
 
-final class CreateGenreResponse
+class CreateGenreResponse
 {
     private string $id;
 

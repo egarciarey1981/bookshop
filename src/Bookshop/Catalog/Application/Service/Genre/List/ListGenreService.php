@@ -4,7 +4,7 @@ namespace Bookshop\Catalog\Application\Service\Genre\List;
 
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 
-final class ListGenreService
+class ListGenreService
 {
     private GenreRepository $genreRepository;
 

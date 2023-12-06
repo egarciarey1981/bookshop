@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Book\List;
 
-final class ListBookRequest
+class ListBookRequest
 {
     private int $offset;
     private int $limit;

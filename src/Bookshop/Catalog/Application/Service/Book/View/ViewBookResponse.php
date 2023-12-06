@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Book\View;
 
-final class ViewBookResponse
+class ViewBookResponse
 {
     private string $id;
     private string $title;

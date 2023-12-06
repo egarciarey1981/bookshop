@@ -6,7 +6,7 @@ use Bookshop\Catalog\Domain\Event\DomainEvent;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use DateTimeImmutable;
 
-final class BookRemovedEvent implements DomainEvent
+class BookRemovedEvent implements DomainEvent
 {
     private DateTimeImmutable $occurredOn;
 

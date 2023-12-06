@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Book\Remove;
 
-final class RemoveBookRequest
+class RemoveBookRequest
 {
     private string $id;
 

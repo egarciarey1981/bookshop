@@ -4,7 +4,7 @@ namespace Bookshop\Catalog\Domain\Model\Genre;
 
 use Bookshop\Catalog\Domain\Exception\DomainException;
 
-final class GenreName
+class GenreName
 {
     private const MIN_LENGTH = 3;
     private const MAX_LENGTH = 255;

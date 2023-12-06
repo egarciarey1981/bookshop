@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Book\Update;
 
-final class UpdateBookRequest
+class UpdateBookRequest
 {
     private string $id;
     private string $title;

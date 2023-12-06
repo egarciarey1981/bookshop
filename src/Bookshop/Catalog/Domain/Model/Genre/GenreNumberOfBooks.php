@@ -4,7 +4,7 @@ namespace Bookshop\Catalog\Domain\Model\Genre;
 
 use InvalidArgumentException;
 
-final class GenreNumberOfBooks
+class GenreNumberOfBooks
 {
     private const ERROR_MESSAGE = 'Genre number of books cannot be negative';
 

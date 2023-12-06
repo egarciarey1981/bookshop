@@ -6,7 +6,7 @@ use Bookshop\Catalog\Domain\Model\Genre\GenreDoesNotExistException;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 
-final class ViewGenreService
+class ViewGenreService
 {
     private GenreRepository $genreRepository;
 

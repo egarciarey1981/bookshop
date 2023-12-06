@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Genre\Update;
 
-final class UpdateGenreRequest
+class UpdateGenreRequest
 {
     private string $id;
     private string $name;

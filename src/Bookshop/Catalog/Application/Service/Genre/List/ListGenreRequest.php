@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Genre\List;
 
-final class ListGenreRequest
+class ListGenreRequest
 {
     private int $offset;
     private int $limit;

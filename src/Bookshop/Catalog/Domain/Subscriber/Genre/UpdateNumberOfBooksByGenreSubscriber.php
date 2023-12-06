@@ -9,7 +9,7 @@ use Bookshop\Catalog\Domain\Event\DomainEvent;
 use Bookshop\Catalog\Domain\Service\Genre\UpdateNumberOfBooksByGenreService;
 use Bookshop\Catalog\Domain\Subscriber\DomainEventSubscriber;
 
-final class UpdateNumberOfBooksByGenreSubscriber implements DomainEventSubscriber
+class UpdateNumberOfBooksByGenreSubscriber implements DomainEventSubscriber
 {
     public function __construct(
         private readonly UpdateNumberOfBooksByGenreService $updateGenresService

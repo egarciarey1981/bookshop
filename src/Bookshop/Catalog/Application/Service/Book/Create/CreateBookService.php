@@ -11,7 +11,7 @@ use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 
-final class CreateBookService
+class CreateBookService
 {
     private DomainEventPublisher $domainEventPublisher;
     private BookRepository $bookRepository;

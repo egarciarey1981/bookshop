@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Genre\Remove;
 
-final class RemoveGenreRequest
+class RemoveGenreRequest
 {
     private string $genreId;
 

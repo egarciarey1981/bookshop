@@ -4,7 +4,7 @@ namespace Bookshop\Catalog\Domain\Model\Genre;
 
 use InvalidArgumentException;
 
-final class GenreId
+class GenreId
 {
     private const ERROR_EMPTY = 'Genre id cannot be empty';
 

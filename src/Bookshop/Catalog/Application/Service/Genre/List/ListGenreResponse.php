@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Application\Service\Genre\List;
 
-final class ListGenreResponse
+class ListGenreResponse
 {
     private int $total;
     private array $genres;
