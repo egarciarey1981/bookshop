@@ -6,6 +6,8 @@ use InvalidArgumentException;
 
 final class GenreId
 {
+    private const ERROR_EMPTY = 'Genre id cannot be empty';
+
     private string $value;
 
     public static function create(): self
@@ -27,7 +29,7 @@ final class GenreId
     protected function assertValueIsValid(string $value): void
     {
         if (empty($value)) {
-            throw new InvalidArgumentException('Genre id cannot be empty');
+            throw new InvalidArgumentException(self::ERROR_EMPTY);
         }
     }
 }

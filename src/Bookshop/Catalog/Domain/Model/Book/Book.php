@@ -46,11 +46,10 @@ class Book
 
     public function setGenres(array $bookGenre): self
     {
-        $bookGenre = array_merge($this->bookGenres, $bookGenre);
         return new self(
             $this->bookId,
             $this->bookTitle,
-            $bookGenre,
+            array_merge($this->bookGenres, $bookGenre),
         );
     }
 }

@@ -6,6 +6,8 @@ use InvalidArgumentException;
 
 final class BookId
 {
+    private const ERROR_EMPTY = 'Book id cannot be empty';
+
     private string $value;
 
     public static function create(): self
@@ -27,7 +29,7 @@ final class BookId
     protected function assertValueIsValid(string $value): void
     {
         if (empty($value)) {
-            throw new InvalidArgumentException('Book id cannot be empty');
+            throw new InvalidArgumentException(self::ERROR_EMPTY);
         }
     }
 }
