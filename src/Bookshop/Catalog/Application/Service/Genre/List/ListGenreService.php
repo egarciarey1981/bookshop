@@ -15,12 +15,12 @@ final class ListGenreService
 
     public function execute(ListGenreRequest $request): ListGenreResponse
     {
-        $offset = $request->offset();
-        $limit = $request->limit();
-        $filter = $request->filter();
-
-        $genres = $this->genreRepository->all($offset, $limit, $filter);
-        $total = $this->genreRepository->count($filter);
+        $total = $this->genreRepository->count($request->filter());
+        $genres = $this->genreRepository->all(
+            $request->offset(),
+            $request->limit(),
+            $request->filter(),
+        );
 
         array_walk($genres, function (&$genre) {
             $genre = [

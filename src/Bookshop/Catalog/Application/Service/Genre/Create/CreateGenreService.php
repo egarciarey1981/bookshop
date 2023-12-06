@@ -18,7 +18,11 @@ class CreateGenreService
     {
         $genreId = $this->genreRepository->nextIdentity();
 
-        $genre = Genre::fromPrimitives($genreId->value(), $request->name(), 0);
+        $genre = Genre::fromPrimitives(
+            $genreId->value(),
+            $request->name(),
+            0,
+        );
 
         $this->genreRepository->insert($genre);
 
