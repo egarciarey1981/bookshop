@@ -28,7 +28,7 @@ ORDER BY title
 LIMIT $limit OFFSET $offset;
 SQL;
 
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute() === false) {
             throw new Exception('Could not fetch books');
         }
@@ -57,7 +57,7 @@ JOIN genres ON books_genres.genre_id = genres.id
 WHERE book_id IN ($inQuery)
 SQL;
 
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute($bookIds) === false) {
             throw new Exception('Could not fetch genres');
         }
@@ -85,7 +85,7 @@ SELECT COUNT(*) AS total
 FROM books
 WHERE title LIKE "%$filter%"
 SQL;
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute() === false) {
             throw new Exception('Could not count books');
         }
@@ -101,7 +101,7 @@ SQL;
     public function ofBookId(BookId $bookId): ?Book
     {
         $sql = "SELECT id, title FROM books WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             throw new Exception('Could not fetch book');
@@ -123,7 +123,7 @@ FROM books_genres
 JOIN genres ON books_genres.genre_id = genres.id
 WHERE book_id = :book_id
 SQL;
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('book_id', $bookId->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             throw new Exception('Could not count books');
@@ -150,96 +150,96 @@ SQL;
 
     public function insert(Book $book): void
     {
-        $this->connection->beginTransaction();
+        $this->connection()->beginTransaction();
 
         $sql = "INSERT INTO books (id, title) VALUES (:id, :title)";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
 
         if ($stmt->execute() === false) {
-            $this->connection->rollBack();
+            $this->connection()->rollBack();
             throw new Exception('Could not insert book');
         }
 
         $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
         foreach ($book->bookGenres() as $genre) {
             $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
             if ($stmt->execute() === false) {
-                $this->connection->rollBack();
+                $this->connection()->rollBack();
                 throw new Exception('Could not insert book');
             }
         }
 
-        if ($this->connection->commit() === false) {
+        if ($this->connection()->commit() === false) {
             throw new Exception('Could not insert book');
         }
     }
 
     public function update(Book $book): void
     {
-        $this->connection->beginTransaction();
+        $this->connection()->beginTransaction();
 
         $sql = "UPDATE books SET title = :title WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('title', $book->bookTitle()->value(), PDO::PARAM_STR);
 
         if ($stmt->execute() === false) {
-            $this->connection->rollBack();
+            $this->connection()->rollBack();
             throw new Exception('Could not update book');
         }
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
 
         if ($stmt->execute() === false) {
-            $this->connection->rollBack();
+            $this->connection()->rollBack();
             throw new Exception('Could not update book');
         }
 
         $sql = "INSERT INTO books_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
         foreach ($book->bookGenres() as $genre) {
             $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
             if ($stmt->execute() === false) {
-                $this->connection->rollBack();
+                $this->connection()->rollBack();
                 throw new Exception('Could not update book');
             }
         }
 
-        if ($this->connection->commit() === false) {
+        if ($this->connection()->commit() === false) {
             throw new Exception('Could not update book');
         }
     }
 
     public function remove(Book $book): void
     {
-        $this->connection->beginTransaction();
+        $this->connection()->beginTransaction();
 
         $sql = "DELETE FROM books WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $book->bookId()->value(), PDO::PARAM_STR);
 
         if ($stmt->execute() === false) {
-            $this->connection->rollBack();
+            $this->connection()->rollBack();
             throw new Exception('Could not remove book');
         }
 
         $sql = "DELETE FROM books_genres WHERE book_id = :book_id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('book_id', $book->bookId()->value(), PDO::PARAM_STR);
 
         if ($stmt->execute() === false) {
-            $this->connection->rollBack();
+            $this->connection()->rollBack();
             throw new Exception('Could not remove book');
         }
 
-        if ($this->connection->commit() === false) {
+        if ($this->connection()->commit() === false) {
             throw new Exception('Could not remove book');
         }
     }

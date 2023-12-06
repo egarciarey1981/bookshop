@@ -30,7 +30,7 @@ ORDER BY name
 LIMIT $limit OFFSET $offset;
 SQL;
 
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute() === false) {
             throw new Exception('Could not fetch genres');
         }
@@ -58,7 +58,7 @@ SELECT COUNT(*) AS total
 FROM genres
 WHERE name LIKE "%$filter%"
 SQL;
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute() === false) {
             throw new Exception('Could not count genres');
         }
@@ -74,7 +74,7 @@ SQL;
     public function ofGenreId(GenreId $genreId): ?Genre
     {
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             throw new Exception('Could not fetch genre');
@@ -103,7 +103,7 @@ SQL;
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
         $ids = array_map(fn ($genreId) => $genreId->value(), $genreIds);
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id IN ($inQuery)";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute($ids) === false) {
             throw new Exception('Could not fetch genres');
         }
@@ -125,7 +125,7 @@ SQL;
     public function insert(Genre $genre): void
     {
         $sql = "INSERT INTO genres (id, name) VALUES (:id, :name)";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
@@ -136,7 +136,7 @@ SQL;
     public function update(Genre $genre): void
     {
         $sql = "UPDATE genres SET name = :name WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
@@ -146,23 +146,23 @@ SQL;
 
     public function remove(Genre $genre): void
     {
-        $this->connection->beginTransaction();
+        $this->connection()->beginTransaction();
 
         $sql = "DELETE FROM genres WHERE id = :id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             throw new Exception('Could not remove genre');
         }
 
         $sql = "DELETE FROM books_genres WHERE genre_id = :genre_id";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             throw new Exception('Could not remove genre');
         }
 
-        if ($this->connection->commit() === false) {
+        if ($this->connection()->commit() === false) {
             throw new Exception('Could not remove genre');
         }
     }
@@ -177,7 +177,7 @@ SET number_of_books = (
     WHERE books_genres.genre_id = genres.id
 )
 SQL;
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection()->prepare($sql);
         if ($stmt->execute() === false) {
             throw new Exception('Could not update number of books by genre');
         }

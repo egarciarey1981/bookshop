@@ -6,10 +6,15 @@ use PDO;
 
 class PdoRepository
 {
-    protected PDO $connection;
+    private PDO $connection;
 
     public function __construct(PDO $connection)
     {
         $this->connection = $connection;
+    }
+
+    public function connection(): PDO
+    {
+        return $this->connection;
     }
 }
