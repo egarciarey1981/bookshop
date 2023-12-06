@@ -21,7 +21,7 @@ class GenreNumberOfBooks
         return $this->value;
     }
 
-    protected function assertValueIsValid(int $value): void
+    private function assertValueIsValid(int $value): void
     {
         if ($value < 0) {
             throw new InvalidArgumentException(self::ERROR_MESSAGE);

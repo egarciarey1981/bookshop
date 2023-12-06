@@ -26,7 +26,7 @@ class BookId
         return $this->value;
     }
 
-    protected function assertValueIsValid(string $value): void
+    private function assertValueIsValid(string $value): void
     {
         if (empty($value)) {
             throw new InvalidArgumentException(self::ERROR_EMPTY);

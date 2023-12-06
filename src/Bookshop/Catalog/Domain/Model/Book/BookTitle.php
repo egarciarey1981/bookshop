@@ -26,7 +26,7 @@ class BookTitle
         return $this->value;
     }
 
-    protected function assertValueIsValid(string $value): void
+    private function assertValueIsValid(string $value): void
     {
         if (empty($value)) {
             throw new DomainException(self::ERROR_EMPTY);
