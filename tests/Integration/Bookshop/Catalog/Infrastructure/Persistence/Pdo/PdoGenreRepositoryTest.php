@@ -5,7 +5,7 @@ namespace Test\Integration\Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use Bookshop\Catalog\Infrastructure\Persistence\Pdo\PdoGenreRepository;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use Tests\Utils\ObjectMothers\GenreObjectMother;
+use Tests\Utils\Bookshop\Catalog\Model\Domain\Genre\GenreObjectMother;
 
 class PdoGenreRepositoryTest extends TestCase
 {

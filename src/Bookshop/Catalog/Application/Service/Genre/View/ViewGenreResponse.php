@@ -6,13 +6,13 @@ class ViewGenreResponse
 {
     private string $id;
     private string $name;
-    private int $numberOfBooks;
+    private int $genreNumberOfBooks;
 
-    public function __construct(string $id, string $name, int $numberOfBooks)
+    public function __construct(string $id, string $name, int $genreNumberOfBooks)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->numberOfBooks = $numberOfBooks;
+        $this->genreNumberOfBooks = $genreNumberOfBooks;
     }
 
     public function id(): string
@@ -27,6 +27,6 @@ class ViewGenreResponse
 
     public function numberOfBooks(): int
     {
-        return $this->numberOfBooks;
+        return $this->genreNumberOfBooks;
     }
 }

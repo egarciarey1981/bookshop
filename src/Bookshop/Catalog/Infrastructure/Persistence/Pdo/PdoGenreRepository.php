@@ -19,30 +19,16 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
 
     public function all(int $offset, int $limit, string $filter): array
     {
-        $where = '';
+        $sql = 'SELECT * FROM genres';
+
         if ($filter !== '') {
-            $where = 'WHERE name LIKE "%' . $filter . '%"';
+            $sql .= " WHERE name LIKE '%$filter%'";
         }
 
-        $sql = <<<SQL
-SELECT id, name, number_of_books
-FROM genres
-$where
-ORDER BY name
-LIMIT $limit OFFSET $offset;
-SQL;
+        $sql .= " ORDER BY name LIMIT $limit OFFSET $offset";
 
-        $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not fetch genres');
-        }
-
+        $stmt = $this->connection()->query($sql);
         $rows = $stmt->fetchAll();
-        if ($rows === false) {
-            throw new Exception('Could not fetch genres');
-        } elseif (empty($rows)) {
-            return [];
-        }
 
         return array_map(function ($row) {
             return new Genre(
@@ -55,39 +41,23 @@ SQL;
 
     public function count(string $filter): int
     {
-        $sql = <<<SQL
-SELECT COUNT(*) AS total
-FROM genres
-WHERE name LIKE "%$filter%"
-SQL;
-        $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not count genres');
+        $sql = 'SELECT COUNT(*) AS total FROM genres';
+
+        if ($filter !== '') {
+            $sql .= " WHERE name LIKE '%$filter%'";
         }
 
+        $stmt = $this->connection()->query($sql);
         $row = $stmt->fetch();
-        if ($row === false || is_array($row) === false) {
-            throw new Exception('Could not count genres');
-        }
-
         return (int) $row['total'];
     }
 
     public function ofGenreId(GenreId $genreId): ?Genre
     {
-        $sql = "SELECT id, name, number_of_books FROM genres WHERE id = :id";
-        $stmt = $this->connection()->prepare($sql);
-        $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not fetch genre');
-        }
-
+        $id = $genreId->value();
+        $sql = "SELECT * FROM genres WHERE id = '$id'";
+        $stmt = $this->connection()->query($sql);
         $row = $stmt->fetch();
-        if ($row === false || is_array($row) === false) {
-            throw new Exception('Could not fetch genre');
-        } elseif (empty($row)) {
-            return null;
-        }
 
         return new Genre(
             new GenreId($row['id']),
@@ -130,7 +100,7 @@ SQL;
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
-        $stmt->bindValue('number_of_books', $genre->numberOfBooks()->value(), PDO::PARAM_INT);
+        $stmt->bindValue('number_of_books', $genre->genreNumberOfBooks()->value(), PDO::PARAM_INT);
         if ($stmt->execute() === false) {
             throw new Exception('Could not insert genre');
         }

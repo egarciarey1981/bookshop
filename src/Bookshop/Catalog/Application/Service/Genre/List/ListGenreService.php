@@ -26,7 +26,7 @@ class ListGenreService
             $genre = [
                 'id' => $genre->genreId()->value(),
                 'name' => $genre->genreName()->value(),
-                'number_of_books' => $genre->numberOfBooks()->value(),
+                'number_of_books' => $genre->genreNumberOfBooks()->value(),
             ];
         });
 

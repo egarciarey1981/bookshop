@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Utils\ObjectMothers;
+namespace Tests\Utils\Bookshop\Catalog\Model\Domain\Genre;
 
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
@@ -14,7 +14,7 @@ class GenreObjectMother
         return new Genre(
             GenreId::create(),
             new GenreName('Adventure'),
-            new GenreNumberOfBooks(10),
+            new GenreNumberOfBooks(0),
         );
     }
 }

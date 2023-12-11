@@ -28,7 +28,7 @@ class ViewGenreService
         return new ViewGenreResponse(
             $genre->genreId()->value(),
             $genre->genreName()->value(),
-            $genre->numberOfBooks()->value(),
+            $genre->genreNumberOfBooks()->value(),
         );
     }
 }

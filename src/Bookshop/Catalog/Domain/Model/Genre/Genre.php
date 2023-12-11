@@ -6,16 +6,16 @@ class Genre
 {
     private GenreId $genreId;
     private GenreName $genreName;
-    private GenreNumberOfBooks $numberOfBooks;
+    private GenreNumberOfBooks $genreNumberOfBooks;
 
     public function __construct(
         GenreId $genreId,
         GenreName $genreName,
-        GenreNumberOfBooks $numberOfBooks,
+        GenreNumberOfBooks $genreNumberOfBooks,
     ) {
         $this->genreId = $genreId;
         $this->genreName = $genreName;
-        $this->numberOfBooks = $numberOfBooks;
+        $this->genreNumberOfBooks = $genreNumberOfBooks;
     }
 
     public function genreId(): GenreId
@@ -28,8 +28,8 @@ class Genre
         return $this->genreName;
     }
 
-    public function numberOfBooks(): GenreNumberOfBooks
+    public function genreNumberOfBooks(): GenreNumberOfBooks
     {
-        return $this->numberOfBooks;
+        return $this->genreNumberOfBooks;
     }
 }

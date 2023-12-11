@@ -31,7 +31,7 @@ class UpdateGenreService
         $genre = new Genre(
             $genreId,
             $genreName,
-            $genre->numberOfBooks(),
+            $genre->genreNumberOfBooks(),
         );
 
         $this->genreRepository->update($genre);
