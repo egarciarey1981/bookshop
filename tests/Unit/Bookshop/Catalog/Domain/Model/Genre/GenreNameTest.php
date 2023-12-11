@@ -17,6 +17,20 @@ class GenreNameTest extends TestCase
         new GenreName('');
     }
 
+    public function testCheckValueEnoughShort(): void
+    {
+        $value = str_repeat('a', self::MIN_LENGTH);
+        $genre = new GenreName($value);
+        $this->assertEquals($value, $genre->value());
+    }
+
+    public function testCheckValueEnoughLong(): void
+    {
+        $value = str_repeat('a', self::MAX_LENGTH);
+        $genre = new GenreName($value);
+        $this->assertEquals($value, $genre->value());
+    }
+
     public function testCheckValueTooShort(): void
     {
         $this->expectException(DomainException::class);
