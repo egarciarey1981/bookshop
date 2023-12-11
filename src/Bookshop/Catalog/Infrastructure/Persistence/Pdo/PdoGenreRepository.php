@@ -5,6 +5,8 @@ namespace Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 use PDO;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
 use Exception;
 
@@ -43,10 +45,10 @@ SQL;
         }
 
         return array_map(function ($row) {
-            return Genre::fromPrimitives(
-                $row['id'],
-                $row['name'],
-                $row['number_of_books'],
+            return new Genre(
+                new GenreId($row['id']),
+                new GenreName($row['name']),
+                new GenreNumberOfBooks($row['number_of_books']),
             );
         }, $rows);
     }
@@ -80,17 +82,17 @@ SQL;
             throw new Exception('Could not fetch genre');
         }
 
-        $rows = $stmt->fetch();
-        if ($rows === false || is_array($rows) === false) {
+        $row = $stmt->fetch();
+        if ($row === false || is_array($row) === false) {
             throw new Exception('Could not fetch genre');
-        } elseif (empty($rows)) {
+        } elseif (empty($row)) {
             return null;
         }
 
-        return Genre::fromPrimitives(
-            $rows['id'],
-            $rows['name'],
-            $rows['number_of_books'],
+        return new Genre(
+            new GenreId($row['id']),
+            new GenreName($row['name']),
+            new GenreNumberOfBooks($row['number_of_books']),
         );
     }
 
@@ -114,20 +116,21 @@ SQL;
         }
 
         return array_map(function ($row) {
-            return Genre::fromPrimitives(
-                $row['id'],
-                $row['name'],
-                $row['number_of_books'],
+            return new Genre(
+                new GenreId($row['id']),
+                new GenreName($row['name']),
+                new GenreNumberOfBooks($row['number_of_books']),
             );
         }, $rows);
     }
 
     public function insert(Genre $genre): void
     {
-        $sql = "INSERT INTO genres (id, name) VALUES (:id, :name)";
+        $sql = "INSERT INTO genres (id, name, number_of_books) VALUES (:id, :name, :number_of_books)";
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('number_of_books', $genre->numberOfBooks()->value(), PDO::PARAM_INT);
         if ($stmt->execute() === false) {
             throw new Exception('Could not insert genre');
         }

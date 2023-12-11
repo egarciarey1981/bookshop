@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use InvalidArgumentException;
+use Bookshop\Catalog\Domain\Exception\DomainException;
 
 class GenreId
 {
@@ -29,7 +29,7 @@ class GenreId
     private function assertValueIsValid(string $value): void
     {
         if (empty($value)) {
-            throw new InvalidArgumentException(self::ERROR_EMPTY);
+            throw new DomainException(self::ERROR_EMPTY);
         }
     }
 }

@@ -58,8 +58,11 @@ endif
 web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client
 
-test-unit: ## Ejecuta los tests
-	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests"
+test-unit: ## Ejecuta los tests unitarios
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Unit"
+
+test-integration: ## Ejecuta los tests de integración
+	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Integration"
 
 test-coverage: ## Ejecuta los tests con cobertura
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always --coverage-html=reports/coverage tests"

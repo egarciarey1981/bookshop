@@ -3,6 +3,8 @@ version: '3.7'
 volumes:
   mysql-data:
     driver: local
+  mysql-data-test:
+    driver: local
 
 services:
   php:
@@ -29,4 +31,16 @@ services:
       MYSQL_DATABASE: bookshop
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./docker/mysql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+  mysql_test:
+    build: ./docker/mysql
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bookshop
+    volumes:
+      - mysql-data-test:/var/lib/mysql
       - ./docker/mysql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql

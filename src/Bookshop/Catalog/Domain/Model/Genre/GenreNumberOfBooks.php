@@ -2,7 +2,7 @@
 
 namespace Bookshop\Catalog\Domain\Model\Genre;
 
-use InvalidArgumentException;
+use Bookshop\Catalog\Domain\Exception\DomainException;
 
 class GenreNumberOfBooks
 {
@@ -24,7 +24,7 @@ class GenreNumberOfBooks
     private function assertValueIsValid(int $value): void
     {
         if ($value < 0) {
-            throw new InvalidArgumentException(self::ERROR_MESSAGE);
+            throw new DomainException(self::ERROR_MESSAGE);
         }
     }
 }
