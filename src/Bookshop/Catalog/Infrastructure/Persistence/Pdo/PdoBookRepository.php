@@ -6,7 +6,11 @@ use PDO;
 use Bookshop\Catalog\Domain\Model\Book\Book;
 use Bookshop\Catalog\Domain\Model\Book\BookId;
 use Bookshop\Catalog\Domain\Model\Book\BookRepository;
+use Bookshop\Catalog\Domain\Model\Book\BookTitle;
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Exception;
 
 class PdoBookRepository extends PdoRepository implements BookRepository
@@ -18,134 +22,118 @@ class PdoBookRepository extends PdoRepository implements BookRepository
 
     public function all(int $offset, int $limit, string $filter): array
     {
-        $where = empty($filter) ? '' : "WHERE title LIKE '%$filter%'";
+        $sql = 'SELECT * FROM books';
 
-        $sql = <<<SQL
-SELECT id, title
-FROM books
-$where
-ORDER BY title
-LIMIT $limit OFFSET $offset;
-SQL;
-
-        $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not fetch books');
+        if ($filter !== '') {
+            $sql .= " WHERE title LIKE '%$filter%'";
         }
 
+        $sql .= " ORDER BY title LIMIT $limit OFFSET $offset";
+
+        $stmt = $this->connection()->query($sql);
         $rows = $stmt->fetchAll();
-        if ($rows === false) {
-            throw new Exception('Could not fetch books');
-        } elseif (empty($rows)) {
-            return [];
-        }
 
-        $books = array_map(function ($row) {
-            return Book::fromPrimitives(
-                $row['id'],
-                $row['title'],
-            );
-        }, $rows);
-
-        $bookIds = array_column($rows, 'id');
-        $inQuery = str_repeat('?,', count($bookIds) - 1) . '?';
-
-        $sql = <<<SQL
-SELECT book_id, id, name, number_of_books
-FROM books_genres
-JOIN genres ON books_genres.genre_id = genres.id
-WHERE book_id IN ($inQuery)
-SQL;
-
-        $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute($bookIds) === false) {
-            throw new Exception('Could not fetch genres');
-        }
-
-        $rows = $stmt->fetchAll();
+        $books = [];
         $genresByBookId = [];
+
         foreach ($rows as $row) {
-            $genresByBookId[$row['book_id']][] = Genre::fromPrimitives(
-                $row['id'],
-                $row['name'],
-                $row['number_of_books'],
-            );
+            $books[] = [
+                'id' => $row['id'],
+                'title' => $row['title'],
+                'genres' => [],
+            ];
         }
 
-        return array_map(function ($book) use ($genresByBookId) {
-            $genres = $genresByBookId[$book->bookId()->value()] ?? [];
-            return $book->setGenres($genres);
+        $sql = 'SELECT * FROM books_genres JOIN genres ON books_genres.genre_id = genres.id';
+        $sql .= ' WHERE books_genres.book_id IN ("';
+        $sql .= implode('", "', \array_column($books, 'id'));
+        $sql .= '")';
+
+        $stmt = $this->connection()->query($sql);
+        $rows = $stmt->fetchAll();
+
+        foreach ($rows as $row) {
+            $genresByBookId[$row['book_id']][] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'number_of_books' => $row['number_of_books'],
+            ];
+        }
+
+        return array_map(function ($book) {
+            return new Book(
+                new BookId($book['id']),
+                new BookTitle($book['title']),
+                array_map(function ($genre) {
+                    return new Genre(
+                        new GenreId($genre['id']),
+                        new GenreName($genre['name']),
+                        new GenreNumberOfBooks($genre['number_of_books']),
+                    );
+                }, $genresByBookId[$book['id']] ?? [])
+            );
         }, $books);
     }
 
     public function count(string $filter): int
     {
-        $sql = <<<SQL
-SELECT COUNT(*) AS total
-FROM books
-WHERE title LIKE "%$filter%"
-SQL;
-        $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not count books');
+        $sql = 'SELECT COUNT(*) AS total FROM books';
+
+        if ($filter !== '') {
+            $sql .= " WHERE title LIKE '%$filter%'";
         }
 
+        $stmt = $this->connection()->query($sql);
         $row = $stmt->fetch();
-        if ($row === false || is_array($row) === false) {
-            throw new Exception('Could not count books');
-        }
-
         return (int) $row['total'];
     }
 
     public function ofBookId(BookId $bookId): ?Book
     {
-        $sql = "SELECT id, title FROM books WHERE id = :id";
-        $stmt = $this->connection()->prepare($sql);
-        $stmt->bindValue('id', $bookId->value(), PDO::PARAM_STR);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not fetch book');
+        $id = $bookId->value();
+        $sql = <<<SQL
+SELECT
+    books.id AS book_id,
+    books.title AS book_title,
+    genres.id AS genre_id,
+    genres.name AS genre_name,
+    genres.number_of_books AS genre_number_of_books
+FROM books
+    LEFT JOIN books_genres ON books.id = books_genres.book_id
+    LEFT JOIN genres ON books_genres.genre_id = genres.id
+WHERE books.id = '$id'
+SQL;
+
+        $stmt = $this->connection()->query($sql);
+        $rows = $stmt->fetchAll();
+
+        $data = [];
+
+        foreach ($rows as $row) {
+            $data['id'] = $row['book_id'];
+            $data['title'] = $row['book_title'];
+            $data['genres'][] = [
+                'id' => $row['genre_id'],
+                'name' => $row['genre_name'],
+                'number_of_books' => $row['genre_number_of_books'],
+            ];
         }
 
-        $row = $stmt->fetch();
-        if ($row === false || is_array($row) === false) {
+        if (empty($data)) {
             return null;
         }
 
-        $book = Book::fromPrimitives(
-            $row['id'],
-            $row['title'],
+        return new Book(
+            new BookId($data['id']),
+            new BookTitle($data['title']),
+            array_map(function ($genre) {
+                return new Genre(
+                    new GenreId($genre['id']),
+                    new GenreName($genre['name']),
+                    new GenreNumberOfBooks($genre['number_of_books']),
+                );
+            }, $data['genres'] ?? []),
         );
-
-        $sql = <<<SQL
-SELECT id, name, number_of_books
-FROM books_genres
-JOIN genres ON books_genres.genre_id = genres.id
-WHERE book_id = :book_id
-SQL;
-        $stmt = $this->connection()->prepare($sql);
-        $stmt->bindValue('book_id', $bookId->value(), PDO::PARAM_STR);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not count books');
-        }
-
-        $rows = $stmt->fetchAll();
-
-        if ($rows === false) {
-            throw new Exception('Could not fetch genres');
-        } elseif (empty($rows)) {
-            return $book;
-        }
-
-        $genres = array_map(function ($row) {
-            return Genre::fromPrimitives(
-                $row['id'],
-                $row['name'],
-                $row['number_of_books'],
-            );
-        }, $rows);
-
-        return $book->setGenres($genres);
     }
 
     public function insert(Book $book): void

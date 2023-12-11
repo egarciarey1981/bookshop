@@ -30,7 +30,11 @@
                     $('#generos').html('Géneros: ' + generos);
                 },
                 error: function(response) {
-                    alert(response.responseJSON.error);
+                    if (response.status == 404) {
+                        alert('Libro no encontrado');
+                    } else {
+                        alert('Error desconocido');
+                    }
                 },
             });
         });
