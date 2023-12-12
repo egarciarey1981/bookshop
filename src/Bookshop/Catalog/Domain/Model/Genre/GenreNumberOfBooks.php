@@ -27,4 +27,9 @@ class GenreNumberOfBooks
             throw new DomainException(self::ERROR_MESSAGE);
         }
     }
+
+    public function equals(self $genreNumberOfBooks): bool
+    {
+        return $this->value() === $genreNumberOfBooks->value();
+    }
 }

@@ -2,35 +2,31 @@
 
 namespace Test\Integration\Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 
+use Bookshop\Catalog\Domain\Model\Genre\Genre;
 use Bookshop\Catalog\Infrastructure\Persistence\Pdo\PdoGenreRepository;
 use PDO;
-use PHPUnit\Framework\TestCase;
 use Tests\Utils\Bookshop\Catalog\Model\Domain\Genre\GenreObjectMother;
+use Tests\Utils\MyTestCase;
 
-class PdoGenreRepositoryTest extends TestCase
+class PdoGenreRepositoryTest extends MyTestCase
 {
-    private PDO $pdo;
-
-    public function setUp(): void
+    private PdoGenreRepository $genreRepository;
+    protected function setUp(): void
     {
-        $driver = 'mysql';
-        $dbname = 'bookshop';
-        $host = 'mysql_test';
-        $user = 'root';
-        $pass = 'root';
-
-        $this->pdo = new PDO("$driver:host=$host;dbname=$dbname", $user, $pass);
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        parent::setUp();
+        $pdo = $this->getAppInstance()->getContainer()->get(PDO::class);
+        $this->genreRepository = new PdoGenreRepository($pdo);
     }
 
     public function testInsert(): void
     {
         $genreObjectMother = GenreObjectMother::createOne();
-        $genreRepository = new PdoGenreRepository($this->pdo);
-        $genreRepository->insert($genreObjectMother);
+        $this->genreRepository->insert($genreObjectMother);
 
-        $genre = $genreRepository->ofGenreId($genreObjectMother->genreId());
-        $this->assertEquals($genreObjectMother, $genre);
+        $genre = $this->genreRepository->ofGenreId($genreObjectMother->genreId());
+        $this->assertInstanceOf(Genre::class, $genre);
+        $this->assertTrue($genreObjectMother->genreId()->equals($genre->genreId()));
+        $this->assertTrue($genreObjectMother->genreName()->equals($genre->genreName()));
+        $this->assertTrue($genreObjectMother->genreNumberOfBooks()->equals($genre->genreNumberOfBooks()));
     }
 }

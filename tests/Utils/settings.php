@@ -23,7 +23,7 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                 'db' => [
                     'driver' => 'mysql', // qué base de datos
-                    'host' => 'database', // contenedor con la base de datos
+                    'host' => 'database_test', // contenedor con la base de datos
                     'database' => 'bookshop',
                     'username' => 'root',
                     'password' => 'root',

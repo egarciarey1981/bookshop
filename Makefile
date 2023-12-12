@@ -1,6 +1,6 @@
-DOCKER_COMPOSE = docker-compose
-CONTAINER_PHP = php
-EXEC_IN_CONTAINER_PHP = $(DOCKER_COMPOSE) exec -u ${USERID}:${GROUPID} $(CONTAINER_PHP) bash -c
+DOCKER_SERVER = docker compose
+CONTAINER_PHP = server
+EXEC_IN_CONTAINER_PHP = $(DOCKER_SERVER) exec -u ${USERID}:${GROUPID} $(CONTAINER_PHP) bash -c
 
 USERID=$(shell id -u)
 GROUPID=$(shell id -g)
@@ -9,10 +9,10 @@ help: ## Ayuda
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 build: ## Construye los contenedores
-	$(DOCKER_COMPOSE) build
+	$(DOCKER_SERVER) build
 
 up: ## Levanta los contenedores
-	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_SERVER) up -d nginx
 	make composer-install
 
 stop: ## Detiene los contenedores
@@ -62,10 +62,18 @@ test-unit: ## Ejecuta los tests unitarios
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Unit"
 
 test-integration: ## Ejecuta los tests de integración
+	$(DOCKER_SERVER) up -d database_test
+	sleep 2
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Integration"
+	$(DOCKER_SERVER) stop database_test
+	$(DOCKER_SERVER) rm -f database_test
 
 test-coverage: ## Ejecuta los tests con cobertura
+	$(DOCKER_SERVER) up -d database_test
+	sleep 2
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always --coverage-html=reports/coverage tests"
+	$(DOCKER_SERVER) stop database_test
+	$(DOCKER_SERVER) rm -f database_test
 
 test-mutation: test-unit ## Ejecuta los tests con mutación
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/infection --only-covered"

@@ -32,4 +32,9 @@ class GenreId
             throw new DomainException(self::ERROR_EMPTY);
         }
     }
+
+    public function equals(self $genreId): bool
+    {
+        return $this->value() === $genreId->value();
+    }
 }
