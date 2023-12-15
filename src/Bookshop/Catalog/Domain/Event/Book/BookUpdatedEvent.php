@@ -3,21 +3,21 @@
 namespace Bookshop\Catalog\Domain\Event\Book;
 
 use Bookshop\Catalog\Domain\Event\DomainEvent;
-use Bookshop\Catalog\Domain\Model\Book\BookId;
+use Bookshop\Catalog\Domain\Model\Book\Book;
 use DateTimeImmutable;
 
 class BookUpdatedEvent implements DomainEvent
 {
     private DateTimeImmutable $occurredOn;
 
-    public function __construct(private readonly BookId $bookId)
+    public function __construct(private readonly Book $book)
     {
         $this->occurredOn = new DateTimeImmutable();
     }
 
-    public function bookId(): BookId
+    public function book(): Book
     {
-        return $this->bookId;
+        return $this->book;
     }
 
     public function occurredOn(): DateTimeImmutable

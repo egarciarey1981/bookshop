@@ -41,7 +41,7 @@ class CreateBookService
         $book = new Book($bookId, $bookTitle, $bookGenres);
         $this->bookRepository->insert($book);
 
-        $event = new BookCreatedEvent($bookId);
+        $event = new BookCreatedEvent($book);
         $this->domainEventPublisher->publish($event);
 
         return new CreateBookResponse($bookId->value());

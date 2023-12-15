@@ -34,7 +34,7 @@ class RemoveBookService
 
         $this->bookRepository->remove($book);
 
-        $event = new BookRemovedEvent($bookId);
+        $event = new BookRemovedEvent($book);
         $this->domainEventPublisher->publish($event);
     }
 }

@@ -49,7 +49,7 @@ class UpdateBookService
         $book = new Book($bookId, $bookTitle, $bookGenreIds);
         $this->bookRepository->update($book);
 
-        $event = new BookUpdatedEvent($bookId);
+        $event = new BookUpdatedEvent($book);
         $this->domainEventPublisher->publish($event);
     }
 }
