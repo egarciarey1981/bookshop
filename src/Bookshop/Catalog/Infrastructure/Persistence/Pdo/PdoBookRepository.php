@@ -60,7 +60,7 @@ class PdoBookRepository extends PdoRepository implements BookRepository
             ];
         }
 
-        return array_map(function ($book) {
+        return array_map(function ($book) use ($genresByBookId) {
             return new Book(
                 new BookId($book['id']),
                 new BookTitle($book['title']),
