@@ -54,9 +54,10 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
 
     public function ofGenreId(GenreId $genreId): ?Genre
     {
-        $id = $genreId->value();
-        $sql = "SELECT * FROM genres WHERE id = '$id'";
-        $stmt = $this->connection()->query($sql);
+        $sql = 'SELECT * FROM genres WHERE id = :id';
+        $stmt = $this->connection()->prepare($sql);
+        $stmt->bindValue('id', $genreId->value(), PDO::PARAM_STR);
+        $stmt->execute();
         $row = $stmt->fetch();
 
         return new Genre(
@@ -91,7 +92,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
 
     public function insert(Genre $genre): void
     {
-        $sql = "INSERT INTO genres (id, name, number_of_books) VALUES (:id, :name, :number_of_books)";
+        $sql = 'INSERT INTO genres (id, name, number_of_books) VALUES (:id, :name, :number_of_books)';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
@@ -103,7 +104,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
 
     public function update(Genre $genre): void
     {
-        $sql = "UPDATE genres SET name = :name WHERE id = :id";
+        $sql = 'UPDATE genres SET name = :name WHERE id = :id';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
@@ -116,14 +117,14 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
     {
         $this->connection()->beginTransaction();
 
-        $sql = "DELETE FROM genres WHERE id = :id";
+        $sql = 'DELETE FROM genres WHERE id = :id';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             throw new Exception('Could not remove genre');
         }
 
-        $sql = "DELETE FROM books_genres WHERE genre_id = :genre_id";
+        $sql = 'DELETE FROM books_genres WHERE genre_id = :genre_id';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
         if ($stmt->execute() === false) {
