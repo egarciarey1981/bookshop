@@ -3,6 +3,9 @@
 namespace Test\Integration\Bookshop\Catalog\Infrastructure\Persistence\Pdo;
 
 use Bookshop\Catalog\Domain\Model\Genre\Genre;
+use Bookshop\Catalog\Domain\Model\Genre\GenreId;
+use Bookshop\Catalog\Domain\Model\Genre\GenreName;
+use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Infrastructure\Persistence\Pdo\PdoGenreRepository;
 use PDO;
 use Tests\Utils\Bookshop\Catalog\Model\Domain\Genre\GenreObjectMother;
@@ -16,6 +19,12 @@ class PdoGenreRepositoryTest extends MyTestCase
         parent::setUp();
         $pdo = $this->getAppInstance()->getContainer()->get(PDO::class);
         $this->genreRepository = new PdoGenreRepository($pdo);
+    }
+
+    public function testNextIdentity(): void
+    {
+        $genreId = $this->genreRepository->nextIdentity();
+        $this->assertInstanceOf(GenreId::class, $genreId);
     }
 
     public function testInsertOneAndRetrieveIt(): void
@@ -57,6 +66,43 @@ class PdoGenreRepositoryTest extends MyTestCase
     {
         $genres = $this->genreRepository->ofGenreIds();
         $this->assertEmpty($genres);
+    }
+
+    public function testUpdate(): void
+    {
+        $genreObjectMother = GenreObjectMother::createOne();
+        $this->genreRepository->insert($genreObjectMother);
+
+        $genreInserted = $this->genreRepository->ofGenreId($genreObjectMother->genreId());
+        $this->assertInstanceOf(Genre::class, $genreInserted);
+        $this->assertGenreEquals($genreObjectMother, $genreInserted);
+
+        $genreUpdated = new Genre(
+            $genreObjectMother->genreId(),
+            new GenreName($genreInserted->genreName()->value() . ' updated'),
+            new GenreNumberOfBooks($genreInserted->genreNumberOfBooks()->value() + 1),
+        );
+
+        $this->genreRepository->update($genreUpdated);
+
+        $genre = $this->genreRepository->ofGenreId($genreObjectMother->genreId());
+        $this->assertInstanceOf(Genre::class, $genre);
+        $this->assertGenreEquals($genreUpdated, $genre);
+    }
+
+    public function testRemove(): void
+    {
+        $genreObjectMother = GenreObjectMother::createOne();
+        $this->genreRepository->insert($genreObjectMother);
+
+        $genreInserted = $this->genreRepository->ofGenreId($genreObjectMother->genreId());
+        $this->assertInstanceOf(Genre::class, $genreInserted);
+        $this->assertGenreEquals($genreObjectMother, $genreInserted);
+
+        $this->genreRepository->remove($genreObjectMother);
+
+        $genre = $this->genreRepository->ofGenreId($genreObjectMother->genreId());
+        $this->assertNull($genre);
     }
 
     private function assertGenreEquals(Genre $genreA, Genre $genreB): void

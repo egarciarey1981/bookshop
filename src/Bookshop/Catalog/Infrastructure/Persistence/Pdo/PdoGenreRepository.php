@@ -8,7 +8,6 @@ use Bookshop\Catalog\Domain\Model\Genre\GenreId;
 use Bookshop\Catalog\Domain\Model\Genre\GenreName;
 use Bookshop\Catalog\Domain\Model\Genre\GenreNumberOfBooks;
 use Bookshop\Catalog\Domain\Model\Genre\GenreRepository;
-use Exception;
 
 class PdoGenreRepository extends PdoRepository implements GenreRepository
 {
@@ -63,6 +62,10 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         $stmt->execute();
         $row = $stmt->fetch();
 
+        if ($row === false) {
+            return null;
+        }
+
         return new Genre(
             new GenreId($row['id']),
             new GenreName($row['name']),
@@ -105,10 +108,11 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
 
     public function update(Genre $genre): void
     {
-        $sql = 'UPDATE genres SET name = :name WHERE id = :id';
+        $sql = 'UPDATE genres SET name = :name, number_of_books = :number_of_books WHERE id = :id';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
+        $stmt->bindValue('number_of_books', $genre->genreNumberOfBooks()->value(), PDO::PARAM_INT);
         $stmt->execute();
     }
 
