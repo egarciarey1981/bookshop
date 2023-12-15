@@ -18,7 +18,7 @@ class PdoGenreRepositoryTest extends MyTestCase
         $this->genreRepository = new PdoGenreRepository($pdo);
     }
 
-    public function testInsert(): void
+    public function testInsertOneAndRetrieveIt(): void
     {
         $genreObjectMother = GenreObjectMother::createOne();
         $this->genreRepository->insert($genreObjectMother);
