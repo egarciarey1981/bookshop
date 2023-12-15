@@ -100,9 +100,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
         $stmt->bindValue('number_of_books', $genre->genreNumberOfBooks()->value(), PDO::PARAM_INT);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not insert genre');
-        }
+        $stmt->execute();
     }
 
     public function update(Genre $genre): void
@@ -111,9 +109,7 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
         $stmt->bindValue('name', $genre->genreName()->value(), PDO::PARAM_STR);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not update genre');
-        }
+        $stmt->execute();
     }
 
     public function remove(Genre $genre): void
@@ -123,20 +119,14 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         $sql = 'DELETE FROM genres WHERE id = :id';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('id', $genre->genreId()->value(), PDO::PARAM_STR);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not remove genre');
-        }
+        $stmt->execute();
 
         $sql = 'DELETE FROM books_genres WHERE genre_id = :genre_id';
         $stmt = $this->connection()->prepare($sql);
         $stmt->bindValue('genre_id', $genre->genreId()->value(), PDO::PARAM_STR);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not remove genre');
-        }
+        $stmt->execute();
 
-        if ($this->connection()->commit() === false) {
-            throw new Exception('Could not remove genre');
-        }
+        $this->connection()->commit();
     }
 
     public function updateNumberOfBooksByGenreService(): void
@@ -149,9 +139,7 @@ SET number_of_books = (
     WHERE books_genres.genre_id = genres.id
 )
 SQL;
-        $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute() === false) {
-            throw new Exception('Could not update number of books by genre');
-        }
+        $stmt = $this->connection()->query($sql);
+        $stmt->execute();
     }
 }
