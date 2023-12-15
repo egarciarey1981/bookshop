@@ -32,7 +32,7 @@ class CreateBookService
         $bookId = $this->bookRepository->nextIdentity();
         $bookTitle = new BookTitle($request->title());
         $bookGenres = $this->genreRepository->ofGenreIds(
-            array_map(
+            ...array_map(
                 fn (string $genreId) => new GenreId($genreId),
                 $request->genreIds()
             )

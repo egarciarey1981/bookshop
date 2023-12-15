@@ -66,24 +66,19 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
         );
     }
 
-    public function ofGenreIds(array $genreIds): array
+    public function ofGenreIds(GenreId ...$genreIds): array
     {
         if (count($genreIds) === 0) {
             return [];
         }
 
         $inQuery = str_repeat('?,', count($genreIds) - 1) . '?';
-        $ids = array_map(fn ($genreId) => $genreId->value(), $genreIds);
         $sql = "SELECT id, name, number_of_books FROM genres WHERE id IN ($inQuery)";
         $stmt = $this->connection()->prepare($sql);
-        if ($stmt->execute($ids) === false) {
-            throw new Exception('Could not fetch genres');
-        }
 
+        $ids = array_map(fn ($genreId) => $genreId->value(), $genreIds);
+        $stmt->execute($ids);
         $rows = $stmt->fetchAll();
-        if ($rows === false) {
-            throw new Exception('Could not fetch genres');
-        }
 
         return array_map(function ($row) {
             return new Genre(

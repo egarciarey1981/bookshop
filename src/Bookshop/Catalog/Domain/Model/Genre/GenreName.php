@@ -36,9 +36,4 @@ class GenreName
             throw new DomainException(sprintf(self::ERROR_TOO_LONG, self::MAX_LENGTH));
         }
     }
-
-    public function equals(self $genreName): bool
-    {
-        return $this->value() === $genreName->value();
-    }
 }

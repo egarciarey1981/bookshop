@@ -25,8 +25,53 @@ class PdoGenreRepositoryTest extends MyTestCase
 
         $genre = $this->genreRepository->ofGenreId($genreObjectMother->genreId());
         $this->assertInstanceOf(Genre::class, $genre);
-        $this->assertTrue($genreObjectMother->genreId()->equals($genre->genreId()));
-        $this->assertTrue($genreObjectMother->genreName()->equals($genre->genreName()));
-        $this->assertTrue($genreObjectMother->genreNumberOfBooks()->equals($genre->genreNumberOfBooks()));
+        $this->assertGenreEquals($genreObjectMother, $genre);
+    }
+
+    public function testInsertManyAndRetrieveThem(): void
+    {
+        $genreObjectMother1 = GenreObjectMother::createOne();
+        $genreObjectMother2 = GenreObjectMother::createOne();
+        $genreObjectMother3 = GenreObjectMother::createOne();
+
+        $this->genreRepository->insert($genreObjectMother1);
+        $this->genreRepository->insert($genreObjectMother2);
+        $this->genreRepository->insert($genreObjectMother3);
+
+        $genreIds = [
+            $genreObjectMother1->genreId(),
+            $genreObjectMother2->genreId(),
+            $genreObjectMother3->genreId(),
+        ];
+
+        $genres = $this->genreRepository->ofGenreIds(...$genreIds);
+
+        $this->assertCount(3, $genres);
+
+        $this->assertGenreEquals($genreObjectMother1, $genres[0]);
+        $this->assertGenreEquals($genreObjectMother2, $genres[1]);
+        $this->assertGenreEquals($genreObjectMother3, $genres[2]);
+    }
+
+    public function testOfGenreIdsWithEmptyArray(): void
+    {
+        $genres = $this->genreRepository->ofGenreIds();
+        $this->assertEmpty($genres);
+    }
+
+    private function assertGenreEquals(Genre $genreA, Genre $genreB): void
+    {
+        $this->assertEquals(
+            $genreA->genreId()->value(),
+            $genreB->genreId()->value(),
+        );
+        $this->assertEquals(
+            $genreA->genreName()->value(),
+            $genreB->genreName()->value(),
+        );
+        $this->assertEquals(
+            $genreA->genreNumberOfBooks()->value(),
+            $genreB->genreNumberOfBooks()->value(),
+        );
     }
 }

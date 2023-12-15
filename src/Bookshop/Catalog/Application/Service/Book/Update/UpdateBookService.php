@@ -34,7 +34,7 @@ class UpdateBookService
         $bookId = new BookId($request->id());
         $bookTitle = new BookTitle($request->title());
         $bookGenreIds = $this->genreRepository->ofGenreIds(
-            array_map(
+            ...array_map(
                 fn (string $genreId) => new GenreId($genreId),
                 $request->genreIds()
             )
