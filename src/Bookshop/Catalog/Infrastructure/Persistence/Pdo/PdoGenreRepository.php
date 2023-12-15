@@ -25,9 +25,12 @@ class PdoGenreRepository extends PdoRepository implements GenreRepository
             $sql .= " WHERE name LIKE '%$filter%'";
         }
 
-        $sql .= " ORDER BY name LIMIT $limit OFFSET $offset";
+        $sql .= ' ORDER BY name ASC LIMIT :limit OFFSET :offset';
 
-        $stmt = $this->connection()->query($sql);
+        $stmt = $this->connection()->prepare($sql);
+        $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
         $rows = $stmt->fetchAll();
 
         return array_map(function ($row) {
