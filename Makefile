@@ -85,6 +85,10 @@ test-coverage: ## Ejecuta los tests con cobertura
 	$(DOCKER_SERVER) rm -f database_test
 
 test-mutation: test-unit ## Ejecuta los tests con mutación
+	$(DOCKER_SERVER) up -d database_test
+	sleep $(DATABASE_DELAY)
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/infection --only-covered"
+	$(DOCKER_SERVER) stop database_test
+	$(DOCKER_SERVER) rm -f database_test
 
 .PHONY: tests
