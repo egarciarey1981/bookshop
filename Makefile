@@ -29,66 +29,62 @@ composer-install: composer.json ## Instala dependencias de composer
 composer-update: ## Actualiza dependencias de composer
 	$(EXEC_IN_CONTAINER_PHP) "cd /var/www/html && composer update"
 
-phpstan: ## Ejecuta phpstan
+phpstan: up ## Ejecuta phpstan
 ifdef FILES
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse -c phpstan.neon $(FILES)"
 else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpstan analyse -c phpstan.neon"
 endif
 
-phpcs: ## Ejecuta phpcs
+phpcs: up ## Ejecuta phpcs
 ifdef FILES
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=phpcs.xml $(FILES)"
 else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcs --standard=phpcs.xml src"
 endif
 
-phpcbf: ## Ejecuta phpcbf
+phpcbf: up ## Ejecuta phpcbf
 ifdef FILES
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=phpcs.xml $(FILES)"
 else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpcbf --standard=phpcs.xml src"
 endif
 
-phpmd: ## Ejecuta phpmd
+phpmd: up ## Ejecuta phpmd
 ifdef FILES
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd $(FILES) text phpmd.xml"
 else
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpmd src text phpmd.xml"
 endif
 
+database-test-up:
+	$(DOCKER_SERVER) up -d database_test
+	sleep $(DATABASE_DELAY)
+
+database-test-down:
+	$(DOCKER_SERVER) stop database_test
+	$(DOCKER_SERVER) rm -f database_test
+
 web: ## Ejecuta el cliente web
 	php -S localhost:8081 -t client
 
-test-unit: ## Ejecuta los tests unitarios
+test-unit: up ## Ejecuta los tests unitarios
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Unit"
 
-test-integration: ## Ejecuta los tests de integración
-	$(DOCKER_SERVER) up -d database_test
-	sleep $(DATABASE_DELAY)
+test-integration: up database-test-up ## Ejecuta los tests de integración
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Integration"
-	$(DOCKER_SERVER) stop database_test
-	$(DOCKER_SERVER) rm -f database_test
+	make database-test-down
 
-test-acceptance: ## Ejecuta los tests de aceptación
-	$(DOCKER_SERVER) up -d database_test
-	sleep $(DATABASE_DELAY)
+test-acceptance: up database-test-up ## Ejecuta los tests de aceptación
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always tests/Acceptance"
-	$(DOCKER_SERVER) stop database_test
-	$(DOCKER_SERVER) rm -f database_test
+	make database-test-down
 
-test-coverage: ## Ejecuta los tests con cobertura
-	$(DOCKER_SERVER) up -d database_test
-	sleep $(DATABASE_DELAY)
+test-coverage: up database-test-up ## Ejecuta los tests con cobertura
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/phpunit --do-not-cache-result --colors=always --coverage-html=reports/coverage tests"
-	$(DOCKER_SERVER) stop database_test
-	$(DOCKER_SERVER) rm -f database_test
+	make database-test-down
 
-test-mutation: test-unit ## Ejecuta los tests con mutación
-	$(DOCKER_SERVER) up -d database_test
-	sleep $(DATABASE_DELAY)
+test-mutation: up database-test-up ## Ejecuta los tests con mutación
 	$(EXEC_IN_CONTAINER_PHP) "vendor/bin/infection --only-covered"
-	$(DOCKER_SERVER) stop database_test
-	$(DOCKER_SERVER) rm -f database_test
+	make database-test-down
 
 .PHONY: tests
